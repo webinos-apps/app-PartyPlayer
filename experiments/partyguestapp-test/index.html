@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<style type="text/css">
+		body { font-family: sans-serif; }
+		#log { clear: both; }
+		.logline {
+		    font-family: monospace;
+		    color: #ddd;
+		    background: #333;
+		    clear: both;
+		}
+		.homeMenuItem{
+			display : inline-block;
+		}
+		ul{
+			list-style-type: none;
+		}
+		.menuBtn {
+			-moz-box-shadow:inset 0px 1px 0px 0px #d9fbbe;
+			-webkit-box-shadow:inset 0px 1px 0px 0px #d9fbbe;
+			box-shadow:inset 0px 1px 0px 0px #d9fbbe;
+			background-color:#b8e356;
+			-moz-border-radius:6px;
+			-webkit-border-radius:6px;
+			border-radius:6px;
+			border:1px solid #83c41a;
+			display:inline-block;
+			color:#ffffff;
+			font-family:arial;
+			font-size:15px;
+			font-weight:bold;
+			padding:6px 24px;
+			text-decoration:none;
+			text-shadow:1px 1px 0px #86ae47;
+		}.menuBtn:hover {
+			background-color:#a5cc52;
+			cursor:pointer;
+		}.menuBtn:active {
+			position:relative;
+			top:1px;
+		}
+		#guestApp{
+			margin-top: 20px;
+			padding:20px;
+			background-color:#efefef;
+		}
+	</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="id3v2.js"></script>
+<script type="text/javascript" src="partyguestapp-test.js"></script>
+<script type="text/javascript" src="../../a2a-stub/include/a2a-stub.js"></script>
+<title>partyGuest App Test</title>
+<script type=text/javascript>
+    var channel = null;
+
+    function log(message){
+        var logline = document.createElement('div');
+        logline.setAttribute('class', 'logline');
+        logline.innerHTML=message;
+        var log = document.getElementById('log');
+        log.insertBefore(logline, log.firstElementChild);
+    }
+
+    // in real life there would be no init(), this is a temporary solution
+    function init(){
+        webinos.app2app.init('ws://localhost:10666/a2a-stub');
+        //webinos.app2app.createChannel('urn:partyplayer', null, function(msg) { log(msg); });
+    }
+
+    function search(){
+        webinos.app2app.searchForChannels(
+            'urn:webinos.org:*', [],
+            function(channel) {
+                log('Found channel with namespace ' +  channel.namespace);
+            });
+    }
+
+    function create(){
+        channel = webinos.app2app.createChannel(
+            'urn:webinos.org:partyplayer', null, alwaysTrue,
+            function handleMessage(payload) {
+                // payload is an object
+                log('Received payload: ' + JSON.stringify(payload));
+            });
+    }
+
+    function send(){
+        channel.send(document.getElementById('message').value);
+    }
+
+    function alwaysTrue(){
+        return true;
+    }
+
+</script>
+</head>
+<body>
+	<h2>Party Guest Test</h2>
+    <form action="" method="get" accept-charset="utf-8">
+        <input type="button" value="Init" onclick="javascript:init();">
+        <input type="button" value="Create" onclick="javascript:create();">
+        <input type="button" value="Send" onclick="javascript:send();">
+        <input type="text" id="message" size="60"
+            placeholder="Type JSON here..."
+            value='{"type":"collection","cmd":"getItems"}'><br>
+    </form>
+    <h3>Logging</h3>
+    <div id=log>
+        <div class=logline>Testing one ... two ... in the place to be!</div>
+    </div>
+    <div id="guestApp"></div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+	"version"	:	1,
+	"filename"	:	"michael jackson - bad.mp3",
+	"title"		:	"Bad",
+	"artist"	:	"Michael Jackson",
+	"mediatype"	:	"audio",
+	"mimetype"	:	"audio/mp3",
+	"screenshot":	"base64/???",
+	"screenshotURI":"http://youtube.com/screenshot.png",
+	"duration"	:	"00:03:55",
+	"contentType":	"onDemand",
+	"contentSrc":	"file",
+	"URI"		:	"",
+	"src"		:	""
+}

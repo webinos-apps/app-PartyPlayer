@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Party Collection</title>
+<link rel="stylesheet" type="text/css" href="css/reset.css" />
+<link id="size-stylesheet" rel="stylesheet" type="text/css" href="css/collection_full.css" />
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script> -->
+<script src="js/jquery-1.8.1.min.js"></script>
+<script src="js/screenshot.js"></script>
+<script src="js/jquery.path.js"></script>
+<script src="js/jquery.ui.js"></script>
+<script src="js/jquery.transit.js"></script>
+<script src="js/create_collection_2.js"></script>
+<script src="js/initialize.js"></script>
+<script src="js/visual.js"></script>
+<script src="js/main.js"></script>
+<!-- <script src="js/collection.js"></script> -->
+</head>
+<body>
+	<div id="main">
+		<ul id="partylist">
+		</ul>
+	</div>
+	
+	<div id="sidebar">
+		<h2>INFO</h2>
+		<ul id="infolist">
+		</ul>
+		<button class="playlistadd">Add to playlist</button>
+		<button class="colldel" disabled=true>Delete from Collection</button>
+		<div class="vote"></div>
+	</div>
+	
+	<div id="funnel">
+		<h2>Funnel Area</h2>
+		<!-- <div id="funnelitem">Hello World</div> -->
+		
+		<div class="addeditems">
+		</div>
+	</div>
+	
+	<div id="queue">
+		<h2>PLAYLIST Upcoming:</h2>
+	</div>
+	
+	<div id="playback">
+		<h2>PLAYBACK Now playing:</h2>
+		<p class="info"></p>
+		<div id='player'></div>
+	</div>
+	<ul id="eventlist">
+	</ul>
+</body>
+</html>

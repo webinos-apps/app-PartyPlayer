@@ -1,0 +1,15 @@
+#logtitle {
+    background-color: #999;
+    margin: 0px;
+}
+
+#log {
+    font-family: monospace;
+    background-color: #ddd;
+    color: black;
+    width: 100%;
+}
+
+.logline-even {
+    background-color: #ccc;
+}
