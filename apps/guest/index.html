@@ -5,16 +5,21 @@
         <title>PartyPlayer Guest</title>
         <link rel=stylesheet href=guest.css type=text/css />
         <script type=text/javascript src=../lib/jquery.min.js></script>
+        <script type=text/javascript src=../lib/id3v2.js></script>
         <script type=text/javascript src=../common/log.js></script>
         <script type=text/javascript src=../common/a2a-stub.js></script>
         <script type=text/javascript src=../common/pplayer.js></script>
         <script type=text/javascript src=guest.js></script>
     </head>
     <body>
-        <div id=main style=height:200px>
+        <div id="main">
             <h1>PartyPlayer Guest</h1>
+            <!-- voorbeeld van Victor
             <input type=button value='share item'
                 onclick="javascript:partyplayer.shareItem(new partyplayer.AudioItem('Nederwiet', 'Doe Maar', 'Skunk', 'http://localhost:10888/library/nederwiet.mp3'));">
+      		-->
         </div>
+        <!-- The Actual Guest App -->
+	    <div id="guestApp"></div>
     </body>
 </html>

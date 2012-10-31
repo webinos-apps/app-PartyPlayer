@@ -1,5 +1,8 @@
 /*
  * Party Guest App Test
+ * @startuml example.png
+ * bob->alice: do work
+ * @enduml
  * */
 
 window.onload=function(){
