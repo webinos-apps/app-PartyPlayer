@@ -120,10 +120,9 @@ partyplayer.VideoItem.prototype = new partyplayer._Item;
 @startuml common_classes_message.png
 
 class Message {
-    String type
-    String status
-    struct payload
-    int version	
+    String namespace
+    String cmd
+    struct payload	
 }
 
 @enduml
@@ -133,19 +132,14 @@ class Message {
  * Constructor for Message
  *
  * @constructor
- * @param type - the message type
+ * @param namespace - the message namespace
  * @param cmd - the function call
- * @param status - status code of message, e.g. OK, NOK 
  * @param payload - the payload of the message,as as struct
- * @param version - the message version number, default =1;
- *
  */
-partyplayer.Message = function(type, cmd, payload, version=1)
+partyplayer.Message = function(namespace,cmd, payload)
 {
-    this.type = type;
+    eval(namespace+"."+cmd+"("+payload+")");
     this.cmd = cmd;
-    this.status = status;
-    this.version;
     this.payload=payload;
 }
 
