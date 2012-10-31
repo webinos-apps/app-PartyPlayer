@@ -218,8 +218,9 @@ class FunnelItem {
  */
 partyplayer.FunnelItem = function(funnelItemID, itemID, hitpoints)
 {
-    this.id = id;
-    this.alias = alias;
+    this.funnelItemID = funnelItemID;
+    this.itemID = itemID;
+    this.hitpoints = hitpoints;
 }
 
 
