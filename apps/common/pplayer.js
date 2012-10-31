@@ -134,17 +134,45 @@ class Message {
  *
  * @constructor
  * @param type - the message type
+ * @param cmd - the function call
  * @param status - status code of message, e.g. OK, NOK 
  * @param payload - the payload of the message,as as struct
  * @param version - the message version number, default =1;
+ *
  */
-partyplayer.Message = function(type, status, payload, version=1)
+partyplayer.Message = function(type, cmd, payload, version=1)
 {
     this.type = type;
+    this.cmd = cmd;
     this.status = status;
     this.version;
     this.payload=payload;
 }
+
+
+/**
+ * Convert JSON-string to partyplayer message
+ * @TODO: needs to be tested
+ **/
+partyplayer.parseMessage = function (msg)
+{	
+	if (msg.version == 1)
+	{
+		msg = new partyplayer.Message(msg.type,msg.cmd,msg.payload,1);
+		return msg;	
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/**
+ * Convert MSGtoJSONString
+ * @TODO: needs to be tested
+ **/
+
+
 
 
 /*
@@ -165,6 +193,30 @@ class User {
  * @param alias alias of the user
  */
 partyplayer.User = function(id, alias)
+{
+    this.id = id;
+    this.alias = alias;
+}
+
+
+/*
+@startuml common_classes_funnelItem.png
+class FunnelItem {
+    int funnelItemID
+    int itemID
+    int hitpoints
+}
+@enduml
+*/
+
+/**
+ * Constructor for FunnelItem
+ * @constructor
+ * @param funnelItemID The userID (unique)
+ * @param itemID the itemID in the collection
+ * @param hitpoints 
+ */
+partyplayer.FunnelItem = function(funnelItemID, itemID, hitpoints)
 {
     this.id = id;
     this.alias = alias;
