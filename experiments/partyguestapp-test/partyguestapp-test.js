@@ -68,12 +68,13 @@ var addFiles ={
 		var htmlList = '';
 		for(var i=0; i<tempList.length; i++){
 			var f = tempList[i];
+			console.log(tempList[i]);
 			htmlList+= '<li class="item">';
 			htmlList+= '<strong>artist: </strong>'+f.Artist+' ';
 			htmlList+= '<strong>title: </strong>'+f.Title+' ';
 			htmlList+= '<strong>album: </strong>'+f.Album+' ';
 			htmlList+= '<strong>name: </strong>'+f.name+' '
-			htmlList+= '</li>'
+			htmlList+= '</li>';
 			//add item to permanent list
 			addFiles.addList.push(f);
 		}
