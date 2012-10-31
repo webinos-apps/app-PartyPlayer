@@ -146,3 +146,29 @@ partyplayer.Message = function(type, status, payload, version=1)
     this.payload=payload;
 }
 
+
+/*
+@startuml common_classes_user.png
+
+class User {
+    int ID
+    string alias
+}
+
+@enduml
+*/
+
+/**
+ * Constructor for User
+ * @constructor
+ * @param id The userID (unique)
+ * @param alias alias of the user
+ */
+partyplayer.User = function(id, alias)
+{
+    this.id = id;
+    this.alias = alias;
+}
+
+
+
