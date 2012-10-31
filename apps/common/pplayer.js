@@ -27,6 +27,7 @@ Item <|-- VideoItem
 */
 
 
+
 'use strict'
 
 
@@ -114,4 +115,34 @@ partyplayer.VideoItem = function(title, artist, url, thumbnail)
     this.thumbnail = thumbnail;
 }
 partyplayer.VideoItem.prototype = new partyplayer._Item;
+
+/*
+@startuml common_classes_message.png
+
+class Message {
+    String type
+    String status
+    struct payload
+    int version	
+}
+
+@enduml
+*/
+
+/**
+ * Constructor for Message
+ *
+ * @constructor
+ * @param type - the message type
+ * @param status - status code of message, e.g. OK, NOK 
+ * @param payload - the payload of the message,as as struct
+ * @param version - the message version number, default =1;
+ */
+partyplayer.Message = function(type, status, payload, version=1)
+{
+    this.type = type;
+    this.status = status;
+    this.version;
+    this.payload=payload;
+}
 
