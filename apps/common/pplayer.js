@@ -214,7 +214,7 @@ class FunnelItem {
  * @constructor
  * @param funnelItemID The userID (unique)
  * @param itemID the itemID in the collection
- * @param hitpoints 
+ * @param hitpoints the "status" of the item 
  */
 partyplayer.FunnelItem = function(funnelItemID, itemID, hitpoints)
 {
