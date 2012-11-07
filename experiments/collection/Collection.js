@@ -2,7 +2,8 @@
 /** 
  * Creates a new Collection Library with the provided Name
  **/
-function Collection(name, randomKey=10){	
+function Collection(name, /* optional */ randomKey){	
+	randomKey = randomKey || 10;
 	this.name=name;
 	this.coll={};
 	this.lastID = randomKey;
@@ -14,7 +15,8 @@ function Collection(name, randomKey=10){
  * returns the key if the item was successfully added
  * returb false 
  **/
-Collection.prototype.addItem = function (item,key=undefined){
+Collection.prototype.addItem = function (item,/* optional */ key){
+	key = key || undefined
 	if (key!=undefined){
 		if (key in this.coll){
 			return false;		
