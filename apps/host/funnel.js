@@ -24,8 +24,10 @@ var funnel = (function(){
 			var count = 0;
 			for(var i = 0; i < slots; i++){
 				if(funnelSlots[i] == null){
-					console.log("add item at pos: "+i);
+					console.log("add item at pos: " + i + "(slot: " + (i+1) + ")");
 					var funnelItem = new partyplayer.FunnelItem(id, 100);
+					var key = funnelList.addItem(funnelItem);
+					funnelSlots[i] = key;
 					break;
 				} else {
 					count++;
@@ -34,6 +36,8 @@ var funnel = (function(){
 			if(count == slots){
 				console.log("funnel full");
 			}
+			console.log(funnelSlots);
+			console.log(funnelList);
 		},
 		removeItem : function(slot){
 			console.log("removing item at slot: " + slot);
