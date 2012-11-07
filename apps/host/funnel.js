@@ -10,7 +10,7 @@ var funnel = (function(){
 	var slots = 6;
 	
 	return{
-		init: function(){
+		init : function(){
 			//stub function to fill up funnellist with funnelitems
 			for(var i = 0; i < slots; i++){
 				var funnelItem = new partyplayer.FunnelItem((i+1)*10, 100);
