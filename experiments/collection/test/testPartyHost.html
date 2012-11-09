@@ -3,7 +3,8 @@
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src='../../../a2a-stub/include/a2a-stub.js'></script>
-<script type="text/javascript" charset="utf-8" src='../include/hash.js'></script>
+<!--<script type="text/javascript" charset="utf-8" src='../include/hash.js'></script>!-->
+<script type="text/javascript" charset="utf-8" src='../Collection.js'></script>
 <script type="text/javascript" charset="utf-8" src='../PartyCollection.js'></script>
 <script type="text/javascript" charset="utf-8" src='../include/item_interface.js'></script>
 
@@ -100,19 +101,36 @@ body { font-family: sans-serif; }
      **/
     function determineAction(payload)
     {
-	console.log("determine-action, payloadCMD="+payload.cmd);
+	//console.log("determine-action, payloadCMD="+payload.cmd);
 
 	var msg = {}; //return message structure
 	msg.type="collection";
 	msg.cmd="addItem";
 	msg.result={};
-	
+	var str = ""
 		
      	switch (payload.cmd) {
-  		case 'registerUser':
-	      		console.log('Yay');
-	      		break;
-		case 'unregisterUser':
+		case 'join':
+			msg.cmd=payload.cmd;
+			ret = coll.addUser(payload.args);
+			msg.result["userID"]=ret;
+			str = JSON.stringify(msg);
+			channel.send(msg) 
+			break;			
+		case 'leave':
+			msg.cmd=payload.cmd;
+			ret = coll.removeUser(payload.args);
+			msg.result["result"]=ret;
+			str = JSON.stringify(msg);
+			channel.send(msg)			 	
+			break;
+		case "getUsers":
+			msg.cmd="getUsers";
+			ret = coll.getUsers();
+			msg.result["users"]=ret;
+			msg.result["collection"]=ret;
+			str = JSON.stringify(msg);
+			channel.send(msg) 
 			break;
 		case 'addItem':
 			msg.cmd="addItem";
@@ -133,6 +151,15 @@ body { font-family: sans-serif; }
 			msg.result["result"]="NOK";
 			msg.cmd="addItems";
 			msg.result["msg"]="feature not yet supported";
+			msg.result["collection"]=ret;
+			str = JSON.stringify(msg);
+			channel.send(msg) 
+			break;
+		case 'getItemCount':
+			msg.result["result"]="OK";
+			msg.cmd='getItemCount';
+			ret = coll.getItemCount();
+			msg.result["collection"]=ret;
 			str = JSON.stringify(msg);
 			channel.send(msg) 
 			break;
@@ -142,7 +169,7 @@ body { font-family: sans-serif; }
 			{
 
 				var ret = coll.removeItemByID(payload.args.itemID)
-				if(item!=false)
+				if(ret!=false)
 				{
 					msg.result["result"]="OK"
 					msg.result["itemID"]=ret;
@@ -158,7 +185,7 @@ body { font-family: sans-serif; }
 				msg.result["msg"]="No item ID provided";			
 			}
 			str = JSON.stringify(msg);
-			channel.send(msg); 
+			channel.send(msg) 
 			break;
 		case 'getItem':
 			console.log("getting Item");
@@ -219,10 +246,11 @@ body { font-family: sans-serif; }
 		default:
 			msg.result["collection"]="error"
 			msg.result["msg"]="could not parse the cmd";
+			console.log("Could't parse command - cmd = "+payload.cmd);
 			str = JSON.stringify(msg);
 			channel.send(msg) 
-			console.log("Could't parse command - cmd = "+payload.cmd);
 			break;
+		
 	}
     }
 
