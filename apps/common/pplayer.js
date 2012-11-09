@@ -120,8 +120,9 @@ partyplayer.VideoItem.prototype = new partyplayer._Item;
 @startuml common_classes_message.png
 
 class Message {
-    String namespace
+    String ns 
     String cmd
+    String ref
     struct payload	
 }
 
@@ -130,15 +131,16 @@ class Message {
 
 /**
  * Constructor for Message
- *
  * @constructor
- * @param namespace - the message namespace
+ * @param ns - the message namespace
  * @param cmd - the function call
+ * @param ref - identifier for the call 
  * @param payload - the payload of the message,as as struct
  */
-partyplayer.Message = function(namespace,cmd, payload)
+partyplayer.Message = function(namespace,cmd, ref, payload)
 {
-    eval(namespace+"."+cmd+"("+payload+")");
+    this.ref = ref || undefined; 
+    //eval(namespace+"."+cmd+"("+payload+")");
     this.cmd = cmd;
     this.payload=payload;
 }
