@@ -12,6 +12,7 @@ home media domain.
 ### Collection and Playlist
 
 The host keeps the `PartyCollection`, the `PartyItemFunnel` and the `PartyPlayList`. These are distinct entities.
+All these entities extend `Collecion`, which provides generic entities.
 
 ### Media items
 
@@ -20,6 +21,17 @@ The host keeps the `PartyCollection`, the `PartyItemFunnel` and the `PartyPlayLi
 Also check out the generated [API documentation](apidoc/index.html).
 
 ### Protocol
+
+The PartyPlayer utilises two types of messages: unidirectional and broadcast messages.
+Broadcast messages are sent from the Host to all connected party guest clients.
+Unidirectional messages are sent from a Client to a Host and vice versa.
+An Unidirectional message from Client to Host MAY be followed by a Unidirectional message from Host to Client, but this is optional.
+
+![Message Format](figures/common_classes_message.png "Message format")
+
+A message consists of a header and a payload. The header consists of three parameters/fields: the namespace ("ns"), the command ("cmd") and the optional reference identifier ("ref")
+
+
 
 ![Protocol join](figures/protocol_join.png "A party guest client connects to the server").
 
