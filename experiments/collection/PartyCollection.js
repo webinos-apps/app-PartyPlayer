@@ -6,6 +6,7 @@
 function PartyCollection(name){	
 	this.name=name;
 	this.coll=new Collection();
+	this.users=new Collection();
 }
 
 PartyCollection.prototype.printName = function () {
@@ -138,7 +139,7 @@ PartyCollection.prototype.getItemCount = function (){
 PartyCollection.prototype.getItems = function (userID, limit, filterCriteria){
 	result = [];
 	for (var index in this.coll.getItems() ){
-		console.log(this.coll[index]);
+		//console.log(this.coll[index]);
 		tmpItem = this.coll.getItem(index);
 		if(userID!=0){
 			if (typeof filterCriteria=='undefined' ){
@@ -167,8 +168,6 @@ PartyCollection.prototype.getItems = function (userID, limit, filterCriteria){
  * return true if the items passes all criteria
  **/
 function filterItem(item,filters){
-	//console.log(item);
-	//console.log(filters);
 	var success =false;
 	for(var filter in filters) {
 		if ((filter in item) && (item[filter]==filters[filter])){
@@ -182,7 +181,17 @@ function filterItem(item,filters){
 };
 
 
+PartyCollection.prototype.addUser = function(userAlias){
+	return this.users.addItem(userAlias);
+}
 
+PartyCollection.prototype.removeUser = function(userID){
+	return this.users.removeItem(userID);
+}
+
+PartyCollection.prototype.getItem = function(userID){
+	return this.users.getItem(userID);
+}
 
 
 
