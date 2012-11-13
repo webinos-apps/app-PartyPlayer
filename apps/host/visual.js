@@ -25,22 +25,23 @@ var visualFunnel = function(name, selector){
 	var funnelSize, step, allCircles;
 	var that = visual(name, selector);
 	
-	var startArc = function(key, circle){
+	var startArc = function(selector, circle){
 		console.log("start arc");
-		var r = (allCircles-circle)*step/2;
-		console.log(r);
+		var r = circle*step/2;
 		var arc_params = {
-			center: [r,r],
+			center: [funnelSize/2-75,funnelSize/2-25],
 			radius: r,
 			start: 180,
 			end: -180,
 			dir: -1
 		};
-		$('div[_funnelitemid=' + key + ']').animate({path : new $.path.arc(arc_params)}, 40000);
+		$(selector).animate({path : new $.path.arc(arc_params)}, 40000, function(){
+			console.log("end of arc");
+		});
 	};
 	
-	that.setupCircles = function(funnelSize, maxCircles){
-		funnelSize = funnelSize;
+	that.setupCircles = function(funnel, maxCircles){
+		funnelSize = funnel;
 		allCircles = maxCircles;
 		step = funnelSize / maxCircles;
 		circles = maxCircles;
@@ -57,11 +58,21 @@ var visualFunnel = function(name, selector){
 		}
 	};
 	that.renderSingle = function(key){
-		var element = $('<div _funnelItemID=' + key + '>');
+		var element = {};
+		element.selector = 'div[_funnelItemID=' + key + ']';
+		element.circle = allCircles;
 		$('<div class="funnelObject" _funnelItemID=' + key + '>funnelItemID: ' + key + '</div>').appendTo('.funnelCircle[circle=0]');
-		startArc(key, 0);
-		
+		startArc(element.selector, allCircles);
 		return element;
+	};
+	that.nextCircle = function(selector){
+		console.log("stop current animation");
+		$(selector).stop(true);
+		var key = $(selector).attr('_funnelItemID');
+		var circle = funnel.getFunnelItem(key).getCircle();
+		circle--;
+		funnel.getFunnelItem(key).setCircle(circle);
+		startArc(selector, circle);
 	};
 	
 	return that;

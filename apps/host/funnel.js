@@ -8,7 +8,8 @@ Object.size = function(obj) {
 };
 
 $(document).ready(function(){
-	funnelViz.setupCircles(800, funnel.getCircles());
+	funnelViz.setupCircles(1300, funnel.getCircles());
+	funnel.addItem(2);
 });
 
 var funnel = (function(){
@@ -57,18 +58,24 @@ var funnel = (function(){
 })();
 
 var funnelObject = function(){
-	var key, selector;
+	var key, element = {}; // selector / circle
 	
 	return{
 		init : function(newKey){
 			key = newKey;
-			selector = funnelViz.renderSingle(key);
+			element = funnelViz.renderSingle(key);
+		},
+		setCircle : function(circle){
+			element.circle = circle;
 		},
 		getKey : function(){
 			return key;
 		},
 		getSelector : function(){
-			return selector;
+			return element.selector;
+		},
+		getCircle : function(){
+			return element.circle;
 		}
 	}	
 }
