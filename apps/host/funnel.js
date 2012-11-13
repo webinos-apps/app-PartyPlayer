@@ -1,49 +1,38 @@
+//augment object with size function tp count the numbers of properties
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
 $(document).ready(function(){
-	funnelViz.setupSlots(funnel.getSlots());
-	funnel.init();
+	funnelViz.setupCircles(800, funnel.getCircles());
 });
 
 var funnel = (function(){
 	//note: key == ID in collection
+	var funnelWidth = 1200;
 	var funnelList = new Collection("Funnel");
-	var funnelSlots = [];
-	var slots = 6;
-	var timeout = 1000;
+	var allItems = {};
+	var maxItems = 10;
+	var circles = 6;
 	
 	return{
-		init : function(){
-			//stub function to fill up funnellist with funnelitems
-			for(var i = 0; i < 5; i++){
-				var funnelItem = new partyplayer.FunnelItem((i+1)*10, 100);
-				var key = funnelList.addItem(funnelItem);
-				var funnelObject = funnelTimer(timeout, key, i);
-				funnelSlots.push(funnelObject);
-				funnelViz.renderSingle(key, i);				
-			}
-			console.log(funnelSlots);
-			console.log(funnelList);
-		},
 		addItem : function(id){
 			var count = 0;
-			for(var i = 0; i < slots; i++){
-				if(funnelSlots[i] == null){
-					console.log("add item at pos: " + i);
-					var funnelItem = new partyplayer.FunnelItem(id, 100);
-					var key = funnelList.addItem(funnelItem);
-					var funnelObject = funnelTimer(timeout, key, i);
-					funnelObject.start();
-					funnelSlots[i] = funnelObject;
-					funnelViz.renderSingle(key, i);
-					break;
-				} else {
-					count++;
-				}
+			if(Object.size(allItems) < maxItems){
+				console.log("add item to circle");
+				var funnelItem = new partyplayer.FunnelItem(id, 100);
+				var key = funnelList.addItem(funnelItem);
+				var fnO = funnelObject();
+				allItems['key_' + key] = fnO;
+				fnO.init(key);
 			}
-			if(count == slots){
-				console.log("funnel full");
-			}
-			console.log(funnelSlots);
+			console.log(allItems);
 			console.log(funnelList);
+			
 		},
 		removeItem : function(slot){
 			console.log("removing item at slot: " + slot);
@@ -55,42 +44,32 @@ var funnel = (function(){
 			console.log(funnelSlots);
 			console.log(funnelList);
 		},
-		getSlots : function(){
-			return slots;
+		getCircles : function(){
+			return circles;
 		},
-		getFunnelItem : function(slot){
-			return funnelSlots[slot];
+		getFunnelItem : function(key){
+			return allItems['key_' + key];
+		},
+		getFunnelWidth : function(){
+			return funnelWidth;
 		}
 	}	
 })();
 
-var funnelTimer = function(time, key, slot){
-	this.time = time;
-	this.key = key;
-	this.slot = slot;
-	var timeID;
-	var falls = 7;
-	
-	var faller = function(){
-		if(falls > 0){
-			funnelViz.fallSingle(slot);
-			timeID = setTimeout(faller, time);
-			falls--;
-		} else {
-			console.log("end");
-		}
-	}
+var funnelObject = function(){
+	var key, selector;
 	
 	return{
-		start : function(){
-			timeID = setTimeout(faller, time);
-		},
-		stop : function(){
-			clearTimeout(timeID);
+		init : function(newKey){
+			key = newKey;
+			selector = funnelViz.renderSingle(key);
 		},
 		getKey : function(){
 			return key;
+		},
+		getSelector : function(){
+			return selector;
 		}
-	}
+	}	
 }
 
