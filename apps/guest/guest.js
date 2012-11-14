@@ -9,7 +9,7 @@ $(document).ready(function(){
     webinos.app2app.init('ws:localhost:10666/guest', function() {
         log('Connected to a2a stub server (as guest)');
 
-        channel = webinos.app2app.createChannel('partyplayer', null, null, function() {
+        partyplayer.channel = webinos.app2app.createChannel('partyplayer', null, null, function() {
             log('Waiting for protocol implementation');
         });
     });
@@ -17,6 +17,12 @@ $(document).ready(function(){
 // init userName functionality
     userName.init();
 });
+
+partyplayer.joinUser = function(name){
+	partyplayer.channel.send({"name":name});
+    log(name+" joining");
+	//return: userId
+};
 
 var userName = {
 	/*
@@ -31,10 +37,10 @@ var userName = {
 		var name = $('#aliasText').val();
 		userName.name = name;
 		//send userName to host
-	    partyplayer.shareItem = function(item){
-	    	channel.send(JSON.stringify(name+" has joined the party!"));
-	        //return: userId
-	    };
+		partyplayer.joinUser(name);
+	    
+	    //partyplayer.shareItem(new partyplayer.AudioItem('Nederwiet', 'Doe Maar', 'Skunk', 'http://localhost:10888/library/nederwiet.mp3'));
+	    
 		$('#aliasDiv').fadeOut(200, function(){
 			$('#aliasDiv').remove();
 			//after choosing an alias init mainMenu
