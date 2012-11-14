@@ -9,7 +9,7 @@ Object.size = function(obj) {
 
 $(document).ready(function(){
 	funnelViz.setupCircles(1500, funnel.getCircles());
-	//funnel.addItem(2);
+	funnel.init();
 });
 
 var funnel = (function(){
@@ -17,10 +17,18 @@ var funnel = (function(){
 	var funnelWidth = 1200;
 	var funnelList = new Collection("Funnel");
 	var allItems = {};
+	var circleSlots = {};
 	var maxItems = 10;
 	var circles = 6;
 	
 	return{
+		init : function(){
+			for(var i = 0; i < circles; i++){
+				circleSlots['circle_' + (i+1)] = new Array(2*i+1);
+				console.log();
+			}
+			console.log(circleSlots);
+		},
 		addItem : function(id){
 			var count = 0;
 			if(Object.size(allItems) < maxItems){
@@ -28,7 +36,6 @@ var funnel = (function(){
 				var funnelItem = new partyplayer.FunnelItem(id, 100);
 				var key = funnelList.addItem(funnelItem);
 				var fnO = funnelObject();
-				allItems['key_' + key] = fnO;
 				fnO.init(key);
 			} else {
 				console.log("funnel full");
@@ -37,10 +44,35 @@ var funnel = (function(){
 			console.log(funnelList);
 			
 		},
+		switchCircle : function(key){
+			//first check if next circle has undefined slots
+			//if yes add myself to undefined position
+			//if no switch myself with first item in next circle
+			var fnO1 = allItems['key_' + key];
+			var circle = fnO1.getCircle();
+			var circleNext = circleSlots['circle_' + (circle-1)];
+			var count = 0;
+			for(var i = 0; i < circleNext.length; i++){
+				if(typeof circleNext[i] === 'undefined'){
+					console.log("add to next circle");	
+					circleNext[i] = fnO1;
+					fnO1.setCircle(circle-1);
+					console.log(fnO1.getCircle());	
+					break;
+				} else {
+					count++;
+				}
+			}
+			if(count == circleNext.length){
+				var fnO2 = circleSlots['circle_' + (circle-1)][0];
+				console.log("switch: " + fnO1 +" with "+fnO2);
+				
+			}
+			console.log(circleSlots);							
+		},
 		removeItem : function(key){
 			console.log("remove item with key: " + key);
-			var fnO = allItems['key_' + key];
-			funnelViz.destroySingle(fnO.getSelector());
+			funnelViz.destroySingle(allItems['key_' + key].getSelector());
 			funnelList.removeItem(key);
 			delete allItems['key_' + key];
 			console.log(allItems);
