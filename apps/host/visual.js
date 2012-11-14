@@ -67,7 +67,7 @@ var visualFunnel = function(name, selector){
 	};
 	that.destroySingle = function(selector){
 		console.log("remove element: " +selector);
-		$(selector)o.stop(true);
+		$(selector).stop(true);
 		$(selector).remove();
 	};
 	that.nextCircle = function(selector){
