@@ -19,13 +19,16 @@ $(document).ready(function(){
 });
 
 /**
- *	The funnel is a closure, meaning it returns an object containg methods, self initialized.
+ *	Do use directly, self initialized, singleton.
+ *	The funnel is a closure, meaning it returns an object containing methods.
  *	These methods are used to communicate with the funnel.
  *	The funnel uses mainly 2 vars: the funnelList as a Collection, and an Object called allItems.
  *	allItems uses the generated key(ID) from the funnelList. This ID gets created when an Item gets added to the funnelList.
  *	This key is a property in allItems, attached to the property is a funnelVar(see funnelVar).
  * 
- *	@constructor funnel
+ *	@namespace funnel
+ *	@example //everywhere in the code it is possible to do:
+ *	funnel.method(parameters);
 **/
 var funnel = (function(){
 	//note: key == ID in collection
@@ -39,8 +42,7 @@ var funnel = (function(){
 	return{
 		/**
 		 *  Initialize function to setup circle slots 
-		 *
-		 *	@function init  
+		 * 
 		**/
 		init : function(){
 			for(var i = 0; i < circles; i++){
@@ -53,8 +55,7 @@ var funnel = (function(){
 		 *  Add an item to the funnel. Creates a funnelItem (for in funnelList) and funnelVar 
 		 *	(for in allItems), with the property as the key of the funnelItem in funnelList
 		 *
-		 *	@function addItem
-		 *  @param id the ID of a partyItem  
+		 *  @param id The ID of a partyItem  
 		**/
 		addItem : function(id){
 			var count = 0;
@@ -73,11 +74,10 @@ var funnel = (function(){
 			
 		},
 		/**
-		 *  //buggy
+		 *  //buggy --
 		 *	Checks the total circle holding space, if full switch with object in 
 		 *	next or previous circle, else simply add the item to the next or previous circle
 		 *	
-		 *	@function switchCircle  
 		**/
 		switchCircle : function(key){
 			//first check if next circle has undefined slots
@@ -108,8 +108,7 @@ var funnel = (function(){
 		/**
 		 *  Removes an item from the funnelList and from allItems
 		 *
-		 *	@function removeItem
-		 *	@param key the ID of the funnelItem as in funnelList
+		 *	@param key The ID of the funnelItem as in funnelList
 		**/
 		removeItem : function(key){
 			console.log("remove item with key: " + key);
@@ -122,7 +121,6 @@ var funnel = (function(){
 		/**
 		 *  Returns the amount of circles the funnel consists of
 		 *
-		 *	@function getCircles  
 		**/
 		getCircles : function(){
 			return circles;
@@ -130,8 +128,7 @@ var funnel = (function(){
 		/**
 		 * Returns funnelVar as in own allItems
 		 *
-		 *	@function getFunnelItem  
-		 *	@param key the ID as a property in allItems
+		 *	@param key The ID as a property in allItems
 		**/
 		getFunnelItem : function(key){
 			return allItems['key_' + key];
@@ -139,8 +136,6 @@ var funnel = (function(){
 		/**
 		 *  Returns the total funnel size (in pixels)
 		 *
-		 *	@function getFunnelWidth
-		 *  
 		**/
 		getFunnelWidth : function(){
 			return funnelWidth;
@@ -154,6 +149,7 @@ var funnel = (function(){
  *	This object contains the funnelItem selector and circle it currently is at.
  *
  *	@constructor funnelVar
+ *	@example var funnelObject = funnelVar();
 **/
 var funnelVar = function(){
 	var key, element = {}; // selector / circle
@@ -163,7 +159,7 @@ var funnelVar = function(){
 		 *	Initializes the funnelVar to setup its key (as it is in funnelList).
 		 *	this method also sets up the element object that gets returned after building it in the DOM
 		 *
-		 *	@param newKey the key from the funnelItem in funnelList
+		 *	@param newKey The key from the funnelItem in funnelList
 		**/
 		init : function(newKey){
 			key = newKey;
@@ -172,7 +168,7 @@ var funnelVar = function(){
 		/**
 		 *	Sets the circle this Item is at in the element Object
 		 *
-		 *	@param circle circle number to be set to
+		 *	@param circle Circle number to be set to
 		**/
 		setCircle : function(circle){
 			element.circle = circle;
