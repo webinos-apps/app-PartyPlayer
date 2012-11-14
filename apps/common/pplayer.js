@@ -28,7 +28,7 @@ Item <|-- VideoItem
 
 
 
-'use strict'
+'use strict';
 
 
 /**
@@ -48,15 +48,14 @@ var partyplayer = partyplayer || {};
  * @param artist String representing the artist
  * @param url String representing the URL from which it can be retrieved
  */
-partyplayer._Item = function(title, artist, url)
-{
+partyplayer._Item = function(title, artist, url) {
     this._class = 'base';
     this.title = title;
     this.artist = artist;
     this.url = url;
     this.isVideoItem = function() { return this._class === 'VideoItem'; };
     this.isAudioItem = function() { return this._class === 'AudioItem'; };
-}
+};
 
 
 /**
@@ -71,22 +70,21 @@ partyplayer._Item = function(title, artist, url)
  * @augments partyplayer._Item
  * @example
  *   var a = new AudioItem(
- *       'Nederwiet', 'Doe Maar', 'Skunk',
- *       'http://xyz/bh.mp3', 'BASE64STRINGLIKESO=');
+ *       'Nederwiet', 'Doe Maar', 'http://xyz/bh.mp3',
+ *       'Skunk', 'BASE64STRINGLIKESO=');
  *
  *   a.isAudioItem();       // true
  *   a.isVideoItem();       // false
  */
-partyplayer.AudioItem = function(title, artist, url, album, cover)
-{
+partyplayer.AudioItem = function(title, artist, url, album, cover) {
     this._class = 'AudioItem';
     this.title = title;
     this.artist = artist;
     this.url = url;
     this.album = album;
     this.cover = cover;
-}
-partyplayer.AudioItem.prototype = new partyplayer._Item;
+};
+partyplayer.AudioItem.prototype = new partyplayer._Item();
 
 
 /**
@@ -106,15 +104,14 @@ partyplayer.AudioItem.prototype = new partyplayer._Item;
  *   v.isAudioItem();       // false
  *   v.isVideoItem();       // true
  */
-partyplayer.VideoItem = function(title, artist, url, thumbnail)
-{
+partyplayer.VideoItem = function(title, artist, url, thumbnail) {
     this._class = 'VideoItem';
     this.title = title;
     this.artist = artist;
     this.url = url;
     this.thumbnail = thumbnail;
-}
-partyplayer.VideoItem.prototype = new partyplayer._Item;
+};
+partyplayer.VideoItem.prototype = new partyplayer._Item();
 
 /*
 @startuml common_classes_message.png
@@ -143,25 +140,20 @@ partyplayer.Message = function(namespace,cmd, ref, payload)
     //eval(namespace+"."+cmd+"("+payload+")");
     this.cmd = cmd;
     this.payload=payload;
-}
+};
 
 
 /**
  * Convert JSON-string to partyplayer message
  * @TODO: needs to be tested
  **/
-partyplayer.parseMessage = function (msg)
-{	
-	if (msg.version == 1)
-	{
-		msg = new partyplayer.Message(msg.type,msg.cmd,msg.payload,1);
-		return msg;	
+partyplayer.parseMessage = function (msg) {	
+    var ret = null;
+	if (msg.version === 1) {
+		ret = new partyplayer.Message(msg.type,msg.cmd,msg.payload,1);
 	}
-	else
-	{
-		return false;
-	}
-}
+	return ret;	
+};
 
 /**
  * Convert MSGtoJSONString
@@ -192,7 +184,7 @@ partyplayer.User = function(id, alias)
 {
     this.id = id;
     this.alias = alias;
-}
+};
 
 
 /*
@@ -212,11 +204,8 @@ class FunnelItem {
  * @param itemID the itemID in the collection
  * @param hitpoints the "status" of the item 
  */
-partyplayer.FunnelItem = function(itemID, hitpoints)
-{
+partyplayer.FunnelItem = function(itemID, hitpoints) {
     this.itemID = itemID;
     this.hitpoints = hitpoints;
-}
-
-
+};
 
