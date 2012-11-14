@@ -35,8 +35,9 @@ var visualFunnel = function(name, selector){
 			end: -180,
 			dir: -1
 		};
-		$(selector).animate({path : new $.path.arc(arc_params)}, 40000, function(){
+		$(selector).animate({path : new $.path.arc(arc_params)}, 20000, function(){
 			console.log("end of arc");
+			that.nextCircle(selector);
 		});
 	};
 	
@@ -44,25 +45,24 @@ var visualFunnel = function(name, selector){
 		funnelSize = funnel;
 		allCircles = maxCircles;
 		step = funnelSize / maxCircles;
-		circles = maxCircles;
 		$('div#funnel').css({
 			width: funnelSize,
 			height: funnelSize
 		});
-		for(var i = 0; i < maxCircles; i++){
-			$('<div class="funnelCircle" circle=' + i + '></div>').appendTo('div#funnel').css({
-				width: (circles * step),
-				height: (circles * step)
+		for(var i = 0; i < allCircles; i++){
+			$('<div class="funnelCircle" circle=' + (i+1) + '></div>').appendTo('div#funnel').css({
+				width: ((i+1) * step),
+				height: ((i+1) * step)
 			});
-			circles--;
 		}
 	};
 	that.renderSingle = function(key){
 		var element = {};
 		element.selector = 'div[_funnelItemID=' + key + ']';
 		element.circle = allCircles;
-		$('<div class="funnelObject" _funnelItemID=' + key + '>funnelItemID: ' + key + '</div>').appendTo('.funnelCircle[circle=0]');
-		startArc(element.selector, allCircles);
+		console.log("render at: " + element.circle);
+		$('<div class="funnelObject" _funnelItemID=' + key + '>funnelItemID: ' + key + '</div>').appendTo('.funnelCircle[circle=' + element.circle + ']');
+		startArc(element.selector, element.circle);
 		return element;
 	};
 	that.nextCircle = function(selector){
@@ -71,6 +71,17 @@ var visualFunnel = function(name, selector){
 		var key = $(selector).attr('_funnelItemID');
 		var circle = funnel.getFunnelItem(key).getCircle();
 		circle--;
+		funnel.getFunnelItem(key).setCircle(circle);
+		console.log("next circle");
+		startArc(selector, circle);
+	};
+	that.prevCircle = function(selector){
+		console.log("stop current animation");
+		$(selector).stop(true);
+		var key = $(selector).attr('_funnelItemID');
+		var circle = funnel.getFunnelItem(key).getCircle();
+		circle++;
+		console.log("prev circle");
 		funnel.getFunnelItem(key).setCircle(circle);
 		startArc(selector, circle);
 	};

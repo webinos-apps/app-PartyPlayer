@@ -8,8 +8,8 @@ Object.size = function(obj) {
 };
 
 $(document).ready(function(){
-	funnelViz.setupCircles(1300, funnel.getCircles());
-	funnel.addItem(2);
+	funnelViz.setupCircles(1500, funnel.getCircles());
+	//funnel.addItem(2);
 });
 
 var funnel = (function(){
