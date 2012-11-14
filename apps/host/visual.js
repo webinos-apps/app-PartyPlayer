@@ -65,6 +65,11 @@ var visualFunnel = function(name, selector){
 		startArc(element.selector, element.circle);
 		return element;
 	};
+	that.destroySingle = function(selector){
+		console.log("remove element: " +selector);
+		$(selector).stop(true);
+		$(selector).remove();
+	};
 	that.nextCircle = function(selector){
 		console.log("stop current animation");
 		$(selector).stop(true);

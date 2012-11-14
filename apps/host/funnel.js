@@ -30,19 +30,20 @@ var funnel = (function(){
 				var fnO = funnelObject();
 				allItems['key_' + key] = fnO;
 				fnO.init(key);
+			} else {
+				console.log("funnel full");
 			}
 			console.log(allItems);
 			console.log(funnelList);
 			
 		},
-		removeItem : function(slot){
-			console.log("removing item at slot: " + slot);
-			var funnelObject = funnelSlots[slot];
-			var key = funnelObject.getKey();
-			funnelObject.stop();
+		removeItem : function(key){
+			console.log("remove item with key: " + key);
+			var fnO = allItems['key_' + key];
+			funnelViz.destroySingle(fnO.getSelector());
 			funnelList.removeItem(key);
-			funnelSlots[(slot)] = null;
-			console.log(funnelSlots);
+			delete allItems['key_' + key];
+			console.log(allItems);
 			console.log(funnelList);
 		},
 		getCircles : function(){
