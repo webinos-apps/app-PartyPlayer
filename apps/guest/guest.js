@@ -13,7 +13,7 @@ $(document).ready(function(){
             log('Waiting for protocol implementation');
         });
     });
-    
+      
 // init userName functionality
     userName.init();
 });
@@ -32,7 +32,7 @@ var userName = {
 		userName.name = name;
 		//send userName to host
 	    partyplayer.shareItem = function(item){
-	        channel.send(JSON.stringify(name+" has joined the party!"));
+	    	channel.send(JSON.stringify(name+" has joined the party!"));
 	        //return: userId
 	    };
 		$('#aliasDiv').fadeOut(200, function(){
@@ -148,6 +148,9 @@ var shareFiles={
 			));
 			//example syntax: 
 			//{"type":"collection","cmd":"addItem","args":{"userID":1,"item":{"version":1,"filename":"michael jackson - bad.mp3","title":"Bad","artist":"Michael Jackson","mediatype":"audio","mimetype":"audio/mp3","screenshot":"base64/???","screenshotURI":"http://youtube.com/screenshot.png","duration":"00:03:55","contentType":"onDemand","contentSrc":"file","URI":"","src":" "}}}
+			//{"type":"collection","cmd":"addItem","args":{"userID":"anton","item":{"version":1,"filename":"michael jackson - bad.mp3","title":"Bad","artist":"Michael Jackson","mediatype":"audio","mimetype":"audio/mp3","screenshot":"base64/???","screenshotURI":"http://youtube.com/screenshot.png","duration":"00:03:55","contentType":"onDemand","contentSrc":"file","URI":"","src":" "}}}
+
+
 		};
 	},
 	init:function(){
