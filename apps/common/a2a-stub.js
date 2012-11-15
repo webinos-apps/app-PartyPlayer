@@ -77,6 +77,11 @@ var webinos = {
                 log('Your browser does not support websockets!');
             }
         },
+
+        reset: function() {
+            log('Sending reset command...');
+            ws.send(JSON.stringify({type:'command', action:'reset'}));
+        },
     }),
 };
 
@@ -84,8 +89,7 @@ var webinos = {
 $(document).ready(function(){
     $('body').append('<div style="position:absolute;background:black;color:white;top:0;right:0;text-align:right">' +
         'app2app Stub Contol &nbsp;&nbsp;' +
-        //'<input type=button value=Init onclick=javascript:alert("haha");>' +
-        '<input type=button value=Reset onclick=javascript:alert("TODO: implement reset (send reset cmd to stub server");>' +
+        '<input type=button value=Reset onclick=javascript:webinos.app2app.reset();>' +
         '</div>');
 });
 

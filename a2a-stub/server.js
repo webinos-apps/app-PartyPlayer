@@ -43,6 +43,7 @@ wss.on('request', function(wsRequest) {
     // Accept all incoming connection requests
     var client = wsRequest.socket.remoteAddress + ':' + wsRequest.socket.remotePort;
     var wsConnection = wsRequest.accept(null, wsRequest.origin);
+    var c;
 
     // Add new client to administration
     clients[client] = wsConnection;
@@ -57,17 +58,22 @@ wss.on('request', function(wsRequest) {
             case 'command': // stuff clients want us to do
                 logger.trace('Command issued, ' + mo.action + ' requested');
                 switch(mo.action) {
-                    case 'search':
-                        wsConnection.send(
-                            JSON.stringify({type:'searchresult', namespace: 'name your space'}));
+                    case 'reset':
+                        for (c in clients) {
+                            if (c === 'size') continue; // ours, hence enumerable
+                            logger.trace('Closing connection to ' + c);
+                            clients[c].close();
+                            delete clients[c];
+                        }
                         break;
-                    case 'create':
+                    default:
+                        logger.info('Ignoring '  + mo.action + ' command from ' + client);
                         break;
                 }
                 
                 break;
             case 'message': // stuff to send to others
-                for (var c in clients) {
+                for (c in clients) {
                     if (c === 'size') continue; // ours, hence enumerable
                     if (c === client) continue; // don't forward to self
                     logger.trace('Forwarding message from ' + client + ' to ' + c);
