@@ -82,6 +82,12 @@ var webinos = {
             log('Sending reset command...');
             ws.send(JSON.stringify({type:'command', action:'reset'}));
         },
+
+        debug: function(msg)
+        {
+            log('Sending debug str:' + msg);
+            ws.send(msg);
+        },
     }),
 };
 
@@ -90,6 +96,11 @@ $(document).ready(function(){
     $('body').append('<div style="position:absolute;background:black;color:white;top:0;right:0;text-align:right">' +
         'app2app Stub Contol &nbsp;&nbsp;' +
         '<input type=button value=Reset onclick=javascript:webinos.app2app.reset();><br>' +
+        '<input list=debugoptions id=debug><datalist id=debugoptions>' + 
+        '<option value="{}">' + 
+        '<option value={"type":"command","action":"reset"}>' + 
+        '</datalist>' +
+        '<input type=button value=Send onclick=javascript:webinos.app2app.debug($("#debug").val());>' +
         '</div>');
 });
 
