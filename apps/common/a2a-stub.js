@@ -29,7 +29,6 @@ var webinos = {
 
         createChannel: function(ns, properties, authCB, msgCB)
         {
-            //createCB = callback;
             log('createChannel invoked, ns=' + ns);
             ws.send(JSON.stringify({type:'command', action:'create', namespace: ns}));
             messageCB = msgCB;
@@ -78,7 +77,8 @@ var webinos = {
             }
         },
 
-        reset: function() {
+        reset: function()
+        {
             log('Sending reset command...');
             ws.send(JSON.stringify({type:'command', action:'reset'}));
         },
@@ -89,7 +89,7 @@ var webinos = {
 $(document).ready(function(){
     $('body').append('<div style="position:absolute;background:black;color:white;top:0;right:0;text-align:right">' +
         'app2app Stub Contol &nbsp;&nbsp;' +
-        '<input type=button value=Reset onclick=javascript:webinos.app2app.reset();>' +
+        '<input type=button value=Reset onclick=javascript:webinos.app2app.reset();><br>' +
         '</div>');
 });
 

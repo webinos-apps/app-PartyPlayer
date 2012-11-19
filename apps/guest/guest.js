@@ -39,8 +39,12 @@ var userName = {
 		//send userName to host
 		partyplayer.joinUser(name);
 	    
-	    //partyplayer.shareItem(new partyplayer.AudioItem('Nederwiet', 'Doe Maar', 'Skunk', 'http://localhost:10888/library/nederwiet.mp3'));
-	    
+	    partyplayer.shareItem = (function(item){
+            log(name + ' has joined the party');
+	        channel.send(JSON.stringify({join: name}));
+	        //return: userId
+	    }());
+
 		$('#aliasDiv').fadeOut(200, function(){
 			$('#aliasDiv').remove();
 			//after choosing an alias init mainMenu
@@ -51,7 +55,7 @@ var userName = {
 		$('#guestApp').append('<div id="aliasDiv"><p>Alias:</p><input type="text" id="aliasText" value="<default Webinos ID>"/><button type="button" id="aliasButton">Alias</button></div>');
 		$('#aliasButton').bind("click", userName.btnClick);
 	}		
-}
+};
 
 var mainMenu = {
 	/*
@@ -70,7 +74,7 @@ var mainMenu = {
 	},
 	init:function(){
 		//welcome message
-		$('#guestApp').append('<p id="welcome">You are known as: '+userName.name+'</p>')
+		$('#guestApp').append('<p id="welcome">You are known as: '+userName.name+'</p>');
 		//add Menu
 		$('#guestApp').append('<ul id="homeMenu"></ul>');
 		var homeMenuItems = '<li class="homeMenuItem"><button class="menuBtn">Collection</button></li>';
@@ -80,7 +84,7 @@ var mainMenu = {
 		//addEvents
 		$('#addFiles').bind("click", mainMenu.addFiles);
 	}
-}
+};
 
 var addFiles ={
 	addList:[],

@@ -38,17 +38,39 @@ logger.info('WebSocket server created, is accepting ALL requests');
 
 var clients = {};
 clients.size = 0;
+var host = null, hostKey = null;
 
 wss.on('request', function(wsRequest) {
-    // Accept all incoming connection requests
-    var client = wsRequest.socket.remoteAddress + ':' + wsRequest.socket.remotePort;
-    var wsConnection = wsRequest.accept(null, wsRequest.origin);
-    var c;
+    var client = wsRequest.key;
 
-    // Add new client to administration
-    clients[client] = wsConnection;
-    clients.size++;
-    logger.info(client + ' connected, #clients now ' + clients.size);
+    // Accept all incoming connection requests, but separate host and guest
+    var wsConnection = wsRequest.accept(null, wsRequest.origin);
+
+    logger.info('Connection request from ' + wsRequest.socket.remoteAddress + ':' + wsRequest.socket.remotePort + ' having key ' + client);
+
+    switch (wsRequest.resourceURL.pathname) {
+    case '/guest':
+        logger.info('New guest connection from ' + client);
+        clients[client] = wsConnection;
+        clients.size++;
+        logger.trace(client + ' connected, #clients now ' + clients.size);
+        break;
+    case '/host':
+        logger.info('New host connection from ' + client);
+        if (hostKey) {
+            logger.info('Replacing host ' + client);
+            host.close();
+        }
+        hostKey = client;
+        host = wsConnection;
+        break;
+    default:
+        wsConnection.close();
+        logger.error('Invalid connection from ' + client);
+        return;
+    }
+
+
 
     // Handle incoming messages
     wsConnection.on('message', function(m) {
@@ -59,7 +81,7 @@ wss.on('request', function(wsRequest) {
                 logger.trace('Command issued, ' + mo.action + ' requested');
                 switch(mo.action) {
                     case 'reset':
-                        for (c in clients) {
+                        for (var c in clients) {
                             if (c === 'size') continue; // ours, hence enumerable
                             logger.trace('Closing connection to ' + c);
                             clients[c].close();
@@ -73,7 +95,7 @@ wss.on('request', function(wsRequest) {
                 
                 break;
             case 'message': // stuff to send to others
-                for (c in clients) {
+                for (var c in clients) {
                     if (c === 'size') continue; // ours, hence enumerable
                     if (c === client) continue; // don't forward to self
                     logger.trace('Forwarding message from ' + client + ' to ' + c);
@@ -84,7 +106,6 @@ wss.on('request', function(wsRequest) {
                 logger.warn('Unknown message type!');
                 break;
         }
-
     });
 
     // Remove the client from the administration
