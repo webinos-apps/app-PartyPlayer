@@ -99,7 +99,7 @@ $(document).ready(function(){
         '<input list=debugoptions id=debug><datalist id=debugoptions>' + 
         '<option value="{}">' + 
         '<option value={"type":"command","action":"reset"}>' + 
-        '<option value={"type":"message","function":"join","name":"Batman"}>' + 
+        '<option value={"type":"message","action":"join","name":"Batman"}>' + 
         '</datalist>' +
         '<input type=button value=Send onclick=javascript:webinos.app2app.debug($("#debug").val());>' +
         '</div>');

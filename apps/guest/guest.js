@@ -19,7 +19,7 @@ $(document).ready(function(){
 });
 
 partyplayer.joinUser = function(name){
-	partyplayer.channel.send({"name":name});
+	partyplayer.channel.send({"function":"join","name":name});
     log(name+" joining");
 	//return: userId
 };

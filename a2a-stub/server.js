@@ -48,67 +48,78 @@ wss.on('request', function(wsRequest) {
 
     logger.info('Connection request from ' + wsRequest.socket.remoteAddress + ':' + wsRequest.socket.remotePort + ' having key ' + client);
 
-    switch (wsRequest.resourceURL.pathname) {
-    case '/guest':
-        logger.info('New guest connection from ' + client);
-        clients[client] = wsConnection;
-        clients.size++;
-        logger.trace(client + ' connected, #clients now ' + clients.size);
-        break;
-    case '/host':
-        logger.info('New host connection from ' + client);
-        if (hostKey) {
-            logger.info('Replacing host ' + client);
-            host.close();
-        }
-        hostKey = client;
-        host = wsConnection;
-        break;
-    default:
-        wsConnection.close();
-        logger.error('Invalid connection from ' + client);
-        return;
+    var request_actions = {
+        'guest': function() {
+            clients[client] = wsConnection;
+            clients.size++;
+            logger.trace(client + ' connected, #clients now ' + clients.size);
+        },
+        'host': function() {
+            if (hostKey) {
+                logger.info('Replacing host ' + client);
+                host.close();
+            }
+            hostKey = client;
+            host = wsConnection;
+        },
+    };
+
+    var role = wsRequest.resourceURL.pathname.split('/')[1];
+    if (role in request_actions) {
+        logger.info('New connection request as ' + role + ' from ' + client);
+        request_actions[role]();
+    } else {
+        logger.warn('Connection request with unknown role ' + role + ' from ' + client);
     }
 
-
+    var message_actions = {
+        // Commands is what can be sent to the a2a stub server itself
+        'command': function(o) {
+            logger.trace('Handling msg with type=' + o.type + ' and action=' + o.action);
+            switch(o.action) {
+            case 'reset':
+                for (var c in clients) {
+                    if (c === 'size') continue; // ours, hence enumerable
+                    logger.trace('Closing connection to ' + c);
+                    clients[c].close();
+                }
+                clients = {};
+                break;
+            default:
+                logger.warn('Ignoring ' + o.type + ' message with unknown action ' + o.action);
+            }
+        },
+        // All other traffic is called message and is to be forwarded
+        'message': function(o) {
+            if (client in clients) {
+                // from client so send to host
+                logger.trace('Forwarding message from client ' + c + ' to host');
+                host.send(JSON.stringify(o));
+            } else {
+                // from host, send to clients
+                for (var c in clients) {
+                    if (c === 'size') continue; // ours, hence enumerable
+                    logger.trace('Forwarding message from host to ' + c);
+                    clients[c].send(JSON.stringify(o));
+                }
+            }
+        },
+    };
 
     // Handle incoming messages
     wsConnection.on('message', function(m) {
         logger.trace(client + ' sent [' + m.utf8Data + ']');
         var mo = JSON.parse(m.utf8Data);
-        switch(mo.type) {
-            case 'command': // stuff clients want us to do
-                logger.trace('Command issued, ' + mo.action + ' requested');
-                switch(mo.action) {
-                    case 'reset':
-                        for (var c in clients) {
-                            if (c === 'size') continue; // ours, hence enumerable
-                            logger.trace('Closing connection to ' + c);
-                            clients[c].close();
-                            delete clients[c];
-                        }
-                        break;
-                    default:
-                        logger.info('Ignoring '  + mo.action + ' command from ' + client);
-                        break;
-                }
-                
-                break;
-            case 'message': // stuff to send to others
-                for (var c in clients) {
-                    if (c === 'size') continue; // ours, hence enumerable
-                    if (c === client) continue; // don't forward to self
-                    logger.trace('Forwarding message from ' + client + ' to ' + c);
-                    clients[c].send(m.utf8Data);
-                }
-                break;
-            default:
-                logger.warn('Unknown message type!');
-                break;
+
+        if (mo.type in message_actions) {
+            message_actions[mo.type](mo);
+        } else {
+            logger.warn('Message with unknown type ' + mo.type);
         }
+
     });
 
-    // Remove the client from the administration
+    // Handle leaving clients
     wsConnection.on('close', function(reasonCode, reasonString) {
         var peer = wsConnection.socket._peername.address + ':' + wsConnection.socket._peername.port;
         logger.trace('Connection closed by ' + peer);
