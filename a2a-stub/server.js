@@ -94,13 +94,24 @@ wss.on('request', function(wsRequest) {
             if (client in clients) {
                 // from client so send to host
                 logger.trace('Forwarding message from client ' + c + ' to host');
+                o.key = client;
                 host.send(JSON.stringify(o));
             } else {
-                // from host, send to clients
-                for (var c in clients) {
-                    if (c === 'size') continue; // ours, hence enumerable
-                    logger.trace('Forwarding message from host to ' + c);
-                    clients[c].send(JSON.stringify(o));
+                // from host, send to all clients except if key field present
+                var key = o.key;
+                if (typeof key === 'string') {
+                    if (clients[key]) {
+                        delete o.key;
+                        clients[key].send(JSON.stringify(o));
+                    } else {
+                        logger.warn('Server meant specific client but I don\'t know ' + key);
+                    }
+                } else {
+                    for (var c in clients) {
+                        if (c === 'size') continue; // ours, hence enumerable
+                        logger.trace('Forwarding message from host to ' + c);
+                        clients[c].send(JSON.stringify(o));
+                    }
                 }
             }
         },
