@@ -1,4 +1,3 @@
-
 /** 
  * Creates a new Collection Library with the provided Name
  **/
@@ -74,7 +73,8 @@ Collection.prototype.removeItem = function(itemID){
 Collection.prototype.getItem = function(itemID){
 	if (this.coll.hasOwnProperty(itemID)){
 		item = this.coll[itemID]
-		return ({"itemID":itemID,"userID":item.userID, "item": item.item})
+		//return ({"itemID":itemID,"userID":item.userID, "item": item.item})
+		return item;
 	}
 	else{
 		return false;

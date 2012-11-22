@@ -11,7 +11,7 @@
     top: 0;
     bottom: 0;
     margin: auto;
-    border: 5px solid black;
+    border: 2px dotted black;
     border-radius: 100%;
 }
 #funnel .funnelObject{

@@ -7,8 +7,9 @@
  *	@example 
  *	//used for functional pattern
  *	var childClass = function(){
- *		var that = Visual('VisualFunnel', 'div#funnel');
- *		privateMethod = function(){}; //define private function
+ *		var varName; //define private field
+ *		var privateMethod = function(){}; //define private function
+ *		var that = Visual('VisualFunnel', 'div#funnel'); //construct class using Visual as baseclass
  *		that.publicMethod = function(){}; //define public function
  *		return that; //return it
  *	}
@@ -58,6 +59,7 @@ var Visual = function(name, selector){
  *	See for this mechanism the Visual documentation.
  *	
  *	@example
+ *	//See Visual for more in-depth example
  *	var funnelViz = visualFunnel('name', 'div#funnel');
  *	funnelViz.function(parameters);
  *	@class visualFunnel
@@ -87,9 +89,11 @@ var visualFunnel = function(name, selector){
 			end: -180,
 			dir: -1
 		};
-		$(selector).animate({path : new $.path.arc(arc_params)}, 20000, function(){
+		//$(selector).appendTo('#funnel .funnelcircle[circle=' + circle-- + ']');
+		$(selector).animate({path : new $.path.arc(arc_params)}, 2000, function(){
 			console.log("end of arc");
-			that.nextCircle(selector);
+			//funnel.switchCircle($(selector).attr('_funnelItemID'), true);
+			funnelViz.nextCircle(selector);
 		});
 	};
 	
@@ -177,13 +181,11 @@ var visualFunnel = function(name, selector){
 		console.log("stop current animation");
 		$(selector).stop(true);
 		var key = $(selector).attr('_funnelItemID');
-		var circle = funnel.getFunnelItem(key).getCircle();
 		circle++;
 		console.log("prev circle");
 		funnel.getFunnelItem(key).setCircle(circle);
 		startArc(selector, circle);
 	};
-	
 	return that;
 }
 
