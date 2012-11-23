@@ -132,15 +132,14 @@ wss.on('request', function(wsRequest) {
 
     // Handle leaving clients
     wsConnection.on('close', function(reasonCode, reasonString) {
-        var peer = wsConnection.socket._peername.address + ':' + wsConnection.socket._peername.port;
-        logger.trace('Connection closed by ' + peer);
-        var client = clients[peer];
-        if (client !== null) {
-            delete clients.peer;
+        logger.trace('Connection closed by ' + client);
+        if (client in clients) {
+            delete clients[client];
             clients.size--;
-            logger.info(peer + ' has left the building, #clients now ' + clients.size);
+            host.send(JSON.stringify({type:'message',action:'leave',key:client}));
+            logger.info(client + ' has left the building, #clients now ' + clients.size);
         } else {
-            logger.warn('Somebody left, but I don\'t know who: ' + peer);
+            logger.info('Host left. It\'s my party and I cry if I want to.');
         }
     });
 });
