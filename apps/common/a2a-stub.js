@@ -53,18 +53,8 @@ var webinos = {
                 ws.onmessage = function (evt) 
                 { 
                     log('received [' + evt.data + ']');
-                    var msg = JSON.parse(evt.data);
-
-                    switch (msg.type) {
-                    case 'message':
-                        if (typeof messageCB === 'function') {
-                            (messageCB)(JSON.parse(msg.payload));
-                            break;
-                        }
-                        // NO break!
-                    default:
-                        log('Don\'t know what to do with [' + evt.data + ']');
-                        break;
+                    if (typeof messageCB === 'function') {
+                        (messageCB)(JSON.parse(evt.data));
                     }
                 };
                 ws.onclose = function()
