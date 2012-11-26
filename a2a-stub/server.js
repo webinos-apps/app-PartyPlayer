@@ -136,7 +136,7 @@ wss.on('request', function(wsRequest) {
         if (client in clients) {
             delete clients[client];
             clients.size--;
-            host.send(JSON.stringify({type:'message',action:'leave',key:client}));
+            host.send(JSON.stringify({type:'message',payload: {ns: 'main', cmd: 'leave'}, key:client}));
             logger.info(client + ' has left the building, #clients now ' + clients.size);
         } else {
             logger.info('Host left. It\'s my party and I cry if I want to.');

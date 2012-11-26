@@ -33,7 +33,7 @@ var webinos = {
             ws.send(JSON.stringify({type:'command', action:'create', namespace: ns}));
             messageCB = msgCB;
             return { send: function(message) {
-                log('sending message ' + message);
+                log('Channel.send invoked with ' + JSON.stringify(message));
                 ws.send(JSON.stringify({type:'message', payload: message}));
             }};
         },
@@ -54,7 +54,8 @@ var webinos = {
                 { 
                     log('received [' + evt.data + ']');
                     if (typeof messageCB === 'function') {
-                        (messageCB)(JSON.parse(evt.data));
+                        var msg = JSON.parse(evt.data);
+                        (messageCB)(msg.payload, msg.key);
                     }
                 };
                 ws.onclose = function()
@@ -89,7 +90,7 @@ $(document).ready(function(){
         '<input list=debugoptions id=debug><datalist id=debugoptions>' + 
         '<option value="{}">' + 
         '<option value={"type":"command","action":"reset"}>' + 
-        '<option value={"type":"message","action":"join","name":"Batman"}>' + 
+        '<option value={"type":"message","payload":{"ns":"main","cmd":"join","params":{"name":"pietje"}}}>' + 
         '</datalist>' +
         '<input type=button value=Send onclick=javascript:webinos.app2app.debug($("#debug").val());>' +
         '</div>');

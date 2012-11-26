@@ -132,14 +132,14 @@ class Message {
  * @param ns - the message namespace
  * @param cmd - the function call
  * @param ref - identifier for the call 
- * @param payload - the payload of the message,as as struct
+ * @param params - the parameters of the function, as as struct
  */
-partyplayer.Message = function(namespace,cmd, ref, payload)
+partyplayer.Message = function( namespace, cmd, ref, params )
 {
+    this.ns = namespace;
     this.ref = ref || undefined; 
-    //eval(namespace+"."+cmd+"("+payload+")");
     this.cmd = cmd;
-    this.payload=payload;
+    this.params = params;
 };
 
 
@@ -147,10 +147,10 @@ partyplayer.Message = function(namespace,cmd, ref, payload)
  * Convert JSON-string to partyplayer message
  * @TODO: needs to be tested
  **/
-partyplayer.parseMessage = function (msg) {	
+partyplayer.parseMessage = function( msg ) {	
     var ret = null;
 	if (msg.version === 1) {
-		ret = new partyplayer.Message(msg.type,msg.cmd,msg.payload,1);
+		ret = new partyplayer.Message(msg.type, msg.cmd, msg.payload, 1);
 	}
 	return ret;	
 };
@@ -208,4 +208,37 @@ partyplayer.FunnelItem = function(itemID, hitpoints) {
     this.hitpoints = hitpoints;
     this.votes = 100;
 };
+
+
+/**
+ * Initialises the websocket and set up the communication protocol
+ * @param hostorguest either 'host' or 'guest', relevant for a2a-stub behaveour
+ */
+partyplayer.init = function(hostorguest) {
+    var channel;
+
+    webinos.app2app.init('ws:localhost:10666/' + hostorguest, function() {
+        log('Connected to a2a stub server (as ' + hostorguest + ')');
+
+        channel = webinos.app2app.createChannel(
+            'partyplayer', null, null, function(msg, key) {
+                var func, handler;
+                if (msg.ns in partyplayer) {
+                    handler = 'on' + msg.cmd;
+                    if (handler in partyplayer[msg.ns]) {
+                        func = partyplayer[msg.ns][handler];
+                    }
+                }
+                if (typeof func === 'function') {
+                    func(msg.payload, msg.ref, key);
+                } else {
+                    log('Can\'t find handler partyplayer.' + msg.ns + '.on' + msg.cmd);
+                }
+        });
+
+        partyplayer.sendMessage = function(msg) {
+            channel.send(msg);
+        };
+    });
+}
 

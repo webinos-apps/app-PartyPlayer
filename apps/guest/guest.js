@@ -3,26 +3,20 @@
  */
 $(document).ready(function(){
 
-// init a2a-stub connection
-	var channel = null;
-
-    webinos.app2app.init('ws:localhost:10666/guest', function() {
-        log('Connected to a2a stub server (as guest)');
-
-        partyplayer.channel = webinos.app2app.createChannel('partyplayer', null, null, function() {
-            log('Waiting for protocol implementation');
-        });
-    });
-      
-// init userName functionality
+    partyplayer.init('guest');
     userName.init();
 });
 
 partyplayer.joinUser = function(name){
-	partyplayer.channel.send({"function":"join","name":name});
-    log(name+" joining");
-	//return: userId
+	partyplayer.sendMessage({ns:"main", cmd:"join", params:{name:name}});
+    log(name + " is joining...");
 };
+
+partyplayer.main = {};
+partyplayer.main.onwelcome = function(param, ref) {
+    log('onwelcome invoked!');
+};
+
 
 var userName = {
 	/*
@@ -51,7 +45,7 @@ var userName = {
 			mainMenu.init();
 		});
 	},
-	init:function(){	
+	init:function(){
 		$('#guestApp').append('<div id="aliasDiv"><p>Alias:</p><input type="text" id="aliasText" value="<default Webinos ID>"/><button type="button" id="aliasButton">Alias</button></div>');
 		$('#aliasButton').bind("click", userName.btnClick);
 	}		
