@@ -8,10 +8,9 @@ var users = {};
 
 partyplayer.main = {};
 partyplayer.main.onjoin = function(params, ref,key) {
-   
     uID = coll.addUser(params.name); //registration on application level
     users[key]=uID; //registration on connection level.
-    partyplayer.sendMessage({ns:"main", cmd:"welcome", key:key, params:{userID:uID}});
+    partyplayer.sendMessage({ns:"main", cmd:"welcome", key:key, params:{userID:uID,users:coll.getUsers()}});
     partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,userAlias:params.name}});
     log('join invoked!');
     getUsers();
@@ -43,6 +42,7 @@ partyplayer.main.onleave= function (params, ref,key) {
     } 
     delete users.key; 	
     getUsers();
+    getItems();
 }
 
 partyplayer.main.onaddItem = function (params, ref, key) {
@@ -51,6 +51,7 @@ partyplayer.main.onaddItem = function (params, ref, key) {
     if(itemID!=false){
 	partyplayer.sendMessage({ns:"main", cmd:"updateItem", params:{userID:uID,itemID:itemID,item:params.item}}); 
     }
+    getItems();
 }
 
 
@@ -65,6 +66,21 @@ function getUsers(){
     log("Currently "+nrUsers+" Users:"+str)
 }
 
+function getItems(){
+	itemCount = coll.getItemCount();
+	var str = ""; 	
+	for (t in itemCount){
+		if (t!="TOTAL"){
+			str+=coll.getItem(t)+":"+itemCount[t]+";";
+		}
+		else{
+			str+=t+":"+itemCount[t]+";";
+		}
+	}
+	console.log("COLLECTION="+str);
+}
+
+
     //////////// protocol implementation from here ////////////
 
     /*
@@ -74,7 +90,7 @@ function getUsers(){
         participant PartyHostApp as host
         group A guest initialises
             guest -> host : join(alias)
-            host -> guest : welcome(userID)
+            host -> guest : welcome(userID,users)
             note right : From now on all messages\nto the host include userID
             loop over collection
                 host -> guest : updateCollectionItem(userID,itemID, item)
