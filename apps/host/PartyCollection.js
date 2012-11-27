@@ -185,6 +185,10 @@ PartyCollection.prototype.addUser = function(userAlias){
 	return this.users.addItem(userAlias);
 }
 
+PartyCollection.prototype.updateUser = function(userID,userAlias){
+	return this.users.updateItem(userID,userAlias);
+}
+
 PartyCollection.prototype.removeUser = function(userID){
 	return this.users.removeItem(userID);
 }
@@ -193,5 +197,7 @@ PartyCollection.prototype.getItem = function(userID){
 	return this.users.getItem(userID);
 }
 
-
+PartyCollection.prototype.getUsers = function(){
+        return this.users.getItems();
+}
 
