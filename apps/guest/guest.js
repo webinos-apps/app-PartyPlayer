@@ -12,10 +12,32 @@ partyplayer.joinUser = function(name){
     log(name + " is joining...");
 };
 
+
+partyplayer.addItem = function(item){
+ 	partyplayer.sendMessage({ns:"main", cmd:"addItem", params:{userId:userId,item:item}});
+	log("adding Item");
+};
+
+
+
 partyplayer.main = {};
 partyplayer.main.onwelcome = function(param, ref) {
     log('onwelcome invoked!');
+    //mainMenu.init();
 };
+
+partyplayer.main.onupdatePlayer = function(param, ref) {
+    log('onupdatePlayer Invoked!');
+    //** If param.userId not in [userTable]
+    //->@TODO: User admininstartion
+    //log("param.userAlias + Joined the party"); 
+};
+
+partyplayer.main.onremovePlayer = function(param, ref) {
+    log('onremovePlayer Invoked!');
+    //->@TODO collection should be updated, as user is removed
+};
+
 
 
 var userName = {
@@ -35,7 +57,7 @@ var userName = {
 	    
 	    partyplayer.shareItem = (function(item){
             log(name + ' has joined the party');
-	        channel.send(JSON.stringify({join: name}));
+	        ///channel.send(JSON.stringify({join: name}));
 	        //return: userId
 	    }());
 
@@ -113,7 +135,9 @@ var addFiles ={
 	    if(localStorage[file.name]) return callback(JSON.parse(localStorage[file.name]));
 	}, 
 	fileSelect:function(event) {
+                log("fileselect");
 		var files = event.target.files;
+           
 	    var tempList=[];
 		//parse ID3 tags and store in temporary list
 		for(var i=0; i<files.length; i++){
@@ -122,7 +146,9 @@ var addFiles ={
 			*does not work in firefox... test with chrome 
 			*TODO find better ID3v2 parser
 			*/
-			addFiles.parseFile(files[i],function(tags){      		       		
+			
+			addFiles.parseFile(files[i],function(tags){ 
+                            		       		
 	       		tags.filename = files[i].name;
 	       		tags.version = 1;
 	       		tempList.push(tags);
