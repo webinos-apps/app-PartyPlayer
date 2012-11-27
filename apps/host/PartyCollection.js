@@ -181,8 +181,8 @@ function filterItem(item,filters){
 };
 
 
-PartyCollection.prototype.addUser = function(userAlias){
-	return this.users.addItem(userAlias);
+PartyCollection.prototype.addUser = function(user){
+	return this.users.addItem(user);
 }
 
 PartyCollection.prototype.updateUser = function(userID,userAlias){
