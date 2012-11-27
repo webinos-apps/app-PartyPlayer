@@ -230,7 +230,7 @@ partyplayer.init = function(hostorguest) {
                     }
                 }
                 if (typeof func === 'function') {
-                    func(msg.payload, msg.ref, key);
+                    func(msg.params, msg.ref, key);
                 } else {
                     log('Can\'t find handler partyplayer.' + msg.ns + '.on' + msg.cmd);
                 }
