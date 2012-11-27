@@ -7,6 +7,8 @@ $(document).ready(function(){
     userName.init();
 });
 
+var userID
+
 partyplayer.joinUser = function(name){
 	partyplayer.sendMessage({ns:"main", cmd:"join", params:{name:name}});
     log(name + " is joining...");
@@ -14,7 +16,7 @@ partyplayer.joinUser = function(name){
 
 
 partyplayer.addItem = function(item){
- 	partyplayer.sendMessage({ns:"main", cmd:"addItem", params:{userId:userId,item:item}});
+ 	partyplayer.sendMessage({ns:"main", cmd:"addItem", params:{userId:userID,item:item}});
 	log("adding Item");
 };
 
@@ -23,6 +25,8 @@ partyplayer.addItem = function(item){
 partyplayer.main = {};
 partyplayer.main.onwelcome = function(param, ref) {
     log('onwelcome invoked!');
+    userID = param.userID;
+    //do
     //mainMenu.init();
 };
 
@@ -174,7 +178,7 @@ var shareFiles={
 	share:function(item){
 		partyplayer.shareItem = function(item){
 			channel.send(JSON.stringify(
-				{"type":"collection","cmd":"addItem","args":{"userID":alias.userName,"item":item}}
+				{"ns":"main","cmd":"addItem","args":{"userID":alias.userName,"item":item}}
 			));
 			//example syntax: 
 			//{"type":"collection","cmd":"addItem","args":{"userID":1,"item":{"version":1,"filename":"michael jackson - bad.mp3","title":"Bad","artist":"Michael Jackson","mediatype":"audio","mimetype":"audio/mp3","screenshot":"base64/???","screenshotURI":"http://youtube.com/screenshot.png","duration":"00:03:55","contentType":"onDemand","contentSrc":"file","URI":"","src":" "}}}
