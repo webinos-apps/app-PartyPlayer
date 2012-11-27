@@ -8,7 +8,7 @@ var users = {};
 
 partyplayer.main = {};
 partyplayer.main.onjoin = function(params, ref,key) {
-    uID = coll.addUser(params.name); //registration on application level
+    uID = coll.addUser(params); //registration on application level
     users[key]=uID; //registration on connection level.
     partyplayer.sendMessage({ns:"main", cmd:"welcome", key:key, params:{userID:uID,users:coll.getUsers()}});
     partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,userAlias:params.name}});
@@ -61,7 +61,7 @@ function getUsers(){
     var nrUsers =0;
     for (t in players){
         nrUsers+=1;
-        str+=players[t]+",";
+        str+=players[t].name+",";
     }
     log("Currently "+nrUsers+" Users:"+str)
 }
