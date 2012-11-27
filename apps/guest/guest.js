@@ -10,7 +10,7 @@ $(document).ready(function(){
 var userID;
 
 partyplayer.joinUser = function(name){
-	partyplayer.sendMessage({ns:"main", cmd:"join", params:{name:name}});
+	partyplayer.sendMessage({ns:"main", cmd:"join", params:{name:name,thumbnail:"empty"}});
     log(name + " is joining...");
 };
 
