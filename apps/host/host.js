@@ -8,8 +8,9 @@ var users = {};
 
 partyplayer.main = {};
 partyplayer.main.onjoin = function(params, ref,key) {
-    users[key]=uID; //registration on connection level.
+   
     uID = coll.addUser(params.name); //registration on application level
+    users[key]=uID; //registration on connection level.
     partyplayer.sendMessage({ns:"main", cmd:"welcome", key:key, params:{userID:uID}});
     partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,userAlias:params.name}});
     log('join invoked!');
@@ -46,9 +47,9 @@ partyplayer.main.onleave= function (params, ref,key) {
 
 partyplayer.main.onaddItem = function (params, ref, key) {
     log('adding item');
-    itemID = coll.addItem(params.userID,param.item);
+    itemID = coll.addItem(params.userID,params.item);
     if(itemID!=false){
-	partyplayer.sendMessage({ns:"main", cmd:"updateItem", params:{userID:uID,itemID=itemID,item=param.item}}); 
+	partyplayer.sendMessage({ns:"main", cmd:"updateItem", params:{userID:uID,itemID:itemID,item:params.item}}); 
     }
 }
 
