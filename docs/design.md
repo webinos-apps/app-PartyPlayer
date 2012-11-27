@@ -35,7 +35,7 @@ A message consists of a header and params. The header consists of three paramete
 
 ![Protocol join](figures/protocol_join.png "A party guest client connects to the server").
 
-The guest sends his users' alias to the server. On success, it receives the `userID` to use for the rest of the session. Users may use the same alias. After doing the user administration, the server continues with sending the complete collection.
+The guest sends his users' alias to the server. On success, it receives the `userID` to use for the rest of the session as well as `users`, a collection of all `userID`-`userAlias` pairs. Users may use the same alias. After doing the user administration, the server continues with sending the complete collection.
 
 ###Sharing
 ![Protocol share](figures/protocol_share.png "A party guest shares content").
