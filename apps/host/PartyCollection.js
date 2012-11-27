@@ -1,7 +1,6 @@
 
 /** 
  * Creates a new Party Collection Library with the provided Name
- *
  **/
 function PartyCollection(name){	
 	this.name=name;
@@ -115,8 +114,10 @@ PartyCollection.prototype.getUsers = function ()
  **/
 PartyCollection.prototype.getItemCount = function (){
 	userMap={}
+        total=0;
 	for (var index in this.coll.getItems() ){
 		item = this.coll.getItem(index);
+		total+=1;
 		if (!userMap[item.userID]) {
   			userMap[item.userID] = 1;
 		}
@@ -124,7 +125,7 @@ PartyCollection.prototype.getItemCount = function (){
 			userMap[item.userID] +=1;
 		}
 	}
-	userMap["TOTAL"]=this.coll.length;		
+	userMap["TOTAL"]=total;		
 	return userMap;
 }
 
@@ -139,7 +140,6 @@ PartyCollection.prototype.getItemCount = function (){
 PartyCollection.prototype.getItems = function (userID, limit, filterCriteria){
 	result = [];
 	for (var index in this.coll.getItems() ){
-		//console.log(this.coll[index]);
 		tmpItem = this.coll.getItem(index);
 		if(userID!=0){
 			if (typeof filterCriteria=='undefined' ){
