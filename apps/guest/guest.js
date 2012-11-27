@@ -7,7 +7,7 @@ $(document).ready(function(){
     userName.init();
 });
 
-var userID
+var userID;
 
 partyplayer.joinUser = function(name){
 	partyplayer.sendMessage({ns:"main", cmd:"join", params:{name:name}});
@@ -24,9 +24,9 @@ partyplayer.addItem = function(item){
 
 partyplayer.main = {};
 partyplayer.main.onwelcome = function(param, ref) {
-    log('onwelcome invoked!');
     userID = param.userID;
-    //do
+    log('onwelcome invoked! userID = '+userID); 
+    //@TODO
     //mainMenu.init();
 };
 
@@ -41,6 +41,15 @@ partyplayer.main.onremovePlayer = function(param, ref) {
     log('onremovePlayer Invoked!');
     //->@TODO collection should be updated, as user is removed
 };
+
+partyplayer.main.onupdateItem = function (param, ref) {
+    log ('onUpdateItem Invoked; my userID='+userID)
+	if (param.userID != userID){
+		log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
+		//@TODO: client logic 
+	}
+};
+
 
 
 
