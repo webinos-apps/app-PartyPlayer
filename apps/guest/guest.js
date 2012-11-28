@@ -20,8 +20,6 @@ partyplayer.addItem = function(item){
 	log("adding Item");
 };
 
-
-
 partyplayer.main = {};
 partyplayer.main.onwelcome = function(param, ref) {
     userID = param.userID;
@@ -49,9 +47,6 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 		//@TODO: client logic 
 	//}
 };
-
-
-
 
 var userName = {
 	/*
