@@ -3,10 +3,10 @@ var coll = null;
 var users = {};
 
 partyplayer.main = {};
-partyplayer.main.onjoin = function(params, ref,key) {
+partyplayer.main.onjoin = function(params, ref, key) {
     uID = coll.addUser(params); //registration on application level
     users[key]=uID; //registration on connection level.
-    partyplayer.sendMessage({ns:"main", cmd:"welcome", key:key, params:{userID:uID,users:coll.getUsers()}});
+    partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID,users:coll.getUsers()}}, key);
     partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,userAlias:params.name}});
     log('join invoked!');
     getUsers();
@@ -20,7 +20,7 @@ partyplayer.main.onjoin = function(params, ref,key) {
 
 };
 
-partyplayer.main.onleave= function (params, ref,key) {
+partyplayer.main.onleave= function (params, ref, key) {
     log('leave invoked!');
     if (typeof params === 'undefined'){ //registered on protocol level
     if (typeof users[key] !== 'undefined'){
