@@ -74,7 +74,7 @@ var userName = {
 	        //return: userId
 	    }());
 
-		$('#aliasDiv').fadeOut(200, function(){
+		$('#userName').fadeOut(200, function(){
 			mainMenu.init();
 		});
 	},
@@ -93,7 +93,8 @@ var mainMenu = {
 	 * 		- "Share files with collection" -(Select files through the file API and add them to the partyCollection)
 	 */
 	addFiles: function(event){
-		$('#homeMenu').fadeOut(200, function(){
+		console.log(event);
+		$('#mainMenu').fadeOut(200, function(){
 			//init nextScreen
 			addFiles.init();
 		});
@@ -104,8 +105,8 @@ var mainMenu = {
 		//welcome message
 		$('#mainMenu #welcome').append(userName.name);
 		//get count and collection
-		partyplayer.getItemCount();
-		partyplayer.getItems();
+		//partyplayer.getItemCount();
+		//partyplayer.getItems();
 		//addEvents
 		$('#mainMenu #add').bind("click", mainMenu.addFiles);
 	}
@@ -185,16 +186,10 @@ var shareFiles={
 	 * @enduml
 	 */	
 	share:function(item){
-		partyplayer.shareItem = function(item){
-			channel.send(JSON.stringify(
-				{"ns":"main","cmd":"addItem","args":{"userID":alias.userName,"item":item}}
-			));
+		partyplayer.addItem({"ns":"main","cmd":"addItem","args":{"userID":userName.name,"item":item}});
 			//example syntax: 
 			//{"type":"collection","cmd":"addItem","args":{"userID":1,"item":{"version":1,"filename":"michael jackson - bad.mp3","title":"Bad","artist":"Michael Jackson","mediatype":"audio","mimetype":"audio/mp3","screenshot":"base64/???","screenshotURI":"http://youtube.com/screenshot.png","duration":"00:03:55","contentType":"onDemand","contentSrc":"file","URI":"","src":" "}}}
 			//{"type":"collection","cmd":"addItem","args":{"userID":"anton","item":{"version":1,"filename":"michael jackson - bad.mp3","title":"Bad","artist":"Michael Jackson","mediatype":"audio","mimetype":"audio/mp3","screenshot":"base64/???","screenshotURI":"http://youtube.com/screenshot.png","duration":"00:03:55","contentType":"onDemand","contentSrc":"file","URI":"","src":" "}}}
-
-
-		};
 	},
 	init:function(){
 		var shareLength = addFiles.addList.length;
