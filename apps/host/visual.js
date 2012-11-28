@@ -80,7 +80,7 @@ var visualFunnel = function(name, selector){
 	 *	@param circle The numbered circle to animate along (larger circle number is larger circle is larger radius)
 	**/
 	var startArc = function(selector, circle){
-		console.log("start arc");
+		//console.log("start arc");
 		var r = circle*step/2;
 		var arc_params = {
 			center: [funnelSize/2-75,funnelSize/2-25],
@@ -90,10 +90,10 @@ var visualFunnel = function(name, selector){
 			dir: -1
 		};
 		//$(selector).appendTo('#funnel .funnelcircle[circle=' + circle-- + ']');
-		$(selector).animate({path : new $.path.arc(arc_params)}, 2000, function(){
-			console.log("end of arc");
-			//funnel.switchCircle($(selector).attr('_funnelItemID'), true);
-			funnelViz.nextCircle(selector);
+		$(selector).animate({path : new $.path.arc(arc_params)}, 5000, function(){
+			//console.log("end of arc");
+			funnel.switchCircle($(selector).attr('_funnelItemID'), true);
+			//funnelViz.nextCircle(selector);
 		});
 	};
 	
@@ -152,38 +152,17 @@ var visualFunnel = function(name, selector){
 		$(selector).remove();
 	};
 	/**
-	 *	Moves the given DOM element to the next circle (closer to the center).
-	 *	It stops any animations. It also gets and updates the circle inside the current Item in funnel
-	 *	to the correct circles. It then starts the startArc function.
+	 *	Moves the given DOM element to the given circle
+	 *	It stops any animations. It then starts the startArc function.
 	 *
 	 *	@methodOf visualFunnel
 	 *	@param selector The selector of the DOM funnel element to look for
+	 *	@param circle The circle to update to
 	**/
-	that.nextCircle = function(selector){
-		console.log("stop current animation");
+	that.updateCircle = function(selector, circle){
+		//console.log("stop current animation");
 		$(selector).stop(true);
-		var key = $(selector).attr('_funnelItemID');
-		var circle = funnel.getFunnelItem(key).getCircle();
-		circle--;
-		funnel.getFunnelItem(key).setCircle(circle);
-		console.log("next circle");
-		startArc(selector, circle);
-	};
-	/**
-	 *	Moves the given DOM element to the prev circle (further from the center).
-	 *	It stops any animations. It also gets and updates the circle inside the current Item in funnel
-	 *	to the correct circles. It then starts the startArc function.
-	 *
-	 *	@methodOf visualFunnel
-	 *	@param selector The selector of the DOM funnel element to look for
-	**/
-	that.prevCircle = function(selector){
-		console.log("stop current animation");
-		$(selector).stop(true);
-		var key = $(selector).attr('_funnelItemID');
-		circle++;
-		console.log("prev circle");
-		funnel.getFunnelItem(key).setCircle(circle);
+		//console.log("update circle to: " + circle);
 		startArc(selector, circle);
 	};
 	return that;

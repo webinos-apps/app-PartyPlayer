@@ -14,6 +14,7 @@ Object.size = function(obj) {
 };
 
 var testKey = [];
+var blaKey= [];
 
 $(document).ready(function(){
 	
@@ -39,7 +40,12 @@ var funnel = (function(){
 	var funnelList = new Collection("Funnel");
 	var allItems = {}; 
 	var circles = 6;
-	var circleSlots = {};
+	var circleSlots = {}; 
+	
+	var randomFromTo = function(from, to){
+		return Math.floor(Math.random() * (to - from + 1) + from);
+	}
+	
 	
 	return{
 		/**
@@ -49,8 +55,20 @@ var funnel = (function(){
 			for(var i = 0; i<circles; i++){
 				circleSlots['circle_' + (i+1)] = new Array(i+1);
 			}
-			circleSlots.circle_5 = ['x', 'x', 'x', 'x', 'x'];
+			var votes = 50;
+			for(var i = 0; i<circleSlots.circle_5.length-1; i++){
+				var funnelItem = new partyplayer.FunnelItem(i,100);
+				funnelItem.votes = votes - 10;
+				blaKey.push(funnelList.addItem(funnelItem));
+				circleSlots.circle_5[i] = blaKey[i];
+				var fnO = funnelVar();
+				allItems['key_' + blaKey[i]] = fnO;
+				fnO.setKey(blaKey[i]);
+				votes +=  50;
+			}
+			
 			console.log(circleSlots);
+			console.log(funnelList);
 		},
 		/**
 		 *	Updates the given maximum for a given circle
@@ -79,7 +97,8 @@ var funnel = (function(){
 					var fnO = funnelVar();
 					allItems['key_' + key] = fnO;
 					circleSlots['circle_' + circles][i] = key;
-					fnO.init(key);
+					fnO.setKey(key);
+					fnO.init();
 					break;
 				} else {
 					count++;
@@ -99,14 +118,10 @@ var funnel = (function(){
 		 *	
 		**/
 		switchCircle : function(key, goNext){
-			//first check if next circle has undefined slots
-			//if yes add myself to undefined position
-			//if no switch myself with first item in next circle
-
 			var fnO1 = allItems['key_' + key];
 			var circle = fnO1.getCircle();
-			var circleOld = circleSlots['circle_' + circle];
 			var toCircle;
+			var key2;
 			if(typeof goNext === 'boolean'){
 				switch(goNext){
 					case true: 
@@ -115,16 +130,21 @@ var funnel = (function(){
 					case false:
 						toCircle = circle+1;
 						break;
-					default:
-						toCircle = circle-1;
-						break;	
 				}
 			} else {
-				return "ERROR: no boolean for goNext found";
+				return "ERROR: no boolean for goNext!";
 			}
 			
-			var circleNext = circleSlots['circle_' + toCircle];
+			if(circle == 1){
+				//console.log('animate same circle: ' + circle);
+				funnelViz.updateCircle(fnO1.getSelector(), circle);
+				return;
+			}
+			var circleOld = circleSlots['circle_' + circle];
 			var indexOld = circleOld.indexOf(key);
+			
+			var circleNext = circleSlots['circle_' + toCircle];
+			var indexNext;
 			var count = 0;
 			
 			for(var i = 0; i < circleNext.length; i++){
@@ -132,14 +152,14 @@ var funnel = (function(){
 					circleOld[indexOld] = undefined;
 					circleNext[i] = key;
 					fnO1.setCircle(toCircle);
-					console.log(fnO1.getCircle());	
+					funnelViz.updateCircle(fnO1.getSelector(), toCircle);
+					//console.log('funnelItem set to circle: ' + fnO1.getCircle());	
 					break;
 				} else {
 					count++;
 				}
 			}
 			if(count == circleNext.length){
-				//make for loop to get votes
 				var allVotes = {};
 				for(var i = 0; i < circleNext.length; i++){
 					allVotes[circleNext[i]] = funnelList.getItem(circleNext[i]).votes;
@@ -149,6 +169,59 @@ var funnel = (function(){
 					sortable.push([key, allVotes[key]]);
 				}
 				sortable.sort(function(a,b){return a[1]-b[1]});
+			
+				/*
+				if(sortable[0][1] == sortable[1][1]){
+					//bug: picks random of all items, even ones with more than the first 2 votes
+					//need algorithm to only pick random from the same lowest votes
+					
+					var r = randomFromTo(0, Object.size(allVotes));
+					console.log('same first 2 numbers, pick random: ' + r);
+					var key2 = sortable[r][0];
+
+				} else {
+					console.log('pick first in sortable (with lowest votes)');
+					var key2 = sortable[0][0];
+				}
+				*/
+				
+				if(sortable.length == 1){
+					//console.log('pick first in sortable (with lowest votes)');
+					var key2 = sortable[0][0];
+				} else {
+					var sameVotes = 0;
+					for(var i = 0;i<sortable.length;i++){
+						if((i+1) == sortable.length){break;}
+						else {
+							if(sortable[i][1] == sortable[(i+1)][1]){
+								sameVotes++;
+							}
+						}
+					}
+					if(sameVotes > 0){
+						var r = randomFromTo(0, sameVotes);
+						console.log('same votes found, pick random: ' + r);
+						var key2 = sortable[r][0];
+					} else {
+						//console.log('pick first in sortable (with lowest votes)');
+						var key2 = sortable[0][0];
+					}
+				}
+				
+				indexNext = circleNext.indexOf(key2);
+				var fnO2 = allItems['key_' + key2];
+				console.log("switch: " + fnO1.getKey() +" with "+fnO2.getKey());
+				fnO2.setCircle(circle);
+				circleOld[indexOld] = key2;
+				funnelViz.updateCircle(fnO2.getSelector(), circle);
+				fnO1.setCircle(toCircle);
+				circleNext[indexNext] = fnO1.getKey();
+				funnelViz.updateCircle(fnO1.getSelector(), toCircle);
+				
+				console.log(allVotes);
+				console.log(sortable);
+
+				
 				/*
 				var key2 = circleNext[0]; //make randomized number
 				var fnO2 = allItems['key_' + key2];
@@ -159,8 +232,7 @@ var funnel = (function(){
 				circleNext[0] = key;
 				*/
 			}
-			console.log(allVotes);
-			console.log(circleSlots);			
+			//console.log(circleSlots);			
 					
 		},
 		/**
@@ -222,9 +294,16 @@ var funnelVar = function(){
 		 *
 		 *	@param newKey The key from the funnelItem in funnelList
 		**/
-		init : function(newKey){
-			key = newKey;
+		init : function(){
 			element = funnelViz.renderSingle(key);
+		},
+		/**
+		 *	Sets the key of this Item
+		 *
+		 *	@param key The key to be set to
+		**/
+		setKey : function(newKey){
+			key = newKey;
 		},
 		/**
 		 *	Sets the circle this Item is at in the element Object
