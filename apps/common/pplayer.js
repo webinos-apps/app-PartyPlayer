@@ -155,14 +155,6 @@ partyplayer.parseMessage = function( msg ) {
 	return ret;	
 };
 
-/**
- * Convert MSGtoJSONString
- * @TODO: needs to be tested
- **/
-
-
-
-
 /*
 @startuml common_classes_user.png
 

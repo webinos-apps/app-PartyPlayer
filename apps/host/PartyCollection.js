@@ -12,21 +12,6 @@ PartyCollection.prototype.printName = function () {
 	console.log("Name = "+this.name);
 };
 
-
-/***
- * Add the providedItems to the PartyCollection
- * @param userID - the identifier of the user
- * @param items - array of items to be added to the collection
- * @return number of items added
-PartyCollection.prototype.addItems = function (userID, items) {
-	var itemsAdded =0;
-	for (i = 0;i<items.length;i++){
-		this.addItem(userID,items[i])==true?itemsAdded++:itemsAdded
-	}
-	return itemsAdded;
-}
- **/ 
-
 /***
  * Add item from user userID
  * @param userID - the user identifier
