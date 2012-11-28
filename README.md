@@ -15,3 +15,7 @@ The layout of this project folder is as follows:
     |
     +── README.md                  -> this file
 
+
+Acknowledgements
+Icons located in apps/guest/icons/icons.js were downloaded from http://www.iconarchive.com/
+
