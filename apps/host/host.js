@@ -6,17 +6,22 @@ partyplayer.main = {};
 partyplayer.main.onjoin = function(params, ref, key) {
     uID = coll.addUser(params); //registration on application level
     users[key]=uID; //registration on connection level.
-    partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID,users:coll.getUsers()}}, key);
-    partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,userAlias:params.name}});
+    partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID}}, key);
+    
+    pUsers = coll.getUsers();
+    for (var u in pUsers){
+         partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,user:pUsers[u]}}, key);      
+    }    
+   
+    partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,user:coll.getUser(uID)}});
     log('join invoked!');
     getUsers();
 
     //send available Items to this user
-    //items = coll.getItems();
-    //for (i=0;i<items.length;i++){
-    //    partyplayer.sendMessage({ns:"main", cmd:"
-//
-//    }
+    pItems = coll.getItems();
+    for (var i=0; i<pItems.length;i++){
+        partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
+    }
 
 };
 
@@ -26,15 +31,15 @@ partyplayer.main.onleave= function (params, ref, key) {
     if (typeof users[key] !== 'undefined'){
         userID = users[key];
         coll.removeUser(userID);
-           coll.removeUserItems(userID);
+        coll.removeUserItems(userID);
         partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:userID}}); 
     }
     }
     else if (typeof params !== 'undefined' && params[userID] !== undefined ){ //registered on application level
-    userID = params[userID];
-    coll.removeUser(userID);
+        userID = params[userID];
+        coll.removeUser(userID);
         coll.removeUserItems(userID);
-    partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:uID}}); 
+        partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:uID}}); 
     } 
     delete users.key;
     getUsers();
@@ -45,7 +50,7 @@ partyplayer.main.onaddItem = function (params, ref, key) {
     log('adding item');
     itemID = coll.addItem(params.userID,params.item);
     if(itemID!==false){
-    partyplayer.sendMessage({ns:"main", cmd:"updateItem", params:{userID:uID,itemID:itemID,item:params.item}}); 
+    partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:uID,itemID:itemID,item:params.item}}); 
     }
     getItems();
 };
@@ -57,7 +62,7 @@ function getUsers(){
     var nrUsers =0;
     for (var t in players) {
         nrUsers+=1;
-        str+=players[t].name+",";
+        str+=players[t].alias+",";
     }
     log("Currently "+nrUsers+" Users:"+str);
 }
