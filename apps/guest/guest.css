@@ -1,4 +1,6 @@
-body { font-family: sans-serif; }
+body {
+	font-family: sans-serif;
+}
 #log { clear: both; }
 .logline {
     font-family: monospace;
@@ -8,6 +10,31 @@ body { font-family: sans-serif; }
 }
 .homeMenuItem{
 	display : inline-block;
+}
+.screen{
+	display: none;	
+}
+#collection{
+	border-top:solid #593634 1px;
+	border-bottom:solid #593634 1px;
+	margin-bottom:10px;
+	padding:1px;
+}
+.collectionItem{
+	font-size:14px;
+	font-family:verdana;
+}
+td{
+	border-right:dotted #E1974E 1px;
+	border-left:dotted #E1974E 1px;
+}
+.collectionItem:nth-child(even) {
+	background: #E0D97F;
+	color: #593634;
+}
+.collectionItem:nth-child(odd) {
+	background: #F3F69F;
+	color: #593634;
 }
 ul{
 	list-style-type: none;
