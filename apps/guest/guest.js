@@ -76,7 +76,8 @@ var userName = {
 	init:function(){
 		$('#userName').show();
 		$('#aliasButton').bind("click", userName.btnClick);
-	}		
+		console.log(itemLib);
+	}
 };
 
 var mainMenu = {
@@ -88,7 +89,7 @@ var mainMenu = {
 	 * 		- "Share files with collection" -(Select files through the file API and add them to the partyCollection)
 	 */
 	addFiles: function(event){
-		console.log(event);
+		//console.log(event);
 		$('#mainMenu').fadeOut(200, function(){
 			//init nextScreen
 			addFiles.init();
@@ -121,7 +122,7 @@ var addFiles ={
 		var htmlList = '';
 		for(var i=0; i<tempList.length; i++){
 			var f = tempList[i];
-			console.log("templist"+JSON.stringify(tempList[i]));
+			//console.log("templist"+JSON.stringify(tempList[i]));
 			htmlList+= '<li class="item">';
 			htmlList+= '<strong>artist: </strong>'+f.Artist+' ';
 			htmlList+= '<strong>title: </strong>'+f.Title+' ';
@@ -130,37 +131,45 @@ var addFiles ={
 			htmlList+= '</li>';
 			//add item to permanent list
 			addFiles.addList.push(f);
-		}
+		};
 		$('#addItems #list').append(htmlList);
 		
 		//Change title to "Add more files"
 		$('#inputDiv .title').text("Add more files");
 	},
 	parseFile: function(file, callback){
-		console.log("parsefile"+file.name);
+		//console.log("parsefile"+file.name);
+		
 	    if(localStorage[file.name]) return callback(JSON.parse(localStorage[file.name]));
 	}, 
 	fileSelect:function(event) {
-		console.log("fileselect"+event.target.files);
+		//console.log("fileselect"+event.target.files);
 		var files = event.target.files;
 	    var tempList=[];
 		//parse ID3 tags and store in temporary list
 		for(var i=0; i<files.length; i++){
 			var name = files[i].name;
-			console.log("name "+name);
+			console.log(files[i]);
+			nameStr = name.substring(3,7);
+			console.log("gggg" + nameStr);
+			//get metadata from itemLib 
+			var metaData = itemLib.name;
+			console.log(name);
+			console.log(itemLib.item01.mp3);
+			
 			/*
 			*does not work in firefox... test with chrome 
 			*TODO find better ID3v2 parser
 			*/
+			/*
 			addFiles.parseFile(files[i],function(tags){      		       		
 				console.log(tags);
 				tags.filename = files[i].name;
 				console.log(tags.filename);
 	       		tags.version = 1;
 	       		tempList.push(tags);
-			});
+			});*/
 		}
-		
 		//add temporary list to DOM
 		addFiles.appendToDom(tempList);
 	},
@@ -170,7 +179,6 @@ var addFiles ={
 		$('#addItems #inputDiv #files').change(addFiles.fileSelect);
 	}
 };
-
 
 var shareFiles={
 	/*
