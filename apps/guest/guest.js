@@ -129,12 +129,12 @@ var addFiles ={
 		var htmlList = '';
 		for(var i=0; i<tempList.length; i++){
 			var f = tempList[i];
-			console.log(tempList[i]);
+			console.log("templist"+JSON.stringify(tempList[i]));
 			htmlList+= '<li class="item">';
 			htmlList+= '<strong>artist: </strong>'+f.Artist+' ';
 			htmlList+= '<strong>title: </strong>'+f.Title+' ';
 			htmlList+= '<strong>album: </strong>'+f.Album+' ';
-			htmlList+= '<strong>name: </strong>'+f.name+' '
+			htmlList+= '<strong>name: </strong>'+f.filename+' '
 			htmlList+= '</li>';
 			//add item to permanent list
 			addFiles.addList.push(f);
@@ -145,28 +145,31 @@ var addFiles ={
 		$('#inputDiv .title').text("Add more files");
 	},
 	parseFile: function(file, callback){
+		console.log("parsefile"+file.name);
 	    if(localStorage[file.name]) return callback(JSON.parse(localStorage[file.name]));
+	    
 	}, 
 	fileSelect:function(event) {
-                log("fileselect");
+		console.log("fileselect"+event.target.files);
 		var files = event.target.files;
-           
 	    var tempList=[];
 		//parse ID3 tags and store in temporary list
 		for(var i=0; i<files.length; i++){
 			var name = files[i].name;
+			console.log("name "+name);
 			/*
 			*does not work in firefox... test with chrome 
 			*TODO find better ID3v2 parser
 			*/
-			
-			addFiles.parseFile(files[i],function(tags){ 
-                            		       		
-	       		tags.filename = files[i].name;
+			addFiles.parseFile(files[i],function(tags){      		       		
+				console.log(tags);
+				tags.filename = files[i].name;
+				console.log(tags.filename);
 	       		tags.version = 1;
 	       		tempList.push(tags);
 			});
 		}
+		
 		//add temporary list to DOM
 		addFiles.appendToDom(tempList);
 	},
@@ -176,7 +179,8 @@ var addFiles ={
 		//bind fileSelect function to change
 		$('#files').change(addFiles.fileSelect);
 	}
-}
+};
+
 
 var shareFiles={
 	/*
