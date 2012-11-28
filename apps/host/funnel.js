@@ -112,9 +112,11 @@ var funnel = (function(){
 			console.log(funnelList);
 		},
 		/**
-		 *  //buggy --
-		 *	Checks the total circle holding space, if full switch with object in 
-		 *	next or previous circle, else simply add the item to the next or previous circle
+		 *  Function to handle switching circles, it looks for the next item with least votes to be switched with if the next circle is full
+		 *	If the same amount of votes are found it picks a random item of the ones with least votes
+		 *
+		 *	@param key The itemID as in funnelList to look for
+		 *	@param goNext boolean If true, looks for the next circle, if false, looks for the prev circle
 		 *	
 		**/
 		switchCircle : function(key, goNext){
