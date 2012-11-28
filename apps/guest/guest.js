@@ -75,13 +75,11 @@ var userName = {
 	    }());
 
 		$('#aliasDiv').fadeOut(200, function(){
-			$('#aliasDiv').remove();
-			//after choosing an alias init mainMenu
 			mainMenu.init();
 		});
 	},
 	init:function(){
-		$('#guestApp').append('<div id="aliasDiv"><p>Alias:</p><input type="text" id="aliasText" value="<default Webinos ID>"/><button type="button" id="aliasButton">Alias</button></div>');
+		$('#userName').show();
 		$('#aliasButton').bind("click", userName.btnClick);
 	}		
 };
@@ -96,22 +94,20 @@ var mainMenu = {
 	 */
 	addFiles: function(event){
 		$('#homeMenu').fadeOut(200, function(){
-			$('#homeMenu').remove();
 			//init nextScreen
 			addFiles.init();
 		});
 	},
 	init:function(){
+		//show screen
+		$('#mainMenu').show();
 		//welcome message
-		$('#guestApp').append('<p id="welcome">You are known as: '+userName.name+'</p>');
-		//add Menu
-		$('#guestApp').append('<ul id="homeMenu"></ul>');
-		var homeMenuItems = '<li class="homeMenuItem"><button class="menuBtn">Collection</button></li>';
-		homeMenuItems += '<li class="homeMenuItem"><button class="menuBtn">Vote</button></li>';
-		homeMenuItems += '<li class="homeMenuItem" id="addFiles"><button class="menuBtn">Share</button></li>';
-		$('#homeMenu').append(homeMenuItems);
+		$('#mainMenu #welcome').append(userName.name);
+		//get count and collection
+		partyplayer.getItemCount();
+		partyplayer.getItems();
 		//addEvents
-		$('#addFiles').bind("click", mainMenu.addFiles);
+		$('#mainMenu #add').bind("click", mainMenu.addFiles);
 	}
 };
 
