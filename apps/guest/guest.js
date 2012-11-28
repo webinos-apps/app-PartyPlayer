@@ -10,7 +10,7 @@ $(document).ready(function(){
 var userID;
 
 partyplayer.joinUser = function(name){
-	partyplayer.sendMessage({ns:"main", cmd:"join", params:{alias:name,thumbnail:"empty"}});
+	partyplayer.sendMessage({ns:"main", cmd:"join", params:{alias:name,thumbnail:base64Images["1"]}});
     log(name + " is joining...");
 };
 
@@ -138,9 +138,14 @@ var addFiles ={
 		$('#inputDiv .title').text("Add more files");
 	},
 	parseFile: function(file, callback){
-		//console.log("parsefile"+file.name);
-		
-	    if(localStorage[file.name]) return callback(JSON.parse(localStorage[file.name]));
+		log("parsefile"+file.name);
+	    if(localStorage[file.name]){
+	        log("localstorage: "+localStorage[file.name]);
+	        return callback(JSON.parse(localStorage[file.name]));
+	    }
+	    else{
+           log("no localstorage");
+        }
 	}, 
 	fileSelect:function(event) {
 		//console.log("fileselect"+event.target.files);
