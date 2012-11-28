@@ -32,9 +32,13 @@ var webinos = {
             log('createChannel invoked, ns=' + ns);
             ws.send(JSON.stringify({type:'command', action:'create', namespace: ns}));
             messageCB = msgCB;
-            return { send: function(message) {
+            return { send: function(message, key) {
+                var o = {type:'message', payload: message};
                 log('Channel.send invoked with ' + JSON.stringify(message));
-                ws.send(JSON.stringify({type:'message', payload: message}));
+
+                // Add key if present
+                if (typeof key === 'string') { o.key = key; }
+                ws.send(o);
             }};
         },
 
