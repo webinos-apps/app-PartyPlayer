@@ -93,7 +93,7 @@ wss.on('request', function(wsRequest) {
         'message': function(o) {
             if (client in clients) {
                 // from client so send to host
-                logger.trace('Forwarding message from client ' + c + ' to host');
+                logger.trace('Forwarding message from client ' + client + ' to host');
                 o.key = client;
                 host.send(JSON.stringify(o));
             } else {
@@ -102,6 +102,7 @@ wss.on('request', function(wsRequest) {
                 if (typeof key === 'string') {
                     if (clients[key]) {
                         delete o.key;
+                        logger.trace('Forwarding message from host to single client ' + key);
                         clients[key].send(JSON.stringify(o));
                     } else {
                         logger.warn('Server meant specific client but I don\'t know ' + key);
@@ -109,7 +110,7 @@ wss.on('request', function(wsRequest) {
                 } else {
                     for (var c in clients) {
                         if (c === 'size') continue; // ours, hence enumerable
-                        logger.trace('Forwarding message from host to ' + c);
+                        logger.trace('Forwarding message from host to all, ' + c);
                         clients[c].send(JSON.stringify(o));
                     }
                 }
