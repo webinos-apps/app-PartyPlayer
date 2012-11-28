@@ -116,11 +116,11 @@ var addFiles ={
 	addList:[],
 	appendToDom:function(tempList){
 		//if there are no items in the list add a <ul> item and share buttton
-		if(!$('#list').children().length){
+		if(!$('#addItems #list').children().length){
 			var newGuestList = '<ul id="guestAddList"><li>Media to Share:</li></ul>'; 
-			$('#list').append(newGuestList);
+			$('#addItems #list').append(newGuestList);
 			var newButtons = '<div id="share"><p class="title">Share With Party</p><button id="share" class="menuBtn">Share</button></div>';
-			$('#guestApp').append(newButtons);
+			$('#addItems').append(newButtons);
 			$('#share').bind("click", shareFiles.init);	
 		}
 		var htmlList = '';
@@ -136,7 +136,7 @@ var addFiles ={
 			//add item to permanent list
 			addFiles.addList.push(f);
 		}
-		$('#guestAddList').append(htmlList);
+		$('#addItems #list').append(htmlList);
 		
 		//Change title to "Add more files"
 		$('#inputDiv .title').text("Add more files");
@@ -144,7 +144,6 @@ var addFiles ={
 	parseFile: function(file, callback){
 		console.log("parsefile"+file.name);
 	    if(localStorage[file.name]) return callback(JSON.parse(localStorage[file.name]));
-	    
 	}, 
 	fileSelect:function(event) {
 		console.log("fileselect"+event.target.files);
@@ -172,9 +171,8 @@ var addFiles ={
 	},
 	init:function(){
 		//add input field to DOM
-		$('#guestApp').append('<div id="inputDiv"><p class="title">Select Files</p><input type="file" accept="audio/*" id="files" name="" multiple /></div><output id="list"></output>');
-		//bind fileSelect function to change
-		$('#files').change(addFiles.fileSelect);
+		$('#addItems').show();
+		$('#addItems #inputDiv #files').change(addFiles.fileSelect);
 	}
 };
 
@@ -199,13 +197,13 @@ var shareFiles={
 		//clear addList;
 		addFiles.addList=[];
 		//clear from DOM
-		$('#guestAddList').remove();
-		$('#share').remove();
+		$('#addItems').hide();
+		$('#share').hide();
 		//added message
 		var addMessage='<div id="added">Shared '+shareLength+' Files with Party Collection</div>';
 		$('#guestApp').append(addMessage);
-		$('#added').fadeOut(4000, function(){
-			$('#added').remove();
+		$('#added').fadeOut(1000, function(){
+			$('#mainMenu').show();
 		});
 	}	
 }
