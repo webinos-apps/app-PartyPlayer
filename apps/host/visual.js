@@ -168,4 +168,24 @@ var visualFunnel = function(name, selector){
 	return that;
 }
 
+var visualPlayer = function(name, selector){
+	var that = Visual(name, selector);
+	
+	that.setupButton = function(){
+		$('<button id=start>Start the Player</button>').appendTo(selector).click(function(){
+			player.getSong();
+		});
+	};
+	
+	that.updatePlayer = function(url){
+	    $(selector).html('<audio autoplay onended="player.getSong()" controls="controls">' + 
+	    '<source src="' + url + '" type="audio/ogg">' +
+	    '<source src="' + url + '" type="audio/mpeg">' +
+	    'Your browser does not support the audio element.</audio>');
+	}
+	
+	return that;
+}
+
 var funnelViz = visualFunnel("VisualFunnel", 'div#funnel');
+var playerViz = visualPlayer("VisualPlayer", 'div#player');

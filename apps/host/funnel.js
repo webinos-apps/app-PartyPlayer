@@ -11,14 +11,26 @@ Object.size = function(obj) {
         if (obj.hasOwnProperty(key)) size++;
     }
     return size;
-};
+}
 
-var testKey = [];
+var item = {};
+item.version = 1;
+item.url = '../../library/01.mp3';
+
+var pc = new PartyCollection('name');
 var blaKey= [];
+var pcKey = [];
 
 $(document).ready(function(){
-	
-	funnelViz.setupCircles(1200, funnel.getCircles());
+    //adding tests items in party collection
+    pcKey.push(pc.addItem(2, item));
+    pcKey.push(pc.addItem(2, item));
+    pcKey.push(pc.addItem(2, item));
+    pcKey.push(pc.addItem(2, item));
+    pcKey.push(pc.addItem(2, item));
+    
+	funnelViz.setupCircles(300, funnel.getCircles());
+	playerViz.setupButton();
 	funnel.init();
 });
 
@@ -55,9 +67,10 @@ var funnel = (function(){
 			for(var i = 0; i<circles; i++){
 				circleSlots['circle_' + (i+1)] = new Array(i+1);
 			}
+			/*
 			var votes = 50;
 			for(var i = 0; i<circleSlots.circle_5.length-1; i++){
-				var funnelItem = new partyplayer.FunnelItem(i,100);
+				var funnelItem = new partyplayer.FunnelItem(pcKey[i],100);
 				funnelItem.votes = votes - 10;
 				blaKey.push(funnelList.addItem(funnelItem));
 				circleSlots.circle_5[i] = blaKey[i];
@@ -66,7 +79,7 @@ var funnel = (function(){
 				fnO.setKey(blaKey[i]);
 				votes +=  50;
 			}
-			
+			*/
 			console.log(circleSlots);
 			console.log(funnelList);
 		},
@@ -93,7 +106,6 @@ var funnel = (function(){
 					console.log("add item to circle");
 					var funnelItem = new partyplayer.FunnelItem(id, 100);
 					var key = funnelList.addItem(funnelItem);
-					testKey.push(key);
 					var fnO = funnelVar();
 					allItems['key_' + key] = fnO;
 					circleSlots['circle_' + circles][i] = key;
@@ -110,6 +122,8 @@ var funnel = (function(){
 			console.log(allItems);
 			console.log(circleSlots);
 			console.log(funnelList);
+			
+			return key;
 		},
 		/**
 		 *  Function to handle switching circles, it looks for the next item with least votes to be switched with if the next circle is full
@@ -274,6 +288,9 @@ var funnel = (function(){
 		**/
 		getFunnelWidth : function(){
 			return funnelWidth;
+		},
+		getFunnelItemsAtCircle : function(circle){
+			return circleSlots['circle_' + circle];
 		}
 	}	
 })();
