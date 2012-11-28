@@ -236,8 +236,8 @@ partyplayer.init = function(hostorguest) {
                 }
         });
 
-        partyplayer.sendMessage = function(msg) {
-            channel.send(msg);
+        partyplayer.sendMessage = function(msg, key) {
+            channel.send(msg, key);
         };
     });
 }
