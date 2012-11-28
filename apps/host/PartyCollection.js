@@ -193,7 +193,7 @@ PartyCollection.prototype.removeUser = function(userID){
 	return this.users.removeItem(userID);
 }
 
-PartyCollection.prototype.getItem = function(userID){
+PartyCollection.prototype.getUser = function(userID){
 	return this.users.getItem(userID);
 }
 
