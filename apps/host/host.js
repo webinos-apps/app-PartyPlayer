@@ -1,7 +1,3 @@
-$(document).ready(function(){
-    partyplayer.init('host');
-    coll = new PartyCollection("testCollection");
-});
 
 var coll = null;
 var users = {};
@@ -43,27 +39,27 @@ partyplayer.main.onleave= function (params, ref,key) {
     delete users.key;
     getUsers();
     getItems();
-}
+};
 
 partyplayer.main.onaddItem = function (params, ref, key) {
     log('adding item');
     itemID = coll.addItem(params.userID,params.item);
-    if(itemID!=false){
+    if(itemID!==false){
     partyplayer.sendMessage({ns:"main", cmd:"updateItem", params:{userID:uID,itemID:itemID,item:params.item}}); 
     }
     getItems();
-}
+};
 
 
 function getUsers(){
     players = coll.getUsers();
     var str = "";
     var nrUsers =0;
-    for (t in players){
+    for (var t in players) {
         nrUsers+=1;
         str+=players[t].name+",";
     }
-    log("Currently "+nrUsers+" Users:"+str)
+    log("Currently "+nrUsers+" Users:"+str);
 }
 
 function getItems(){
@@ -125,3 +121,7 @@ function getItems(){
     @enduml
     */
 
+$(document).ready(function(){
+    partyplayer.init('host');
+    coll = new PartyCollection("testCollection");
+});
