@@ -38,7 +38,7 @@ var webinos = {
 
                 // Add key if present
                 if (typeof key === 'string') { o.key = key; }
-                ws.send(o);
+                ws.send(JSON.stringify(o));
             }};
         },
 
