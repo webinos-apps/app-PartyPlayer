@@ -10,7 +10,7 @@ $(document).ready(function(){
 var userID;
 
 partyplayer.joinUser = function(name){
-	partyplayer.sendMessage({ns:"main", cmd:"join", params:{name:name,thumbnail:"empty"}});
+	partyplayer.sendMessage({ns:"main", cmd:"join", params:{alias:name,thumbnail:"empty"}});
     log(name + " is joining...");
 };
 
@@ -42,12 +42,12 @@ partyplayer.main.onremovePlayer = function(param, ref) {
     //->@TODO collection should be updated, as user is removed
 };
 
-partyplayer.main.onupdateItem = function (param, ref) {
+partyplayer.main.onupdateCollectionItem = function (param, ref) {
     log ('onUpdateItem Invoked; my userID='+userID)
-	if (param.userID != userID){
-		log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
+	//if (param.userID != userID){
+	log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
 		//@TODO: client logic 
-	}
+	//}
 };
 
 
