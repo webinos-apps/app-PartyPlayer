@@ -18,7 +18,7 @@ partyplayer.main.onjoin = function(params, ref,key) {
     //send available Items to this user
     //items = coll.getItems();
     //for (i=0;i<items.length;i++){
-    //	partyplayer.sendMessage({ns:"main", cmd:"
+    //    partyplayer.sendMessage({ns:"main", cmd:"
 //
 //    }
 
@@ -26,21 +26,21 @@ partyplayer.main.onjoin = function(params, ref,key) {
 
 partyplayer.main.onleave= function (params, ref,key) {
     log('leave invoked!');
-    if (typeof params == 'undefined'){ //registered on protocol level
-	if (typeof users[key] != 'undefined'){
-                userID = users[key];
-		coll.removeUser(userID);
-        	coll.removeUserItems(userID);
-		partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:userID}}); 
-	}
+    if (typeof params === 'undefined'){ //registered on protocol level
+    if (typeof users[key] !== 'undefined'){
+        userID = users[key];
+        coll.removeUser(userID);
+           coll.removeUserItems(userID);
+        partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:userID}}); 
     }
-    else if (typeof params != 'undefined' && params[userID] != undefined ){ //registered on application level
-	userID = params[userID];
-	coll.removeUser(userID);
+    }
+    else if (typeof params !== 'undefined' && params[userID] !== undefined ){ //registered on application level
+    userID = params[userID];
+    coll.removeUser(userID);
         coll.removeUserItems(userID);
-	partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:uID}}); 
+    partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:uID}}); 
     } 
-    delete users.key; 	
+    delete users.key;
     getUsers();
     getItems();
 }
@@ -49,7 +49,7 @@ partyplayer.main.onaddItem = function (params, ref, key) {
     log('adding item');
     itemID = coll.addItem(params.userID,params.item);
     if(itemID!=false){
-	partyplayer.sendMessage({ns:"main", cmd:"updateItem", params:{userID:uID,itemID:itemID,item:params.item}}); 
+    partyplayer.sendMessage({ns:"main", cmd:"updateItem", params:{userID:uID,itemID:itemID,item:params.item}}); 
     }
     getItems();
 }
@@ -67,17 +67,17 @@ function getUsers(){
 }
 
 function getItems(){
-	itemCount = coll.getItemCount();
-	var str = ""; 	
-	for (t in itemCount){
-		if (t!="TOTAL"){
-			str+=coll.getItem(t)+":"+itemCount[t]+";";
-		}
-		else{
-			str+=t+":"+itemCount[t]+";";
-		}
-	}
-	console.log("COLLECTION="+str);
+    itemCount = coll.getItemCount();
+    var str = "";     
+    for (t in itemCount){
+        if (t!="TOTAL"){
+            str+=coll.getItem(t)+":"+itemCount[t]+";";
+        }
+        else{
+            str+=t+":"+itemCount[t]+";";
+        }
+    }
+    console.log("COLLECTION="+str);
 }
 
 
@@ -124,3 +124,4 @@ function getItems(){
         end
     @enduml
     */
+
