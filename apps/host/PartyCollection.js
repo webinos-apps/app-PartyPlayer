@@ -19,8 +19,7 @@ PartyCollection.prototype.printName = function () {
  * returns true if the item was successfully added
  **/
 PartyCollection.prototype.addItem = function (userID, item){
-	console.log(item)
-	if(item.version ==1){
+	if(this.users.getItems().hasOwnProperty(userID) && item.version ==1){
 		return this.coll.addItem({"userID":userID,"item":item});
 	}
 	else{
@@ -100,7 +99,7 @@ PartyCollection.prototype.getUsers = function ()
  **/
 PartyCollection.prototype.getItemCount = function (){
 	userMap={}
-        total=0;
+	total=0;
 	for (var index in this.coll.getItems() ){
 		item = this.coll.getItem(index);
 		total+=1;
@@ -164,6 +163,13 @@ function filterItem(item,filters){
 		}
 	}
 	return success;
+};
+
+/**
+ * Get Random Party collection item.
+ **/
+PartyCollection.prototype.getRandom = function(){
+    return this.coll.getRandom();
 };
 
 
