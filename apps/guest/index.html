@@ -15,16 +15,54 @@
         <script type=text/javascript src=../../library/items.js></script>
     </head>
     <body>
-        <div id="main">
-            <h1>PartyPlayer Guest</h1>
-        </div>
-        <!-- The Actual Guest App -->
+  		<!-- Guest App Container -->
 	    <div id="guestApp">
-	    	<!-- screen 1: userName --><!-- User provides an alias before continuing -->
-	    	<div id="userName" class="screen">
-	    		<p>Alias:</p>
-	    		<input type="text" id="aliasText" value="<default Webinos ID>"/><button type="button" id="aliasButton">Alias</button>
+	    
+	    	<!-- Opening Screen, choose user profile -->
+	    	<div id="selectProfile" class="screen">
+				<h2>Choose a profile</h2>
+				<ul id="profiles">
+					<!-- add profiles as <li> items-->
+				</ul>
 	    	</div>
+	    	
+	    	<!-- Current Collection, what is already in the collection?-->
+	    	<div id="currentCollection" class="screen">
+				<h2><div id="knownAs">You are known as</div></h2>
+				<div id="collectionContainer" class="centeredContainer">
+					There appears to be no music in the collection right now, add your own music to the collection. 
+					<table>
+						<tr>
+							<td>table</td>
+							<td>with</td>
+							<td>items</td>
+						</tr>
+					</table>
+				</div>
+				<div id="addItemsBtnContainer" class="centeredContainer">
+					<button id="addItemsBtn" class="menuBtn">Add Local Items</button>
+				</div>
+	    	</div>
+	    	
+	    	<!-- Select Local Items, select which local files to add -->
+	    	<div id="selectLocalItems" class="screen">
+				<h2>Select local items to share</h2>
+				<div id="localCollectionContainer" class="centeredContainer">
+					<table id="localCollection">
+						<tr>
+							<td>Artist</td>
+							<td>Title</td>
+							<td>Album</td>
+							<td>Select All</td>
+						</tr>
+					</table>
+				</div>
+				<div id="shareItemsBtnContainer" class="centeredContainer">
+					<button id="shareItemsBtn" class="menuBtn">Share Items With Collection</button>
+				</div>
+	    	</div>
+	    	
+	    	
 	    	<!--  screen 2: mainMenu --><!-- Present collection  -->
 	    	<div id="mainMenu" class="screen">
 	    		<p id="welcome">Welcome: you are known as </p>

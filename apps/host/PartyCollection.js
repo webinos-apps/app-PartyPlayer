@@ -19,6 +19,7 @@ PartyCollection.prototype.printName = function () {
  * returns true if the item was successfully added
  **/
 PartyCollection.prototype.addItem = function (userID, item){
+	console.log(item)
 	if(item.version ==1){
 		return this.coll.addItem({"userID":userID,"item":item});
 	}
