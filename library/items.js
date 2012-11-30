@@ -2,13 +2,13 @@ var libUser01 = {
 	"userName":"Victor",
 	"items" : {
 	"item01": {"version":"1", "fileName":"01.mp3","artist":"Michael Jackson", "title":"bad", "album":"bad", "cover":"../../library/albumart/unknown.png"},
-	"item02": {"version":"1", "fileName":"02.mp3","artist":"Michael Jackson", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
+	"item02": {"version":"1", "fileName":"02.mp3","artist":"Britney Spears", "title":"One more Time", "album":"Redundancy - the Album", "cover":"../../library/albumart/britney.png"},
 	"item03": {"version":"1", "fileName":"03.mp3","artist":"Michael Jackson", "title":"bad", "album":"bad", "cover":"../../library/albumart/mj1.png"},
-	"item04": {"version":"1", "fileName":"04.mp3","artist":"Michael Jackson", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
-	"item05": {"version":"1", "fileName":"05.mp3","artist":"Michael Jackson", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
-	"item06": {"version":"1", "fileName":"06.mp3","artist":"Michael Jackson", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
-	"item07": {"version":"1", "fileName":"07.mp3","artist":"Michael Jackson", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
-	"item08": {"version":"1", "fileName":"08.mp3","artist":"Michael Jackson", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
+	"item04": {"version":"1", "fileName":"04.mp3","artist":"Britney Spears", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
+	"item05": {"version":"1", "fileName":"05.mp3","artist":"Britney Spears", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
+	"item06": {"version":"1", "fileName":"06.mp3","artist":"Britney Spears", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
+	"item07": {"version":"1", "fileName":"07.mp3","artist":"Britney Spears", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
+	"item08": {"version":"1", "fileName":"08.mp3","artist":"Britney Spears", "title":"bad", "album":"bad", "cover":"../../library/albumart/britney.png"},
 	}
 }
 
