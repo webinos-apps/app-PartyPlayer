@@ -109,8 +109,19 @@ Collection.prototype.replaceItem = function(itemID, item){
 	else{
 		return false;
 	}
-}
+};
 
+
+Collection.prototype.getRandom = function(){
+    var keys = Object.keys(this.coll);
+    if (keys.length >0){
+         var key = keys[Math.floor(Math.random() * keys.length)];
+         return key;
+    }
+    else{
+        return false;
+    }
+};
 
 /**
  * Updates the properties for the provided itemID
