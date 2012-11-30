@@ -112,7 +112,7 @@ var selectProfile = {
 			//add userInfo to screen
 			
 			var newUser = '';
-		    newUser += '<div class="profile">';
+		    newUser += '<div id="yourProfile" class="profile">';
 		    newUser += '<div class="userInfoPic">';
 		    newUser += '<img class="profilePicSmall" id="base64image" src="'+userProfile.userPic+'"/></div>';
 		    newUser += '<div class="userInfoText">'+userProfile.userName+'</div>';
