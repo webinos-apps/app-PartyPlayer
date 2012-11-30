@@ -23,7 +23,12 @@ PartyCollection.prototype.addItem = function (userID, item){
 		return this.coll.addItem({"userID":userID,"item":item});
 	}
 	else{
-		console.log("item not supported");
+        if (item.version !=1){		
+            console.log("item not supported");
+        }
+        else{
+            log("Cannot add invalid item");
+        }
 	}	
 	return false;
 };
