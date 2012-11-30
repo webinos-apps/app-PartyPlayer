@@ -10,9 +10,9 @@ $(document).ready(function(){
 var userID;
 
 var userProfile = {
-		userName:'',
-		userPic:'',
-		userID:'',
+	userName:'',
+	userPic:'',
+	userID:'',
 };
 
 partyplayer.joinUser = function(name, picture){
