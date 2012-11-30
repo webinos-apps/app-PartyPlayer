@@ -7,51 +7,78 @@ $(document).ready(function(){
     selectProfile.init();
 });
 
-var userID;
-
+//globals for user
 var userProfile = {
 	userName:'',
 	userPic:'',
 	userID:'',
 };
 
+var partyPlayerUsers = {};
+
 partyplayer.joinUser = function(name, picture){
 	partyplayer.sendMessage({ns:"main", cmd:"join", params:{alias:name,thumbnail:picture}});
     log(name + " is joining...");
 };
-
 
 partyplayer.addItem = function(item){
  	partyplayer.sendMessage({ns:"main", cmd:"addItem", params:{userID:userProfile.userID,item:item}});
 	log("adding Item");
 };
 
+partyplayer.removeItem = function(itemID){
+	partyplayer.sendMessage({ns:"main", cmd:"removeItem", params:{userID:userProfile.userID,itemID:itemID}});
+	log("removing Item");
+}
+
 partyplayer.main = {};
 partyplayer.main.onwelcome = function(param, ref) {
     userProfile.userID = param.userID;
     log('onwelcome invoked! userID = '+ userProfile.userID); 
-    //@TODO
-    //mainMenu.init();
 };
 
 partyplayer.main.onupdateUser = function(param, ref) {
     log('onupdateUser Invoked!');
-    //** If param.userId not in [userTable]
-    //->@TODO: User admininstartion
-    //log("param.userAlias + Joined the party"); 
+    if(param.userID != userProfile.userID){
+		log("Adding "+param.user.alias);
+    	//store user in userList
+		//@TODO: user updates instead of additions
+	    if (! (param.userID in partyPlayerUsers)){
+	    	partyPlayerUsers[param.userID]={name:param.user.alias,picture:param.user.thumbnail}
+	    	 //update users on screen
+		    var newUser = '';
+		    newUser += '<div class="profile">';
+		    newUser += '<div class="userInfoPic">';
+		    newUser += '<img class="profilePicSmall" id="base64image" src="'+param.user.thumbnail+'"/></div>';
+		    newUser += '<div class="userInfoText">'+param.user.alias+'</div>';
+		    newUser += '</div>';
+		    $('#userInfo').append(newUser);
+	    }
+    }
+	console.log(partyPlayerUsers);
 };
 
 partyplayer.main.onremoveUser = function(param, ref) {
     log('onremoveUser Invoked!');
+    
+    delete partyPlayerUsers[param.userID];
     //->@TODO collection should be updated, as user is removed
 };
 
 partyplayer.main.onupdateCollectionItem = function (param, ref) {
     log ('onUpdateItem Invoked; my userID='+userProfile.userID)
 	//if (param.userID != userID){
-	log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
-		//@TODO: client logic 
+		log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
+		 
 	//}
+    //add items to screen
+	var trItem = '';
+	trItem += '<tr>';
+	trItem += '<td>'+param.item.artist+'</td>';
+	trItem += '<td>'+param.item.title+'</td>';
+	trItem += '<td>'+param.item.album+'</td>';
+	trItem += '</tr>';
+	$('#currentCollection .collectionContainer #partyCollection').append(trItem);
 };
 
 
@@ -66,6 +93,9 @@ var selectProfile = {
 		userProfile.userName = profileName;
 		userProfile.userPic = profilePic;
 		
+		//add local items from library to HTML list  
+		selectLocalItems.importItems(userProfile.userName);
+		
 		/*
 		 *@startuml ../docs/figures/guest_add_to_host.png
 		 * partyGuest->partyHost: userName
@@ -74,11 +104,20 @@ var selectProfile = {
 		 * @enduml
 		 */	
 	    partyplayer.joinUser(userProfile.userName, userProfile.userPic);
-	    //TODO: receive and store userID
 	    
-		//next screen
+		//show next screen and update userInfo on screen
 		$('#selectProfile').fadeOut(200, function(){
 			currentCollection.init();
+			//add userInfo to screen
+			
+			var newUser = '';
+		    newUser += '<div class="profile">';
+		    newUser += '<div class="userInfoPic">';
+		    newUser += '<img class="profilePicSmall" id="base64image" src="'+userProfile.userPic+'"/></div>';
+		    newUser += '<div class="userInfoText">'+userProfile.userName+'</div>';
+		    newUser += '</div>';
+		    $('#userInfo').prepend(newUser);
+			$('#userInfo').show();
 		});
 	},
 	init:function() {
@@ -108,8 +147,6 @@ var currentCollection = {
 	init:function(){
 		$('#currentCollection').show();
 		$('#currentCollection h2').append(" "+userProfile.userName);
-		console.log(userProfile.userName);
-		//TODO: get collection
 		$('#currentCollection #addItemsBtnContainer #addItemsBtn').bind("click", currentCollection.addItemsClick);
 	}	
 };
@@ -125,6 +162,10 @@ var selectLocalItems ={
 			//send to host
 			partyplayer.addItem(sendItem);
 		}); 
+		//go to previous screen
+		$('#selectLocalItems').fadeOut(200, function(){
+			$('#currentCollection').show();
+		});		
 	},
 	importItems:function(user){
 		//locate collection
@@ -148,11 +189,10 @@ var selectLocalItems ={
 		    trItem += '</tr>';
 		    itemList += trItem;
 		});	
-		$('#selectLocalItems #localCollectionContainer #localCollection').append(itemList);
+		$('#selectLocalItems .collectionContainer #localCollection').append(itemList);
 	},
 	init:function(){
 		$('#selectLocalItems').show();
 		$('#selectLocalItems #shareItemsBtnContainer #shareItemsBtn').bind("click", selectLocalItems.shareItemsClick);
-		selectLocalItems.importItems(userProfile.userName);
 	}
 };
