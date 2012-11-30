@@ -34,15 +34,15 @@ partyplayer.main.onwelcome = function(param, ref) {
     //mainMenu.init();
 };
 
-partyplayer.main.onupdatePlayer = function(param, ref) {
-    log('onupdatePlayer Invoked!');
+partyplayer.main.onupdateUser = function(param, ref) {
+    log('onupdateUser Invoked!');
     //** If param.userId not in [userTable]
     //->@TODO: User admininstartion
     //log("param.userAlias + Joined the party"); 
 };
 
-partyplayer.main.onremovePlayer = function(param, ref) {
-    log('onremovePlayer Invoked!');
+partyplayer.main.onremoveUser = function(param, ref) {
+    log('onremoveUser Invoked!');
     //->@TODO collection should be updated, as user is removed
 };
 
@@ -53,6 +53,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 		//@TODO: client logic 
 	//}
 };
+
 
 //Opening screen select profile
 var selectProfile = {

@@ -12,10 +12,10 @@ partyplayer.main.onjoin = function(params, ref, key) {
     pUsers = coll.getUsers();
     for (var u in pUsers){
         if(uID != u){
-            partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,user:pUsers[u]}}, key);      
+            partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pUsers[u]}}, key);      
         }
     }    
-    partyplayer.sendMessage({ns:"main", cmd:"updatePlayer", params:{userID:uID,user:coll.getUser(uID)}});
+    partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:coll.getUser(uID)}});
     //log('join invoked!');
     getUsers();
     //send available Items to this user
@@ -23,6 +23,7 @@ partyplayer.main.onjoin = function(params, ref, key) {
     for (var i=0; i<pItems.length;i++){
         partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
     }
+    getRandom();
 };
 
 partyplayer.main.onleave= function (params, ref, key) {
@@ -32,14 +33,14 @@ partyplayer.main.onleave= function (params, ref, key) {
             userID = users[key];
             coll.removeUser(userID);
             coll.removeUserItems(userID);
-            partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:userID}}); 
+            partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:userID}}); 
         }
     }
     else if (typeof params !== 'undefined' && params[userID] !== undefined ){ //registered on application level
         userID = params[userID];
         coll.removeUser(userID);
         coll.removeUserItems(userID);
-        partyplayer.sendMessage({ns:"main", cmd:"removePlayer", params:{userID:uID}}); 
+        partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:uID}}); 
     } 
     delete users.key;
     getUsers();
@@ -50,9 +51,11 @@ partyplayer.main.onaddItem = function (params, ref, key) {
     log('adding item');
     itemID = coll.addItem(params.userID,params.item);
     if(itemID!==false){
-        partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:uID,itemID:itemID,item:params.item}}); 
+        partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:params.userID,itemID:itemID,item:params.item}}); 
+        getItems();
+        getRandom();
     }
-    getItems();
+   
 };
 
 
@@ -83,6 +86,7 @@ function getUsers(){
 
 function getItems(){
     itemCount = coll.getItemCount();
+    log(itemCount)
     var str = "";     
     for (t in itemCount){
         if (t!="TOTAL"){
@@ -95,6 +99,13 @@ function getItems(){
     console.log("COLLECTION="+str);
 }
 
+
+function getRandom(){
+    var item = coll.getRandom();
+    if (item != 'false'){
+        log(item);
+    }
+}
 
     //////////// protocol implementation from here ////////////
 
