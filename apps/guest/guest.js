@@ -22,7 +22,7 @@ partyplayer.joinUser = function(name, picture){
 
 
 partyplayer.addItem = function(item){
- 	partyplayer.sendMessage({ns:"main", cmd:"addItem", params:{userId:userID,item:item}});
+ 	partyplayer.sendMessage({ns:"main", cmd:"addItem", params:{userID:userProfile.userID,item:item}});
 	log("adding Item");
 };
 
