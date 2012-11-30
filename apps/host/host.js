@@ -11,8 +11,9 @@ partyplayer.main.onjoin = function(params, ref, key) {
     partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID}}, key);
     pUsers = coll.getUsers();
     for (var u in pUsers){
+    	log(u);
         if(uID != u){
-            partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pUsers[u]}}, key);      
+            partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}}, key);      
         }
     }    
     partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:coll.getUser(uID)}});
