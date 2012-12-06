@@ -138,7 +138,14 @@ var visualFunnel = function(name, selector){
 		element.selector = 'div[_funnelItemID=' + key + ']';
 		element.circle = allCircles;
 		console.log("render at: " + element.circle);
-		$('<div class="funnelObject" _funnelItemID=' + key + '>funnelItemID: ' + key + '</div>').appendTo('.funnelCircle[circle=' + element.circle + ']');
+		user = pc.getUser(funnel.getFunnelListItem(key).userID);
+		item = pc.getItem(funnel.getFunnelListItem(key).itemID);
+		 //.userID).alias;
+		//log(user.alias); 
+		userCover = '<img src='+user.thumbnail+' width=20, height=20/>';
+		trackCover = '<img src='+item.cover+' width=10, height=10/>';
+		track = '"'+item.track+" - "+item.title+'"';
+		$('<div class="funnelObject" _funnelItemID=' + key + '>'+userCover+'</div>').appendTo('.funnelCircle[circle=' + element.circle + ']');
 		startArc(element.selector, element.circle);
 		return element;
 	};

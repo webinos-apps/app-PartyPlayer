@@ -16,6 +16,7 @@ Object.size = function(obj) {
 var item = {};
 item.version = 1;
 item.url = 'http://martinprins.com/unknown-track.mp3';
+item.artist = "MJJ";
 
 //var pc = new PartyCollection('name');
 var blaKey= [];
@@ -111,12 +112,12 @@ var funnel = (function(){
 		 *  @param id int The ID of a partyItem. 
 		 * 
 		**/
-		addItem : function(id){
+		addItem : function(id, userID){
 			var count = 0;
 			for(var i = 0; i<circleSlots['circle_' + circles].length; i++){
 				if(typeof circleSlots['circle_' + circles][i] === 'undefined'){
 					console.log("add item to circle");
-					var funnelItem = new partyplayer.FunnelItem(id, 100);
+					var funnelItem = new partyplayer.FunnelItem(id, 100, userID);
 					var key = funnelList.addItem(funnelItem);
 					var fnO = funnelVar();
 					allItems['key_' + key] = fnO;
