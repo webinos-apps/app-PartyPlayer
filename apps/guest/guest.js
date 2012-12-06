@@ -187,7 +187,7 @@ var selectLocalItems ={
 		    trItem += '<td>'+item.artist+'</td>';
 		    trItem += '<td>'+item.title+'</td>';
 		    trItem += '<td>'+item.album+'</td>';
-		    trItem += '<td>'+'<img class="cover" src="'+item.cover+' width="80px" height="40px" />'+'</td>';
+		    trItem += '<td>'+'<img class="cover" src="'+item.cover+'" width="80px" height="40px" />'+'</td>';
 		    //also add checkBoxes
 		    //checkBoxes get the same name as the fileName, the whole item is passed as value
 		    trItem += '<td><input name="'+item.fileName+'" value="'+i+'" type="checkbox"></td>';
