@@ -44,7 +44,8 @@ partyplayer.main.onupdateUser = function(param, ref) {
     	//store user in userList
 		//@TODO: user updates instead of additions
 	    if (! (param.userID in partyPlayerUsers)){
-	    	partyPlayerUsers[param.userID]={name:param.user.alias,picture:param.user.thumbnail}
+	    	partyPlayerUsers[param.userID]={name:param.user.alias,picture:param.user.thumbnail};
+	    	console.log(partyPlayerUsers);
 	    	 //update users on screen
 		    var newUser = '';
 		    newUser += '<div class="profile">';
@@ -76,11 +77,20 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	trItem += '<td>'+param.item.artist+'</td>';
 	trItem += '<td>'+param.item.title+'</td>';
 	trItem += '<td>'+param.item.album+'</td>';
-	trItem += '<td><img src="'+param.item.cover+'" width="80" height="40" /></td>';
+	trItem += '<td><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>';
 	trItem += '<td><button class="menuBtn">Vote</button></td>';
-	trItem += '<td>'+param.userID+'</td>';
+	var profileImage; 
+	if(param.userID == userProfile.userID){
+		// you added this item
+		profileImage = userProfile.userPic;
+	}else if (param.userID != userProfile.userID){
+		//other user added this item
+		profileImage = partyPlayerUsers[param.userID].picture;
+	}
+	trItem += '<td><img src="'+profileImage+'" width="30" height="30" /></td>';
 	console.log("user "+param.userID);
-	//console.log("picture "+ users);
+	console.log(partyPlayerUsers);
+	console.log(partyPlayerUsers[param.userID]);
 	trItem += '</tr>';
 	$('#currentCollection .collectionContainer #partyCollection').append(trItem);
 };
