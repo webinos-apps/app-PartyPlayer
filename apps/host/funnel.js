@@ -259,6 +259,8 @@ var funnel = (function(){
 			    console.log(allItems);
 			    console.log(circleSlots);
 			    console.log(funnelList);
+			    //@TODO-> use proper callback interface
+			    partyplayer.funnel.removeFunnelItem(key);
 			    return true;
 			} else {
 			    return false;
