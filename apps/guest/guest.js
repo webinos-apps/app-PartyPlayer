@@ -31,7 +31,20 @@ partyplayer.removeItem = function(itemID){
 	log("removing Item");
 }
 
+partyplayer.addFunnelItem = function(itemID){
+ 	partyplayer.sendMessage({ns:"funnel", cmd:"addItem", params:{userID:userProfile.userID,itemID:itemID}});
+	log("adding Item To Funnel");
+};
+
+partyplayer.voteFunnelItem = function(funnelItem, voteValue){
+    //@TODO -> TEST
+ 	partyplayer.sendMessage({ns:"funnel", cmd:"vote", params:{userID:userProfile.userID,funnelItemID:funnelItemID}});
+	log("adding Item To Funnel");
+};
+
+
 partyplayer.main = {};
+partyplayer.funnel = {};
 partyplayer.main.onwelcome = function(param, ref) {
     userProfile.userID = param.userID;
     log('onwelcome invoked! userID = '+ userProfile.userID); 
@@ -94,6 +107,16 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	trItem += '</tr>';
 	$('#currentCollection .collectionContainer #partyCollection').append(trItem);
 };
+
+partyplayer.funnel.onUpdateFunnelItem = function (param, ref) {
+    log ('onUpdateItem Invoked on Funnel')
+    //something added to the funnel / or changed in the funnel
+}
+
+partyplayer.funnel.onDeleteFunnelItem = function (param, ref) {
+    log ('onDelete Funnel Item Invoked on Funnel')
+    //something added to the funnel / or changed in the funnel
+}
 
 
 //Opening screen select profile
