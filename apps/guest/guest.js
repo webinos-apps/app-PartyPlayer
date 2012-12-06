@@ -79,24 +79,18 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	trItem += '<td>'+param.item.artist+'</td>';
 	trItem += '<td>'+param.item.title+'</td>';
 	trItem += '<td>'+param.item.album+'</td>';
-	trItem += '<td><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>';
-	
-	
-
+	trItem += '<td align="center"><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>'
 	if(param.userID == userProfile.userID){
 		// you added this item
 		var profileImage = userProfile.userPic;
-		trItem += '<td><img src="'+profileImage+'" width="30" height="30" /></td>';
-		trItem += '<td><img src="../../library/trash.png" width="30" height="30" /></td>';
+		trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>';
+		trItem += '<td align="center"><img src="../../library/trash.png" width="30" height="30" /></td>';
 	}else if (param.userID != userProfile.userID){
 		//other user added this item
 		var profileImage = partyPlayerUsers[param.userID].picture;
-		trItem += '<td><img src="'+profileImage+'" width="30" height="30" /></td>';
-		trItem += '<td><button class="menuBtn">Vote</button></td>';
+		trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>';
+		trItem += '<td align="center"><button class="addBtn">Play</button></td>';
 	}
-	console.log("user "+param.userID);
-	console.log(partyPlayerUsers);
-	console.log(partyPlayerUsers[param.userID]);
 	trItem += '</tr>';
 	$('#currentCollection .collectionContainer #partyCollection').append(trItem);
 };
