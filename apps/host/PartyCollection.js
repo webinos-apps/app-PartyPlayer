@@ -137,7 +137,6 @@ PartyCollection.prototype.getItems = function (userID, limit, filterCriteria){
 			if (typeof filterCriteria=='undefined' ){
 				filterCriteria={};
 			}
-			//tmpItem.item.userID=tmpItem.userID;
 		}
 		if (typeof filterCriteria != 'undefined' ){
 			if (filterItem(tmpItem.item, filterCriteria) == true){

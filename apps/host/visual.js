@@ -137,15 +137,15 @@ var visualFunnel = function(name, selector){
 		var element = {};
 		element.selector = 'div[_funnelItemID=' + key + ']';
 		element.circle = allCircles;
-		console.log("render at: " + element.circle);
+		//console.log("render at: " + element.circle);
 		user = pc.getUser(funnel.getFunnelListItem(key).userID);
 		item = pc.getItem(funnel.getFunnelListItem(key).itemID);
 		 //.userID).alias;
 		//log(user.alias); 
 		userCover = '<img src='+user.thumbnail+' width=40, height=40/>';
 		trackCover = '<img src='+item.item.cover+' width=40, height=40/>';
-		track = '"'+item.track+" - "+item.title+'"';
-		$('<div class="funnelObject" _funnelItemID=' + key + '>'+userCover+' '+trackCover+'</div>').appendTo('.funnelCircle[circle=' + element.circle + ']');
+		track = '"'+item.item.artist+" - "+item.item.title+'"';
+		$('<div class="funnelObject" _funnelItemID=' + key + '>'+userCover+' '+trackCover+'<br>'+track+'</div>').appendTo('.funnelCircle[circle=' + element.circle + ']');
 		startArc(element.selector, element.circle);
 		return element;
 	};
@@ -217,6 +217,11 @@ var visualPlayer = function(name, selector){
 	that.updatePlayer = function(url, playerSelector){
 	    $(playerSelector).attr('src', url);
 	};
+	
+	that.setupButton = function(){
+	    $(selector).append('<button id="setupButton">Play next track</button>');
+	    $('#setupButton').bind('click', player.getSong());
+    }
 	
 	return that;
 }

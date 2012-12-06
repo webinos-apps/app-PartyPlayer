@@ -1,7 +1,7 @@
 
 var pc = null;
 var users = {};
-
+var firstTrack=true;
 partyplayer.main = {};
 partyplayer.funnel = {};
 
@@ -11,20 +11,17 @@ partyplayer.main.onjoin = function(params, ref, key) {
     partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID}}, key);
     pUsers = pc.getUsers();
     for (var u in pUsers){
-    	log(u);
         if(uID != u){
             partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}}, key);      
         }
     }    
     partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pc.getUser(uID)}});
-    //log('join invoked!');
     getUsers();
     //send available Items to this user
     pItems = pc.getItems();
     for (var i=0; i<pItems.length;i++){
         partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
     }
-    getRandom();
 };
 
 partyplayer.main.onleave= function (params, ref, key) {
@@ -54,7 +51,6 @@ partyplayer.main.onaddItem = function (params, ref, key) {
     if(itemID!==false){
         partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:params.userID,itemID:itemID,item:params.item}}); 
         getItems();
-        getRandom();
     }
    
 };
@@ -64,16 +60,19 @@ partyplayer.funnel.onaddItem = function( params,ref, key) {
     log("got a new item for the funnel");   
     funnelItemID = funnel.addItem(params.itemID,params.userID);
     partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,vote:0}});
+    if(firstTrack == true){
+        firstTrack =false;
+        playerViz.setupButton();
+    }
 }
 
 partyplayer.funnel.onvote = function (params, ref, key) {
     log("got a vote");
     funnel.vote(userID,itemID,funnelItemID,vote);
-    //user "pietje" upvoted item in funnelID "blaat"
     partyplayer.sendMessage({ns:"funnel", cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,vote:voteresult}});
 }
 
-//@TODO: create callback from 
+//@TODO: create callback from visual.js to this function 
 partyplayer.funnel.removeFunnelItem = function (funnelItemID) {
     partyplayer.sendMessage({ns:"funnel", cmd:"removeFunnelItem", params:{funnelItemID:funnelItemID}});
 };
@@ -88,7 +87,7 @@ function getUsers(){
         nrUsers+=1;
         str+=players[t].alias+",";
     }
-    log("Currently "+nrUsers+" Users:"+str);
+    log("Currently "+nrUsers+" User(s):"+str);
 }
 
 function getItems(){
@@ -97,7 +96,7 @@ function getItems(){
     var str = "";     
     for (t in itemCount){
         if (t!="TOTAL"){
-            str+=pc.getItem(t)+":"+itemCount[t]+";";
+            str+=pc.getUser(t).alias+":"+itemCount[t]+";";
         }
         else{
             str+=t+":"+itemCount[t]+";";
@@ -161,8 +160,8 @@ function getRandom(){
 
 $(document).ready(function(){
     partyplayer.init('host');
-    pc = new PartyCollection("testCollection");
+    pc = new PartyCollection("Webinos Party");
     funnel.init(500, 5);
 	player.init();
-    
+	
 });

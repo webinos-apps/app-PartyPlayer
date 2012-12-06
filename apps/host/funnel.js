@@ -13,30 +13,9 @@ Object.size = function(obj) {
     return size;
 }
 
-var item = {};
-item.version = 1;
-item.url = 'http://martinprins.com/unknown-track.mp3';
-item.artist = "MJJ";
-
 //var pc = new PartyCollection('name');
 var blaKey= [];
 var pcKey = [];
-
-/**
-$(document).ready(function(){
-    //adding tests items in party collection
-   
-    //pcKey.push(pc.addItem(2, item));
-    //pcKey.push(pc.addItem(2, item));
-    //pcKey.push(pc.addItem(2, item));
-    //pcKey.push(pc.addItem(2, item));
-    //pcKey.push(pc.addItem(2, item));
-
-	//funnel.init(500, 5);
-	//player.init();
-});
-
-**/
 
 /**
  *	Use directly, self initialized, singleton.
@@ -90,8 +69,8 @@ var funnel = (function(){
 			}
 			*/
 			funnelViz.setupCircles(funnelWidth, circles);
-			console.log(circleSlots);
-			console.log(funnelList);
+			//console.log(circleSlots);
+			//console.log(funnelList);
 		},
 		/**
 		 *	Updates the given maximum for a given circle
@@ -116,7 +95,7 @@ var funnel = (function(){
 			var count = 0;
 			for(var i = 0; i<circleSlots['circle_' + circles].length; i++){
 				if(typeof circleSlots['circle_' + circles][i] === 'undefined'){
-					console.log("add item to circle");
+					//console.log("add item to circle");
 					var funnelItem = new partyplayer.FunnelItem(id, 100, userID);
 					var key = funnelList.addItem(funnelItem);
 					var fnO = funnelVar();
@@ -133,9 +112,9 @@ var funnel = (function(){
 				console.log('funnel full');
 				return false;
 			}
-			console.log(allItems);
-			console.log(circleSlots);
-			console.log(funnelList);
+			//console.log(allItems);
+			//console.log(circleSlots);
+			//console.log(funnelList);
 			
 			return key;
 		},
