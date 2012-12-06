@@ -154,8 +154,8 @@ function getRandom(){
 $(document).ready(function(){
     partyplayer.init('host');
     pc = new PartyCollection("testCollection");
-    itemID = pc.addItem(2,item);
-    console.log ("Item ID = "+itemID);
+    //itemID = pc.addItem(2,item);
+   // console.log ("Item ID = "+itemID);
     funnel.init(500, 5);
 	player.init();
     

@@ -111,9 +111,20 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 
 partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
-    //something added to the funnel / or changed in the funnel
+    //something added to the funnel or changed in the funnel
     
     console.log(param);
+    
+    //add items to funnel on screen
+	var trItem = '';
+	trItem += '<tr class="funnel">';
+	trItem += '<td>artist</td>';
+	trItem += '<td>title</td>';
+	trItem += '<td>album</td>';
+//	trItem += '<td align="center"><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>'
+	trItem += '</tr>';
+	$('#currentCollection .funnelContainer #partyFunnel').append(trItem);
+	//$('#currentCollection .collectionContainer #partyCollection .addBtn[itemID='+param.itemID+']').bind("click", currentCollection.preferItemsClick);   
 }
 
 partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
