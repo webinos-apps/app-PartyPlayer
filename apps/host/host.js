@@ -73,7 +73,6 @@ partyplayer.funnel.onvote = function (params, ref, key) {
     partyplayer.sendMessage({ns:"funnel", cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,vote:voteresult}});
 }
 
-
 function getUsers(){
     players = coll.getUsers();
     var str = "";

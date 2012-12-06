@@ -55,7 +55,6 @@ partyplayer.main.onupdateUser = function(param, ref) {
 		    $('#userInfo').append(newUser);
 	    }
     }
-	console.log(partyPlayerUsers);
 };
 
 partyplayer.main.onremoveUser = function(param, ref) {
@@ -77,7 +76,11 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	trItem += '<td>'+param.item.artist+'</td>';
 	trItem += '<td>'+param.item.title+'</td>';
 	trItem += '<td>'+param.item.album+'</td>';
-	trItem += '<td><img src="'+param.item.cover+'" width=40px height=40px/></td>';
+	trItem += '<td><img src="'+param.item.cover+'" width="80" height="40" /></td>';
+	trItem += '<td><button class="menuBtn">Vote</button></td>';
+	trItem += '<td>'+param.userID+'</td>';
+	console.log("user "+param.userID);
+	//console.log("picture "+ users);
 	trItem += '</tr>';
 	$('#currentCollection .collectionContainer #partyCollection').append(trItem);
 };
@@ -184,10 +187,10 @@ var selectLocalItems ={
 		    trItem += '<td>'+item.artist+'</td>';
 		    trItem += '<td>'+item.title+'</td>';
 		    trItem += '<td>'+item.album+'</td>';
-		    trItem += '<td>'+"<img src="+item.cover+' width=40px hight=40px/>'+'</td>';
+		    trItem += '<td>'+'<img class="cover" src="'+item.cover+' width="80px" height="40px" />'+'</td>';
 		    //also add checkBoxes
 		    //checkBoxes get the same name as the fileName, the whole item is passed as value
-		    trItem += '<td><input name="'+item.fileName+'" value="'+i+'" type="checkbox" checked="checked"></td>';
+		    trItem += '<td><input name="'+item.fileName+'" value="'+i+'" type="checkbox"></td>';
 		    trItem += '</tr>';
 		    itemList += trItem;
 		});	
