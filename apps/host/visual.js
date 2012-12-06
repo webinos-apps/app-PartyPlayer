@@ -15,8 +15,8 @@
  *	}
  *	//calling the method is done like
  *	childClass.publicMethod();
- *	@param name the name of the visual class
- *	@param selector the base element the code looks for when appending extra elements
+ *	@param name string the name of the visual class
+ *	@param selector string the base element the code looks for when appending extra elements
 **/
 var Visual = function(name, selector){
 	this.name = name;
@@ -25,7 +25,7 @@ var Visual = function(name, selector){
 	var that = {};
 	
 	/**
-	 *	Returns the selector
+	 *	string Returns The selector
 	 *
 	 *	@methodOf Visual
 	**/
@@ -33,7 +33,7 @@ var Visual = function(name, selector){
 		return selector;
 	};
 	/**
-	 *	Returns the name
+	 *	string Returns The name
 	 *
 	 *	@methodOf Visual
 	**/
@@ -41,10 +41,10 @@ var Visual = function(name, selector){
 		return name;
 	};
 	/**
-	 *	Replaces the current the selector with the geven selector
+	 *	Replaces the current the selector with the given selector
 	 *
 	 *	@methodOf Visual
-	 *	@param newSelector the selector replacing the current selector
+	 *	@param newSelector string the selector replacing the current selector
 	**/
 	that.replaceSelector = function(newSelector){
 		selector = newSelector;
@@ -76,8 +76,8 @@ var visualFunnel = function(name, selector){
 	 *	@private plus @function startArc 
 	 *	
 	 *	@private
-	 *	@param selector The DOM funnel element to animate
-	 *	@param circle The numbered circle to animate along (larger circle number is larger circle is larger radius)
+	 *	@param selector string The DOM funnel element to animate
+	 *	@param circle int The numbered circle to animate along (larger circle number is larger circle is larger radius)
 	**/
 	var startArc = function(selector, circle){
 		//console.log("start arc");
@@ -103,8 +103,8 @@ var visualFunnel = function(name, selector){
 	 *	to itself for future reference
 	 *
 	 *	@methodOf visualFunnel
-	 *	@param funnel The max width the funnel is (also uses this number for height)
-	 *	@param maxCircles The maximum number of circles the funnel will hold
+	 *	@param funnel int The max width the funnel is (also uses this number for height)
+	 *	@param maxCircles int The maximum number of circles the funnel will hold
 	**/
 	that.setupCircles = function(funnel, maxCircles){
 		funnelSize = funnel;
@@ -127,8 +127,10 @@ var visualFunnel = function(name, selector){
 	 *	When these things are build, it invokes the startArc function. The element object will be returned
 	 *	for future reference
 	 *
+	 *  string Returns the DOM element
+	 *
 	 *	@methodOf visualFunnel
-	 *	@param key The ID of the funnelItem as in funnelList, used as a custom attribute at the DOM element
+	 *	@param key int The ID of the funnelItem as in funnelList, used as a custom attribute at the DOM element
 	 *	for future reference
 	**/	
 	that.renderSingle = function(key){
@@ -142,9 +144,10 @@ var visualFunnel = function(name, selector){
 	};
 	/**
 	 *	Destroys the DOM element for the given funnelItem. It also stops any animations
+	 *  boolean Returns if succesful yes/no
 	 *
 	 *	@methodOf visualFunnel
-	 *	@param selector The selector of the DOM funnel element to look for
+	 *	@param selector string The selector of the DOM funnel element to look for
 	**/
 	that.destroySingle = function(selector){
 		console.log("remove element: " +selector);
@@ -156,8 +159,8 @@ var visualFunnel = function(name, selector){
 	 *	It stops any animations. It then starts the startArc function.
 	 *
 	 *	@methodOf visualFunnel
-	 *	@param selector The selector of the DOM funnel element to look for
-	 *	@param circle The circle to update to
+	 *	@param selector string The selector of the DOM funnel element to look for
+	 *	@param circle int The circle to update to
 	**/
 	that.updateCircle = function(selector, circle){
 		//console.log("stop current animation");
@@ -165,27 +168,52 @@ var visualFunnel = function(name, selector){
 		//console.log("update circle to: " + circle);
 		startArc(selector, circle);
 	};
+	/**
+	 *	Updates the given DOM element to show the votes and display a blink depending on value
+	 *
+	 *	@methodOf visualFunnel
+	 *  @param value int the total value that needs to be updated to
+	 *	@param selector string The selector of the DOM funnel element to look for
+	 *
+	 *  @TODO build selector update
+	 *  @TODO build blink
+	**/	
+	that.showVote = function(value, selector){
+	    if(value >= 0){
+	        //make green blink for selector
+	        console.log(selector + " green");   
+	    } else if (value < 0){
+	        //make red blink for selector
+	        console.log(selector + " red");   	        
+	    }
+	};
+	
 	return that;
 }
 
+/**
+ *  The class updating the player frontend & css. Same build as the funnel, with Visual as baseclass
+**/
 var visualPlayer = function(name, selector){
 	var that = Visual(name, selector);
 	
-	that.setupButton = function(){
-		$('<button id=start>Start the Player</button>').appendTo(selector).click(function(){
-			player.getSong();
-		});
+	that.buildPlayer = function(){
+        $(selector).html('<audio id="playback" autoplay onended="player.getSong()" controls="controls">' + 
+	    '<source src="" type="audio/ogg">' +
+	    '<source src="" type="audio/mpeg">' +
+	    'Your browser does not support the audio element.</audio>');
+	    
+	    var playerSelector = '#playback';
+	    return playerSelector;	    
 	};
 	
-	that.updatePlayer = function(url){
-	    $(selector).html('<audio autoplay onended="player.getSong()" controls="controls">' + 
-	    '<source src="' + url + '" type="audio/ogg">' +
-	    '<source src="' + url + '" type="audio/mpeg">' +
-	    'Your browser does not support the audio element.</audio>');
-	}
+	that.updatePlayer = function(url, playerSelector){
+	    $(playerSelector).attr('src', url);
+	};
 	
 	return that;
 }
 
+//initialize the visual parts, assigning them to a var
 var funnelViz = visualFunnel("VisualFunnel", 'div#funnel');
 var playerViz = visualPlayer("VisualPlayer", 'div#player');

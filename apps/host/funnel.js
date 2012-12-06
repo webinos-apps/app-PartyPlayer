@@ -28,10 +28,9 @@ $(document).ready(function(){
     pcKey.push(pc.addItem(2, item));
     pcKey.push(pc.addItem(2, item));
     pcKey.push(pc.addItem(2, item));
-    
-	funnelViz.setupCircles(300, funnel.getCircles());
-	playerViz.setupButton();
-	funnel.init();
+
+	funnel.init(500, 5);
+	player.init();
 });
 
 /**
@@ -62,8 +61,13 @@ var funnel = (function(){
 	return{
 		/**
 		 *  Initialize function to setup circle slots.
+		 *
+		 *  @param funnelSize int The size of the funnel (width & height) in pixels
+		 *  @param circles int The amount of circles the funnel holds 
 		**/
-		init : function(){
+		init : function(funnelSize, the_circles){
+		    funnelWidth = funnelSize;
+		    circles = the_circles;
 			for(var i = 0; i<circles; i++){
 				circleSlots['circle_' + (i+1)] = new Array(i+1);
 			}
@@ -80,14 +84,15 @@ var funnel = (function(){
 				votes +=  50;
 			}
 			*/
+			funnelViz.setupCircles(funnelWidth, circles);
 			console.log(circleSlots);
 			console.log(funnelList);
 		},
 		/**
 		 *	Updates the given maximum for a given circle
 		 *
-		 *	@param circle The circle to change the maximum of slots for
-		 *	@param maximum The new number of maximum items to hold 
+		 *	@param circle int The circle to change the maximum of slots for
+		 *	@param maximum int The new number of maximum items to hold 
 		**/
 		updateMaxSlots : function(circle, maximum){
 			circleSlots['circle_' + circle].length = maximum;
@@ -96,8 +101,11 @@ var funnel = (function(){
 		/**
 		 *  Add an item to the funnel. Creates a funnelItem (for in funnelList) and funnelVar 
 		 *	(for in allItems), with the property as the key of the funnelItem in funnelList
-		 *
-		 *  @param id The ID of a partyItem  
+		 * 
+		 *  Returns int The key as in funnelList
+		 * 
+		 *  @param id int The ID of a partyItem. 
+		 * 
 		**/
 		addItem : function(id){
 			var count = 0;
@@ -118,6 +126,7 @@ var funnel = (function(){
 			}
 			if(count == circleSlots['circle_' + circles].length){
 				console.log('funnel full');
+				return false;
 			}
 			console.log(allItems);
 			console.log(circleSlots);
@@ -129,7 +138,7 @@ var funnel = (function(){
 		 *  Function to handle switching circles, it looks for the next item with least votes to be switched with if the next circle is full
 		 *	If the same amount of votes are found it picks a random item of the ones with least votes
 		 *
-		 *	@param key The itemID as in funnelList to look for
+		 *	@param key int The itemID as in funnelList to look for
 		 *	@param goNext boolean If true, looks for the next circle, if false, looks for the prev circle
 		 *	
 		**/
@@ -185,21 +194,6 @@ var funnel = (function(){
 					sortable.push([key, allVotes[key]]);
 				}
 				sortable.sort(function(a,b){return a[1]-b[1]});
-			
-				/*
-				if(sortable[0][1] == sortable[1][1]){
-					//bug: picks random of all items, even ones with more than the first 2 votes
-					//need algorithm to only pick random from the same lowest votes
-					
-					var r = randomFromTo(0, Object.size(allVotes));
-					console.log('same first 2 numbers, pick random: ' + r);
-					var key2 = sortable[r][0];
-
-				} else {
-					console.log('pick first in sortable (with lowest votes)');
-					var key2 = sortable[0][0];
-				}
-				*/
 				
 				if(sortable.length == 1){
 					//console.log('pick first in sortable (with lowest votes)');
@@ -237,58 +231,87 @@ var funnel = (function(){
 				console.log(allVotes);
 				console.log(sortable);
 
-				
-				/*
-				var key2 = circleNext[0]; //make randomized number
-				var fnO2 = allItems['key_' + key2];
-				console.log("switch: " + fnO1.getKey() +" with "+fnO2.getKey());
-				fnO2.setCircle(circle);
-				circleOld[indexOld] = key2;
-				fnO1.setCircle(toCircle);
-				circleNext[0] = key;
-				*/
 			}
 			//console.log(circleSlots);			
 					
 		},
 		/**
 		 *  Removes an item from the funnelList and from allItems
+		 *  boolean Returns if succesful yes/no
 		 *
-		 *	@param key The ID of the funnelItem as in funnelList
+		 *	@param key int The ID of the funnelItem as in funnelList
 		**/
 		removeItem : function(key){
 			console.log("remove item with key: " + key);
-			funnelViz.destroySingle(allItems['key_' + key].getSelector());
-			funnelList.removeItem(key);
-			delete allItems['key_' + key];
-			console.log(allItems);
-			console.log(funnelList);
+			var fnO = allItems['key_' + key];
+			if(fnO){
+			    funnelViz.destroySingle(allItems['key_' + key].getSelector());
+			    funnelList.removeItem(key);
+			    var circle = allItems['key_' + key].getCircle();
+			    var index = circleSlots['circle_' + circle].indexOf(key);
+			    circleSlots['circle_' + circle][index] = undefined;
+			    delete allItems['key_' + key];
+			    console.log(allItems);
+			    console.log(circleSlots);
+			    console.log(funnelList);
+			    return true;
+			} else {
+			    return false;
+			}
 		},
 		/**
-		 *  Returns the amount of circles the funnel consists of
+		 *  Vote for an item inside the Funnel
+		 *  boolean Return (un)succesful
+		 *
+		 *	@param value int The amount of votes given to the item
+		 *  @param string key The funnelItem ID
+		**/
+		voteItem : function(value, key){
+		    if(value && key){
+		        var funnelItem = funnelList.getItem(key);
+		        funnelItem.votes += value;
+		        funnelViz.showVote(value, allItems['key_' + key].getSelector())
+		        console.log(funnelItem.votes);
+		        return true;
+		    } else {
+		        return false;
+		    }
+		},
+		/**
+		 *  int Returns The amount of circles the funnel consists of
 		 *
 		**/
 		getCircles : function(){
 			return circles;
 		},
 		/**
-		 * Returns funnelVar as in own allItems
+		 *  object Returns funnelVar as in allItems
 		 *
-		 *	@param key The ID as a property in allItems
+		 *	@param key int The ID as a property in allItems
 		**/
 		getFunnelItem : function(key){
 			return allItems['key_' + key];
 		},
+		/**
+		 *  object Returns funnelItem as in funnelList
+		 *
+		 *	@param key int The ID as a property in allItems
+		**/
 		getFunnelListItem : function(key){
 			return funnelList.getItem(key);
 		},
 		/**
-		 *  Returns the total funnel size (in pixels)
+		 *  int Returns The total funnel size (in pixels)
 		 *
 		**/
 		getFunnelWidth : function(){
 			return funnelWidth;
 		},
+		/**
+		 *  array Returns The circle given with all items in it
+		 *
+		 *  @param circle int The circle to return
+		**/
 		getFunnelItemsAtCircle : function(circle){
 			return circleSlots['circle_' + circle];
 		}
@@ -308,10 +331,8 @@ var funnelVar = function(){
 	
 	return{
 		/**
-		 *	Initializes the funnelVar to setup its key (as it is in funnelList).
-		 *	this method also sets up the element object that gets returned after building it in the DOM
+		 *	This method sets up the element object that gets returned after building it in the DOM
 		 *
-		 *	@param newKey The key from the funnelItem in funnelList
 		**/
 		init : function(){
 			element = funnelViz.renderSingle(key);
@@ -319,7 +340,7 @@ var funnelVar = function(){
 		/**
 		 *	Sets the key of this Item
 		 *
-		 *	@param key The key to be set to
+		 *	@param key int The key to be set to
 		**/
 		setKey : function(newKey){
 			key = newKey;
@@ -327,29 +348,68 @@ var funnelVar = function(){
 		/**
 		 *	Sets the circle this Item is at in the element Object
 		 *
-		 *	@param circle Circle number to be set to
+		 *	@param circle int Circle number to be set to
 		**/
 		setCircle : function(circle){
 			element.circle = circle;
 		},
 		/**
-		 *	Returns the key of the Item
+		 *	string Returns The key of the Item
 		**/
 		getKey : function(){
 			return key;
 		},
 		/**
-		 *	Returns the selector the element Object
+		 *	string Returns The selector the element Object
 		**/
 		getSelector : function(){
 			return element.selector;
 		},
 		/**
-		 *	Returns the circle the Item is at
+		 *	int Returns The circle the Item is at
 		**/
 		getCircle : function(){
 			return element.circle;
 		}
 	}	
 };
+
+/******************||**||**|||**|||**||*****************************
+*******************||**||**||*||*||**||*****************************
+*******************||||||**||****||**|||||**************************/
+
+ /*
+ @startuml protocol_funnel_addItem.png
+ group Adding an Item to the funnel
+    PartyCollection -> Funnel: addItem(itemID)
+    Funnel -> VisualFunnel: renderSingle(key)
+ 
+    VisualFunnel --> Funnel: return element
+    Funnel --> PartyCollection: return key/false
+ end
+ @enduml
+ */
+ 
+ /*
+ @startuml protocol_funnel_removeItem.png
+ group Removing an Item from the funnel
+    PartyCollection -> Funnel: removeItem(key)
+    Funnel -> VisualFunnel: destroySingle(key)
+ 
+    Funnel --> PartyCollection: return boolean
+ end
+ @enduml
+ */
+ 
+  /*
+ @startuml protocol_funnel_voteItem.png
+ group Voting for an Item
+    PartyCollection -> Funnel: voteItem(value, key)
+    Funnel -> VisualFunnel: showVote(value, selector)
+ 
+    Funnel --> PartyCollection: return boolean
+ end
+ @enduml
+ */
+
 
