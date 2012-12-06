@@ -63,7 +63,7 @@ partyplayer.main.onaddItem = function (params, ref, key) {
 partyplayer.funnel.onaddItem = function( params,ref, key) {
     log("got a new item for the funnel");   
     funnelItemID = funnel.addItem(params.itemID,params.userID);
-    partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,vote:0}});
+    partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,vote:0}});
 }
 
 partyplayer.funnel.onvote = function (params, ref, key) {
@@ -154,8 +154,6 @@ function getRandom(){
 $(document).ready(function(){
     partyplayer.init('host');
     pc = new PartyCollection("testCollection");
-    //itemID = pc.addItem(2,item);
-   // console.log ("Item ID = "+itemID);
     funnel.init(500, 5);
 	player.init();
     
