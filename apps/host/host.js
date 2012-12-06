@@ -73,6 +73,13 @@ partyplayer.funnel.onvote = function (params, ref, key) {
     partyplayer.sendMessage({ns:"funnel", cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,vote:voteresult}});
 }
 
+//@TODO: create callback from 
+partyplayer.funnel.removeFunnelItem = function (funnelItemID) {
+    partyplayer.sendMessage({ns:"funnel", cmd:"removeFunnelItem", params:{funnelItemID:funnelItemID}});
+};
+
+
+
 function getUsers(){
     players = pc.getUsers();
     var str = "";
