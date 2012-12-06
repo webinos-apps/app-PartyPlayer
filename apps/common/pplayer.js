@@ -195,8 +195,9 @@ class FunnelItem {
  * @param itemID the itemID in the collection
  * @param hitpoints the "status" of the item 
  */
-partyplayer.FunnelItem = function(itemID, hitpoints) {
+partyplayer.FunnelItem = function(itemID, hitpoints, userID) {
     this.itemID = itemID;
+    this.userID = userID;
     this.hitpoints = hitpoints;
     this.votes = 100;
 };

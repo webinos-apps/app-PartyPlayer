@@ -62,8 +62,8 @@ partyplayer.main.onaddItem = function (params, ref, key) {
 
 partyplayer.funnel.onaddItem = function( params,ref, key) {
     log("got a new item for the funnel");   
-    funnelItemID = funnel.addItem(itemID);
-    partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,vote:voteresult}});
+    funnelItemID = funnel.addItem(params.itemID,params.userID);
+    partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,vote:0}});
 }
 
 partyplayer.funnel.onvote = function (params, ref, key) {

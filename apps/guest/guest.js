@@ -109,14 +109,14 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	$('#currentCollection .collectionContainer #partyCollection .addBtn[itemID='+param.itemID+']').bind("click", currentCollection.preferItemsClick);
 };
 
-partyplayer.funnel.onUpdateFunnelItem = function (param, ref) {
+partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
     //something added to the funnel / or changed in the funnel
     
     console.log(param);
 }
 
-partyplayer.funnel.onDeleteFunnelItem = function (param, ref) {
+partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
     log ('onDelete Funnel Item Invoked on Funnel')
     //something added to the funnel / or changed in the funnel
 }
