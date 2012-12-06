@@ -142,10 +142,10 @@ var visualFunnel = function(name, selector){
 		item = pc.getItem(funnel.getFunnelListItem(key).itemID);
 		 //.userID).alias;
 		//log(user.alias); 
-		userCover = '<img src='+user.thumbnail+' width=20, height=20/>';
-		trackCover = '<img src='+item.cover+' width=10, height=10/>';
+		userCover = '<img src='+user.thumbnail+' width=40, height=40/>';
+		trackCover = '<img src='+item.item.cover+' width=40, height=40/>';
 		track = '"'+item.track+" - "+item.title+'"';
-		$('<div class="funnelObject" _funnelItemID=' + key + '>'+userCover+'</div>').appendTo('.funnelCircle[circle=' + element.circle + ']');
+		$('<div class="funnelObject" _funnelItemID=' + key + '>'+userCover+' '+trackCover+'</div>').appendTo('.funnelCircle[circle=' + element.circle + ']');
 		startArc(element.selector, element.circle);
 		return element;
 	};
