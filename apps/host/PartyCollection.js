@@ -133,11 +133,10 @@ PartyCollection.prototype.getItems = function (userID, limit, filterCriteria){
 	result = [];
 	for (var index in this.coll.getItems() ){
 		tmpItem = this.coll.getItem(index);
-		if(userID!=0){
+		if(typeof userID!='undefined'){
 			if (typeof filterCriteria=='undefined' ){
 				filterCriteria={};
 			}
-			filterCriteria["userID"]=userID;
 			//tmpItem.item.userID=tmpItem.userID;
 		}
 		if (typeof filterCriteria != 'undefined' ){
@@ -145,6 +144,7 @@ PartyCollection.prototype.getItems = function (userID, limit, filterCriteria){
 				result.push({"itemID":index,"userID":tmpItem.userID, "item": tmpItem.item});
 			}		
 		}
+		
 		else{
 			result.push({"itemID":index,"userID":tmpItem.userID, "item": tmpItem.item});
 		}
