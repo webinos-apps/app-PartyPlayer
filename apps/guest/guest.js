@@ -45,10 +45,9 @@ partyplayer.main.onupdateUser = function(param, ref) {
 		//@TODO: user updates instead of additions
 	    if (! (param.userID in partyPlayerUsers)){
 	    	partyPlayerUsers[param.userID]={name:param.user.alias,picture:param.user.thumbnail};
-	    	console.log(partyPlayerUsers);
 	    	 //update users on screen
 		    var newUser = '';
-		    newUser += '<div class="profile">';
+		    newUser += '<div class="profile" user="'+param.userID+'">';
 		    newUser += '<div class="userInfoPic">';
 		    newUser += '<img class="profilePicSmall" id="base64image" src="'+param.user.thumbnail+'"/></div>';
 		    newUser += '<div class="userInfoText">'+param.user.alias+'</div>';
@@ -62,7 +61,10 @@ partyplayer.main.onremoveUser = function(param, ref) {
     log('onremoveUser Invoked!');
     
     delete partyPlayerUsers[param.userID];
-    //->@TODO collection should be updated, as user is removed
+    //delete user from screen
+    $('.profile[user="'+param.userID+'"]').remove();
+    //delete items from collection
+    $('#currentCollection .collectionContainer #partyCollection tr[user="'+param.userID+'"]').remove();
 };
 
 partyplayer.main.onupdateCollectionItem = function (param, ref) {
@@ -73,21 +75,25 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	//}
     //add items to screen
 	var trItem = '';
-	trItem += '<tr>';
+	trItem += '<tr user="'+param.userID+'">';
 	trItem += '<td>'+param.item.artist+'</td>';
 	trItem += '<td>'+param.item.title+'</td>';
 	trItem += '<td>'+param.item.album+'</td>';
 	trItem += '<td><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>';
-	trItem += '<td><button class="menuBtn">Vote</button></td>';
-	var profileImage; 
+	
+	
+
 	if(param.userID == userProfile.userID){
 		// you added this item
-		profileImage = userProfile.userPic;
+		var profileImage = userProfile.userPic;
+		trItem += '<td><img src="'+profileImage+'" width="30" height="30" /></td>';
+		trItem += '<td><img src="../../library/trash.png" width="30" height="30" /></td>';
 	}else if (param.userID != userProfile.userID){
 		//other user added this item
-		profileImage = partyPlayerUsers[param.userID].picture;
+		var profileImage = partyPlayerUsers[param.userID].picture;
+		trItem += '<td><img src="'+profileImage+'" width="30" height="30" /></td>';
+		trItem += '<td><button class="menuBtn">Vote</button></td>';
 	}
-	trItem += '<td><img src="'+profileImage+'" width="30" height="30" /></td>';
 	console.log("user "+param.userID);
 	console.log(partyPlayerUsers);
 	console.log(partyPlayerUsers[param.userID]);
