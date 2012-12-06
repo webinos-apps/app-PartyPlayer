@@ -15,23 +15,27 @@ Object.size = function(obj) {
 
 var item = {};
 item.version = 1;
-item.url = '../../library/01.mp3';
+item.url = 'http://martinprins.com/unknown-track.mp3';
 
-var pc = new PartyCollection('name');
+//var pc = new PartyCollection('name');
 var blaKey= [];
 var pcKey = [];
 
+/**
 $(document).ready(function(){
     //adding tests items in party collection
-    pcKey.push(pc.addItem(2, item));
-    pcKey.push(pc.addItem(2, item));
-    pcKey.push(pc.addItem(2, item));
-    pcKey.push(pc.addItem(2, item));
-    pcKey.push(pc.addItem(2, item));
+   
+    //pcKey.push(pc.addItem(2, item));
+    //pcKey.push(pc.addItem(2, item));
+    //pcKey.push(pc.addItem(2, item));
+    //pcKey.push(pc.addItem(2, item));
+    //pcKey.push(pc.addItem(2, item));
 
-	funnel.init(500, 5);
-	player.init();
+	//funnel.init(500, 5);
+	//player.init();
 });
+
+**/
 
 /**
  *	Use directly, self initialized, singleton.

@@ -3,19 +3,31 @@
     <head>
         <meta charset=utf-8>
         <title>PartyPlayer Host</title>
-        <link rel=stylesheet href=host.css type=text/css />
-        <script type=text/javascript src=../lib/jquery.min.js></script>
+        <!--<link rel=stylesheet href=host.css type=text/css />-->
+        <link rel="stylesheet" type="text/css" href="index2.css" />
+	    <script type=text/javascript src=../lib/jquery.min.js></script>
+	    <script type=text/javascript src=../lib/jquery.transit.js></script>
+	    <script type=text/javascript src=../lib/jquery.ui.js></script>
+	    <script type=text/javascript src=../lib/jquery.path.js></script>    
         <script type=text/javascript src=../common/log.js></script>
         <script type=text/javascript src=../common/a2a-stub.js></script>
         <script type=text/javascript src=../common/pplayer.js></script>
-	<script type=text/javascript src=../common/Collection.js></script>
-	<script type="text/javascript" charset="utf-8" src='PartyCollection.js'></script>
+	    <script type=text/javascript src=../common/Collection.js></script>
+	    <script type="text/javascript" charset="utf-8" src='PartyCollection.js'></script>
+	    <script type="text/javascript"src='funnel.js'></script>
         <script type=text/javascript src=host.js></script>
+        <script type=text/javascript src=player.js></script>
+	    <script type=text/javascript src=visual.js></script>
     </head>
     <body>
-        <div id=main style=height:200px>
+        <div id=main style=height:10px>
             <h1>PartyPlayer Host</h1>
         </div>
+        <div id="funnel">
+	    </div>
+	
+	    <div id="player">
+	    </div>
     </body>
 </html>
 

@@ -27,7 +27,9 @@ PartyCollection.prototype.addItem = function (userID, item){
             console.log("item not supported");
         }
         else{
-            log("Cannot add invalid item");
+            log("Warning - adding item without valid UserID");
+            // log("Cannot add invalid item");
+            return this.coll.addItem({"userID":userID,"item":item});    
         }
 	}	
 	return false;
