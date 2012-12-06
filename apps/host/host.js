@@ -1,26 +1,26 @@
 
-var coll = null;
+var pc = null;
 var users = {};
 
 partyplayer.main = {};
 partyplayer.funnel = {};
 
 partyplayer.main.onjoin = function(params, ref, key) {
-    uID = coll.addUser(params); //registration on application level
+    uID = pc.addUser(params); //registration on application level
     users[key]=uID; //registration on connection level.
     partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID}}, key);
-    pUsers = coll.getUsers();
+    pUsers = pc.getUsers();
     for (var u in pUsers){
     	log(u);
         if(uID != u){
             partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}}, key);      
         }
     }    
-    partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:coll.getUser(uID)}});
+    partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pc.getUser(uID)}});
     //log('join invoked!');
     getUsers();
     //send available Items to this user
-    pItems = coll.getItems();
+    pItems = pc.getItems();
     for (var i=0; i<pItems.length;i++){
         partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
     }
@@ -32,15 +32,15 @@ partyplayer.main.onleave= function (params, ref, key) {
     if (typeof params === 'undefined'){ //registered on protocol level
         if (typeof users[key] !== 'undefined'){
             userID = users[key];
-            coll.removeUser(userID);
-            coll.removeUserItems(userID);
+            pc.removeUser(userID);
+            pc.removeUserItems(userID);
             partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:userID}}); 
         }
     }
     else if (typeof params !== 'undefined' && params[userID] !== undefined ){ //registered on application level
         userID = params[userID];
-        coll.removeUser(userID);
-        coll.removeUserItems(userID);
+        pc.removeUser(userID);
+        pc.removeUserItems(userID);
         partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:uID}}); 
     } 
     delete users.key;
@@ -50,7 +50,7 @@ partyplayer.main.onleave= function (params, ref, key) {
 
 partyplayer.main.onaddItem = function (params, ref, key) {
     log('adding item');
-    itemID = coll.addItem(params.userID,params.item);
+    itemID = pc.addItem(params.userID,params.item);
     if(itemID!==false){
         partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:params.userID,itemID:itemID,item:params.item}}); 
         getItems();
@@ -74,7 +74,7 @@ partyplayer.funnel.onvote = function (params, ref, key) {
 }
 
 function getUsers(){
-    players = coll.getUsers();
+    players = pc.getUsers();
     var str = "";
     var nrUsers =0;
     for (var t in players) {
@@ -85,12 +85,12 @@ function getUsers(){
 }
 
 function getItems(){
-    itemCount = coll.getItemCount();
+    itemCount = pc.getItemCount();
     log(itemCount)
     var str = "";     
     for (t in itemCount){
         if (t!="TOTAL"){
-            str+=coll.getItem(t)+":"+itemCount[t]+";";
+            str+=pc.getItem(t)+":"+itemCount[t]+";";
         }
         else{
             str+=t+":"+itemCount[t]+";";
@@ -101,7 +101,7 @@ function getItems(){
 
 
 function getRandom(){
-    var item = coll.getRandom();
+    var item = pc.getRandom();
     if (item != 'false'){
         log(item);
     }
@@ -153,5 +153,10 @@ function getRandom(){
 
 $(document).ready(function(){
     partyplayer.init('host');
-    coll = new PartyCollection("testCollection");
+    pc = new PartyCollection("testCollection");
+    itemID = pc.addItem(2,item);
+    console.log ("Item ID = "+itemID);
+    funnel.init(500, 5);
+	player.init();
+    
 });
