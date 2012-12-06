@@ -102,15 +102,18 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 		//other user added this item
 		var profileImage = partyPlayerUsers[param.userID].picture;
 		trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>';
-		trItem += '<td align="center"><button class="addBtn">Play</button></td>';
+		trItem += '<td align="center"><button class="addBtn" itemid="'+param.itemID+'">Prefer</button></td>';
 	}
 	trItem += '</tr>';
 	$('#currentCollection .collectionContainer #partyCollection').append(trItem);
+	$('#currentCollection .collectionContainer #partyCollection .addBtn[itemID='+param.itemID+']').bind("click", currentCollection.preferItemsClick);
 };
 
 partyplayer.funnel.onUpdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
     //something added to the funnel / or changed in the funnel
+    
+    console.log(param);
 }
 
 partyplayer.funnel.onDeleteFunnelItem = function (param, ref) {
@@ -176,6 +179,10 @@ var selectProfile = {
 };
 
 var currentCollection = {
+	preferItemsClick:function(event){
+		var itemID = $(this).attr('itemid');
+		partyplayer.addFunnelItem(itemID);
+	},
 	addItemsClick:function(event){
 		$('#currentCollection').fadeOut(200, function(){
 			selectLocalItems.init();

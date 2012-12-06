@@ -78,7 +78,7 @@
 	padding:2px;
 }
 .collectionContainer{
-	height:60%;
+	height:40%;
 	overflow-y:scroll;
 }
 .collectionTop{
@@ -91,6 +91,19 @@ tr:nth-child(even) {
 }
 tr:nth-child(odd) {
 	background: #E0F1FF;
+	color: #021D29;
+}
+
+.funnelContainer{
+	height:30%;
+	overflow-y:scroll;	
+}
+.funnel:nth-child(even) {
+	background: #EFBF1B;
+	color: #021D29;
+}
+.funnel:nth-child(odd) {
+	background: #EF791B;
 	color: #021D29;
 }
 
