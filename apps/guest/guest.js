@@ -88,7 +88,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	//}
     //add items to screen
 	var trItem = '';
-	trItem += '<tr user="'+param.userID+'">';
+	trItem += '<tr user="'+param.userID+'" itemID="'+param.itemID+'">';
 	trItem += '<td>'+param.item.artist+'</td>';
 	trItem += '<td>'+param.item.title+'</td>';
 	trItem += '<td>'+param.item.album+'</td>';
@@ -117,7 +117,7 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     
     //add items to funnel on screen
 	var trItem = '';
-	trItem += '<tr class="funnel">';
+	trItem += '<tr class="funnel" funnelItemID="'+param.funnelItemID+'">';
 	trItem += '<td>artist</td>';
 	trItem += '<td>title</td>';
 	trItem += '<td>album</td>';
