@@ -42,7 +42,6 @@ partyplayer.voteFunnelItem = function(funnelItem, voteValue){
 	log("adding Item To Funnel");
 };
 
-
 partyplayer.main = {};
 partyplayer.funnel = {};
 partyplayer.main.onwelcome = function(param, ref) {
@@ -77,26 +76,25 @@ partyplayer.main.onremoveUser = function(param, ref) {
     //delete user from screen
     $('.profile[user="'+param.userID+'"]').remove();
     //delete items from collection
-    $('#currentCollection .collectionContainer #partyCollection tr[user="'+param.userID+'"]').remove();
+    $('table#partyCollection tr[user="'+param.userID+'"]').remove();
 };
 
 partyplayer.main.onupdateCollectionItem = function (param, ref) {
     log ('onUpdateItem Invoked; my userID='+userProfile.userID)
 	//if (param.userID != userID){
 		log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
-		 
 	//}
     //add items to screen
 	var trItem = '';
 	trItem += '<tr user="'+param.userID+'" itemID="'+param.itemID+'">';
-	trItem += '<td>'+param.item.artist+'</td>';
-	trItem += '<td>'+param.item.title+'</td>';
-	trItem += '<td>'+param.item.album+'</td>';
-	trItem += '<td align="center"><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>'
+	trItem += '<td class="artist">'+param.item.artist+'</td>';
+	trItem += '<td class="title">'+param.item.title+'</td>';
+	trItem += '<td class="album">'+param.item.album+'</td>';
+	trItem += '<td align="center" class="cover"><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>'
 	if(param.userID == userProfile.userID){
 		// you added this item
 		var profileImage = userProfile.userPic;
-		trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>';
+		trItem += '<td align="center" class="user"><img src="'+profileImage+'" width="25" height="25" /></td>';
 		trItem += '<td align="center"><img src="../../library/trash.png" width="30" height="30" /></td>';
 	}else if (param.userID != userProfile.userID){
 		//other user added this item
@@ -105,25 +103,30 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 		trItem += '<td align="center"><button class="addBtn" itemid="'+param.itemID+'">Prefer</button></td>';
 	}
 	trItem += '</tr>';
-	$('#currentCollection .collectionContainer #partyCollection').append(trItem);
-	$('#currentCollection .collectionContainer #partyCollection .addBtn[itemID='+param.itemID+']').bind("click", currentCollection.preferItemsClick);
+	$('table#partyCollection').append(trItem);
+	$('table#partyCollection .addBtn[itemID="'+param.itemID+'"]').bind("click", currentCollection.preferItemsClick);
 };
 
 partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
     //something added to the funnel or changed in the funnel
     
-    console.log(param);
-    
+    //get values from party collection
+    var item = $('table#partyCollection tr[itemID="'+param.itemID+'"]');
+    var artist = item.find('.artist').html();
+    var title = item.find('.title').html();
+    var album = item.find('.album').html();
+    var cover = item.find('.cover').html();
+
     //add items to funnel on screen
 	var trItem = '';
 	trItem += '<tr class="funnel" funnelItemID="'+param.funnelItemID+'">';
-	trItem += '<td>artist</td>';
-	trItem += '<td>title</td>';
-	trItem += '<td>album</td>';
-//	trItem += '<td align="center"><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>'
+	trItem += '<td>'+artist+'</td>';
+	trItem += '<td>'+title+'</td>';
+	trItem += '<td>'+album+'</td>';
+	trItem += '<td align="center">'+cover+'</td>'
 	trItem += '</tr>';
-	$('#currentCollection .funnelContainer #partyFunnel').append(trItem);
+	$('table#partyFunnel').append(trItem);
 	//$('#currentCollection .collectionContainer #partyCollection .addBtn[itemID='+param.itemID+']').bind("click", currentCollection.preferItemsClick);   
 }
 
@@ -172,7 +175,7 @@ var selectProfile = {
 		});
 	},
 	init:function() {
-		$('#selectProfile').show();
+		$('div#selectProfile').show();
 		//add profile pics to list
 		var picList = '';
 		for(var i=0; i<libUsers.length; i++) {
@@ -184,8 +187,8 @@ var selectProfile = {
 			liItem += '</li>';
 			picList += liItem;
 		}
-		$('#selectProfile #profiles').append(picList);
-		$('#selectProfile #profiles .profileItem').bind("click", selectProfile.profileClick);
+		$('div#selectProfile ul#profiles').append(picList);
+		$('ul#profiles li.profileItem').bind("click", selectProfile.profileClick);
 	}
 };
 
@@ -200,9 +203,9 @@ var currentCollection = {
 		});
 	},	
 	init:function(){
-		$('#currentCollection').show();
-		$('#currentCollection h2').append(" "+userProfile.userName);
-		$('#currentCollection #addItemsBtnContainer #addItemsBtn').bind("click", currentCollection.addItemsClick);
+		$('div#currentCollection').show();
+		$('div#currentCollection h2').append(" "+userProfile.userName);
+		$('div#addItemsBtnContainer button#addItemsBtn').bind("click", currentCollection.addItemsClick);
 	}	
 };
 
@@ -245,10 +248,10 @@ var selectLocalItems ={
 		    trItem += '</tr>';
 		    itemList += trItem;
 		});	
-		$('#selectLocalItems .collectionContainer #localCollection').append(itemList);
+		$('div.collectionContainer table#localCollection').append(itemList);
 	},
 	init:function(){
-		$('#selectLocalItems').show();
-		$('#selectLocalItems #shareItemsBtnContainer #shareItemsBtn').bind("click", selectLocalItems.shareItemsClick);
+		$('div#selectLocalItems').show();
+		$('div#shareItemsBtnContainer button#shareItemsBtn').bind("click", selectLocalItems.shareItemsClick);
 	}
 };
