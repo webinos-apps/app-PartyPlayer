@@ -100,7 +100,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 		//other user added this item
 		var profileImage = partyPlayerUsers[param.userID].picture;
 		trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>';
-		trItem += '<td align="center"><button class="addBtn" itemid="'+param.itemID+'">Prefer</button></td>';
+		trItem += '<td align="center"><button class="addBtn" itemid="'+param.itemID+'">Add</button></td>';
 	}
 	trItem += '</tr>';
 	$('table#partyCollection').append(trItem);
@@ -125,9 +125,13 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
 	trItem += '<td>'+title+'</td>';
 	trItem += '<td>'+album+'</td>';
 	trItem += '<td align="center">'+cover+'</td>'
+	//var profileImage = partyPlayerUsers[param.userID].picture;
+	//trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>'
+	trItem += '<td></td>'
+	trItem += '<td align="center"><button class="voteBtn" funnelid="'+param.funnelItemID+'">Vote</button></td>'
 	trItem += '</tr>';
 	$('table#partyFunnel').append(trItem);
-	//$('#currentCollection .collectionContainer #partyCollection .addBtn[itemID='+param.itemID+']').bind("click", currentCollection.preferItemsClick);   
+	$('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').bind("click", currentCollection.voteClick);   
 }
 
 partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
@@ -193,6 +197,10 @@ var selectProfile = {
 };
 
 var currentCollection = {
+	voteClick:function(event){
+		console.log("funnel id = "+$(this).attr('funnelid'));
+		console.log("vote+1");
+	},	
 	preferItemsClick:function(event){
 		var itemID = $(this).attr('itemid');
 		partyplayer.addFunnelItem(itemID);
@@ -204,7 +212,6 @@ var currentCollection = {
 	},	
 	init:function(){
 		$('div#currentCollection').show();
-		$('div#currentCollection h2').append(" "+userProfile.userName);
 		$('div#addItemsBtnContainer button#addItemsBtn').bind("click", currentCollection.addItemsClick);
 	}	
 };
