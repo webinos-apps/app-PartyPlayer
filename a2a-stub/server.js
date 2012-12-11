@@ -1,6 +1,20 @@
 #!/usr/bin/env node
-/**
- * server.js
+/*
+ * Code contributed to the webinos project.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * (C) Copyright 2012, TNO
  *
  * This server is part of the a2a-stub project and simulates the webinos
  * App2App API implementation. Just include the a2a-stub.js file in your
@@ -8,9 +22,8 @@
  *
  * For examples, see the test directory and check out the App2App speci-
  * fication at http://dev.webinos.org/specifications/new/app2app.html
- *
- * Author: Victor Klos
  */
+
 var PORT = 10666;
 
 var logger = require('./logger');
