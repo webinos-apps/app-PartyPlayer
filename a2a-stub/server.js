@@ -17,11 +17,7 @@
  * (C) Copyright 2012, TNO
  *
  * This server is part of the a2a-stub project and simulates the webinos
- * App2App API implementation. Just include the a2a-stub.js file in your
- * html and you are good to go.
- *
- * For examples, see the test directory and check out the App2App speci-
- * fication at http://dev.webinos.org/specifications/new/app2app.html
+ * App2App API implementation.
  */
 
 var PORT = 10666;
