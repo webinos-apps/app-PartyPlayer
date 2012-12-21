@@ -35,6 +35,7 @@ var partyPlayerUsers = {};
 partyplayer.joinUser = function(name, picture){
 	partyplayer.sendMessage({ns:"main", cmd:"join", params:{alias:name,thumbnail:picture}});
     log(name + " is joining...");
+    console.log("1: "+name+" aanmelden");
 };
 
 partyplayer.addItem = function(item){
@@ -96,7 +97,8 @@ partyplayer.main.onremoveUser = function(param, ref) {
 };
 
 partyplayer.main.onupdateCollectionItem = function (param, ref) {
-    log ('onUpdateItem Invoked; my userID='+userProfile.userID)
+    console.log("2: collection updated");
+	log ('onUpdateItem Invoked; my userID='+userProfile.userID)
 	//if (param.userID != userID){
 		log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
 	//}

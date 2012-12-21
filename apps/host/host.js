@@ -30,7 +30,7 @@ partyplayer.main.onjoin = function(params, ref, key) {
     partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID}}, key);
     pUsers = pc.getUsers();
     for (var u in pUsers){
-        if(uID != u){
+    	if(uID != u){
             partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}}, key);      
         }
     }    
