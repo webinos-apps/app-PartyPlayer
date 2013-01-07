@@ -59,7 +59,7 @@ Authors Victor Klos, Arno Pont, Martin Prins
 				<!-- Funnel -->
 				<h2 class="centeredContainer"><img src="icons/play.png" height="16px" width="16px" /> Playlist</h2>
 				<div class="collectionContainer centeredContainer">
-					<table id="partyFunnel" cellspacing="0"'>
+					<table id="partyFunnel" cellspacing="0" cellpadding="0">
 						<tr class="collectionTop funnel">
 							<td>Artist</td>
 							<td>Title</td>
@@ -67,6 +67,14 @@ Authors Victor Klos, Arno Pont, Martin Prins
 							<td align="center">Cover</td>
 							<td align="center">Selected by</td>
 							<td align="center">Vote</td>
+						</tr>
+						<tr>
+							<td class="default" colspan="6" valign="top">
+								<p>The playlist is empty...</p>
+								<div id="addItemsBtnContainer" class="centeredContainer">
+									<button id="" class="menuBtn fullWidthBtn">get this party started!</button>
+								</div>
+							</td>
 						</tr>
 					</table>
 				</div>

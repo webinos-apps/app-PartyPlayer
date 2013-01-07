@@ -132,6 +132,15 @@ tr:nth-child(odd) {
 	background: #EF791B;
 	color: #021D29;
 }
+.default{
+	height: 400px;
+	font-size:24px;
+	padding:20px;
+	font-family:serif;
+	font-style:italic;
+	background-color:#CCCCCC;
+	color: #666666;
+}
 
 /* General */
 
@@ -154,6 +163,7 @@ table{
 	border:0px;
 	font-size:12px;
 	width:100%;
+	background-color:#CCCCCC;
 }
 .openingScreen{
 	display: none;
