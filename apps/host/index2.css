@@ -31,14 +31,36 @@
     top: 0;
     bottom: 0;
     margin: auto;
-    border: 2px dotted black;
+    border: 2px solid black;
     border-radius: 100%;
+    background-color: white;
+}
+#funnel .funnelCircle .info{
+    position: absolute;
+    left: 48%;
+    font-family: arial;
+    font-weight: bold;
+    text-align: center;
+    border: 1px dashed black;
+    border-radius: 75%;
 }
 #funnel .funnelObject{
 	position: absolute;
-	width: 150px;
-	height: 50px;
-	border: 1px solid black;
-	background: #999;
+	background-color: rgba(200, 200, 200, 0.8);
 	z-index: 999;
+	border: 2px solid black;
+    border-radius: 33%;
 }
+
+    .funnelObject .thumbnail{
+        
+    }
+    
+    .funnelObject .cover{
+        border: 1px solid #777777;
+    }
+    
+    .funnelObject p{
+        float: left;
+        margin: 0;
+    }

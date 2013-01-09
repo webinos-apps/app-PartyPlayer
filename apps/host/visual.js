@@ -87,7 +87,7 @@ var Visual = function(name, selector){
  *	@param selector the base element the code looks for when appending extra elements
 **/
 var visualFunnel = function(name, selector){
-	var funnelSize, step, allCircles;
+	var funnelSize, step, allCircles, inDist;
 	var that = Visual(name, selector);
 	
 	/**
@@ -99,28 +99,93 @@ var visualFunnel = function(name, selector){
 	 *	@param selector string The DOM funnel element to animate
 	 *	@param circle int The numbered circle to animate along (larger circle number is larger circle is larger radius)
 	**/
-	var startArc = function(selector, circle){
+	var startArc = function(selector, circle, first){
 		//console.log("start arc");
-		var r = circle*step/2;
+		var r = circle*step/2 - inDist/2;
 		var arc_params = {
-			center: [funnelSize/2-75,funnelSize/2-25],
+			center: [funnelSize/2 - inDist/2,funnelSize/2 - inDist/2],
 			radius: r,
 			start: 180,
 			end: -180,
 			dir: -1
 		};
-		//$(selector).appendTo('#funnel .funnelcircle[circle=' + circle-- + ']');
-		$(selector).animate({path : new $.path.arc(arc_params)}, 5000, function(){
-			//console.log("end of arc");
-			funnel.switchCircle($(selector).attr('_funnelItemID'), true);
-			//funnelViz.nextCircle(selector);
-		});
+		
+		$(selector).animate({path : new $.path.arc(arc_params)}, 30000, function(){
+			startArc(selector, circle);
+		});	
+	};
+	/**
+	 *	Makes the funnelItem switch the info it's showing. After switch, it calls itself again with new variables. Using Timeout function.
+	 *
+	 *	@private plus @function buildSwitcher 
+	 *	
+	 *	@private
+	 *	@param selector string The DOM funnel element to animate
+	 *	@param state int The info to show depending on state
+	**/	
+    var buildSwitcher = function (selector, state) {
+        var newState;
+        switch(state){
+            case 1:
+                var trackCover = '<img src='+item.item.cover+' class=cover>';
+                $(selector).html(trackCover);
+                $(selector + ' .cover').css({
+                'width': inDist * 0.8,
+                'height' : inDist * 0.8,
+                'margin' : inDist * 0.1
+		        });
+		        newState = 2;
+		        break;
+		    case 2:
+		        var trackInfo = '<p class=title>' + item.item.title +'</p><p class=artist>' + item.item.artist +'</p><p class=album>' + item.item.album +'</p>';
+		        $(selector).html(trackInfo);
+		        $(selector + ' p').css({
+		            'font-size' : inDist/6,
+		            'font-weight' : 'bold',
+		            'margin-left' : inDist * 0.1,
+		            'margin-top' : inDist * 0.1,
+		            'width' : inDist * 0.8
+		        });
+                $(selector + ' .title').css({
+                    'padding-bottom' : inDist * 0.05,
+                    'border-bottom' : '1px solid #777777'
+                });
+                $(selector + ' .artist').css({
+                    'margin-top' : inDist * 0.05,
+                    'padding-bottom' : inDist * 0.05,
+                    'border-bottom' : '1px solid #777777'
+                });
+
+                $(selector + ' .album').css({
+                    'margin-top' : inDist * 0.05,
+                    'padding-bottom' : inDist * 0.05,
+                });
+                newState = 3;
+                break;
+		    case 3:
+		        var userCover = '<p class=usertxt>Added by: </p><img src='+ user.thumbnail +' class=thumbnail>';
+		        $(selector).html(userCover);
+		        $(selector + ' p').css({
+		            'font-size' : inDist/6,
+		            'font-weight' : 'bold',
+		            'margin-left' : inDist * 0.1,
+		            'margin-top' : inDist * 0.1,
+		            'width' : inDist * 0.8
+		        });
+		        $(selector + ' .thumbnail').css({
+		            'width' : inDist * 0.6,
+		            'height' : inDist * 0.6,
+		            'margin' : '0px ' + inDist * 0.2 +'px' 
+		        }); 
+		        newState = 1;
+		        break;
+        }
+	    console.log(newState);
+	    setTimeout( function() { buildSwitcher(selector, newState) }, 2000)
 	};
 	
 	/**
-	 *	Builds the DOM and (background) css for the funnel. This function creates the given circles
-	 *	with an even amount of whitespace between them. It also assigns the given values
-	 *	to itself for future reference
+	 *	Builds the DOM and (background) css for the funnel.
 	 *
 	 *	@methodOf visualFunnel
 	 *	@param funnel int The max width the funnel is (also uses this number for height)
@@ -130,16 +195,40 @@ var visualFunnel = function(name, selector){
 		funnelSize = funnel;
 		allCircles = maxCircles;
 		step = funnelSize / maxCircles;
+		inDist = step/2
 		$('div#funnel').css({
 			width: funnelSize,
 			height: funnelSize
 		});
 		for(var i = 0; i < allCircles; i++){
-			$('<div class="funnelCircle" circle=' + (i+1) + '></div>').appendTo('div#funnel').css({
+			$('<div class="funnelCircle" circle=' + (i+1) + '>' +
+			'<div class="info">' + (allCircles - i) + '</div>' +
+		    '</div>').appendTo('div#funnel').css({
 				width: ((i+1) * step),
-				height: ((i+1) * step)
+				height: ((i+1) * step),
+				'z-index' : i-(i+i),
 			});
-		}
+			if(i%2==0){
+			    $('.funnelCircle[circle=' + (i+1 + ']')).css({
+			        'background-color': '#BBFFFF'
+			    });
+			};
+	        $('.funnelCircle .info').css({
+	            'bottom' : inDist/2,
+	            'width' : inDist/3,
+		        'font-size' : inDist/5
+		    });
+		    $('.funnelCircle[circle=1] .info').html('NEXT ITEM').css({
+		        'left' : '25%',
+		        'width' : inDist,
+		        'height' : inDist,
+		        'border' : '1px dashed black',
+		        'border-radius' : '33%',
+		        'line-height' : inDist/2 + 'px'
+		    });
+		    $('.funnelCircle[circle=2] .info').html(allCircles-1 + '+');
+
+		}//end for loop
 	};
 	/**
 	 *	Builds the DOM and css for a funnelItem. It also creates an element object holding the last circle and
@@ -156,28 +245,41 @@ var visualFunnel = function(name, selector){
 	that.renderSingle = function(key){
 		var element = {};
 		element.selector = 'div[_funnelItemID=' + key + ']';
-		element.circle = allCircles;
+		element.circle = (allCircles+1) - funnel.getFunnelListItem(key).votes;
 		//console.log("render at: " + element.circle);
 		user = pc.getUser(funnel.getFunnelListItem(key).userID);
 		item = pc.getItem(funnel.getFunnelListItem(key).itemID);
 		 //.userID).alias;
 		//log(user.alias); 
-		userCover = '<img src='+user.thumbnail+' width=40, height=40/>';
-		trackCover = '<img src='+item.item.cover+' width=40, height=40/>';
-		track = '"'+item.item.artist+" - "+item.item.title+'"';
-		$('<div class="funnelObject" _funnelItemID=' + key + '>'+userCover+' '+trackCover+'<br>'+track+'</div>').appendTo('.funnelCircle[circle=' + element.circle + ']');
+		trackCover = '<img src='+item.item.cover+' class=cover>';
+		$('<div class="funnelObject" _funnelItemID=' + key + '>' + trackCover + '</div>').appendTo('#funnel');
+		
+		//make object switch between states (intervals)?
+		
+		$('.funnelObject').css({
+		    'width' : inDist,
+		    'height' : inDist,
+		});
+		
+		$(selector + ' .cover').css({
+		    'width': inDist * 0.8,
+		    'height' : inDist * 0.8,
+		    'margin' : inDist * 0.1
+		});
+		
+		var state = 2;
+        		
+		element.interval = setTimeout(function(){ buildSwitcher(element.selector, state); }, 5000);
 		startArc(element.selector, element.circle);
 		return element;
 	};
 	/**
 	 *	Destroys the DOM element for the given funnelItem. It also stops any animations
-	 *  boolean Returns if succesful yes/no
 	 *
 	 *	@methodOf visualFunnel
 	 *	@param selector string The selector of the DOM funnel element to look for
 	**/
 	that.destroySingle = function(selector){
-		console.log("remove element: " +selector);
 		$(selector).stop(true);
 		$(selector).remove();
 	};
@@ -190,29 +292,45 @@ var visualFunnel = function(name, selector){
 	 *	@param circle int The circle to update to
 	**/
 	that.updateCircle = function(selector, circle){
-		//console.log("stop current animation");
 		$(selector).stop(true);
-		//console.log("update circle to: " + circle);
-		startArc(selector, circle);
+		
+		$(selector).animate({
+		    'top' : (allCircles - circle) * inDist,
+		    'left' : funnelSize/2 - inDist/2
+		}, 300, function(){ 
+		    startArc(selector, circle);
+		});
+		
 	};
 	/**
-	 *	Updates the given DOM element to show the votes and display a blink depending on value
+	 *	Sets the final item on the center of the Funnel. Doesn't invoke the startArc function
 	 *
 	 *	@methodOf visualFunnel
-	 *  @param value int the total value that needs to be updated to
 	 *	@param selector string The selector of the DOM funnel element to look for
+	**/
+	that.setCenter = function(selector){
+	    $(selector).stop(true);
+	    $(selector).animate({
+	        'top' : funnelSize/2 - inDist/2 + 'px',
+	        'left' : funnelSize/2 - inDist/2 + 'px'
+	    });
+	};
+	/**
+	 *	Animates the to-be-played item to the player onscreen. Invokes the removing functions after the animation
 	 *
-	 *  @TODO build selector update
-	 *  @TODO build blink
-	**/	
-	that.showVote = function(value, selector){
-	    if(value >= 0){
-	        //make green blink for selector
-	        console.log(selector + " green");   
-	    } else if (value < 0){
-	        //make red blink for selector
-	        console.log(selector + " red");   	        
-	    }
+	 *	@methodOf visualFunnel
+	 *	@param selector string The selector of the DOM funnel element to look for
+	**/
+	that.animateToPlayer = function(selector){
+	    $(selector).stop(true);
+	    var dist = $('#funnel').offset();
+	    var playerPos = $('#player').offset();
+	    $(selector).animate({
+	        'left' : playerPos.left - dist.left,
+	        'top' : playerPos.top - dist.top
+	    }, 2000, function(){
+	        funnel.removeItem($(selector).attr('_funnelItemID'), partyplayer.funnel.removeFunnelItem);
+	    });
 	};
 	
 	return that;
@@ -224,8 +342,14 @@ var visualFunnel = function(name, selector){
 var visualPlayer = function(name, selector){
 	var that = Visual(name, selector);
 	
+	/**
+	 *	Build the player onscreen. Returns itself as DOM element.
+	 *  string Returns DOM element
+	 *
+	 *	@methodOf visualPlayer
+	**/
 	that.buildPlayer = function(){
-        $(selector).html('<audio id="playback" autoplay onended="player.getSong()" controls="controls">' + 
+        $(selector).html('<audio id="playback" autoplay onended="player.getSong()" controls="false">' + 
 	    '<source src="" type="audio/ogg">' +
 	    '<source src="" type="audio/mpeg">' +
 	    'Your browser does not support the audio element.</audio>');
@@ -233,15 +357,25 @@ var visualPlayer = function(name, selector){
 	    var playerSelector = '#playback';
 	    return playerSelector;	    
 	};
-	
+    /**
+	 *	For manually updating the player to play a given url
+	 *
+	 *	@methodOf visualPlayer
+	 *  @param url string The URL the play
+	 *  @param playerSelector string The player to update
+	**/
 	that.updatePlayer = function(url, playerSelector){
 	    $(playerSelector).attr('src', url);
 	};
-	
+    /**
+	 *	Creates a button to manually look for the next song to play. Calls player.getSong()
+	 *
+	 *	@methodOf visualPlayer
+	**/
 	that.setupButton = function(){
 	    $(selector).append('<button id="setupButton">Play next track</button>');
-	    $('#setupButton').bind('click', player.getSong());
-    }
+	    $('#setupButton').bind('click', player.getSong);
+    };
 	
 	return that;
 }
@@ -249,3 +383,35 @@ var visualPlayer = function(name, selector){
 //initialize the visual parts, assigning them to a var
 var funnelViz = visualFunnel("VisualFunnel", 'div#funnel');
 var playerViz = visualPlayer("VisualPlayer", 'div#player');
+
+/******************||**||**|||**|||**||*****************************
+*******************||**||**||*||*||**||*****************************
+*******************||||||**||****||**|||||**************************/
+/*
+@startuml visual_classes.png
+
+class Visual {
+    protected string name
+    protected string selector
+}
+class VisualFunnel {
+    private int funnelSize, step, allCircles, inDist
+    private void startArc(selector, circle)
+    public void setupCircles(funnelSize, maxCircles)
+    public Object renderSingle(key)
+    public void destroySingle(selector)
+    public void updateCircle(selector, circle)
+    public void setCenter(selector)
+    public void animateToPlayer(selector)
+}
+class VisualPlayer {
+    public string buildPlayer()
+    public void updatePlayer(url, playerSelector)
+    public void setupButton()
+}
+
+Visual <|-- VisualFunnel
+Visual <|-- VisualPlayer
+
+@enduml
+*/
