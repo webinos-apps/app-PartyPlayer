@@ -52,10 +52,10 @@ partyplayer.addFunnelItem = function(itemID){
 	log("adding Item To Funnel");
 };
 
-partyplayer.voteFunnelItem = function(funnelItem, voteValue){
+partyplayer.voteFunnelItem = function(funnelItemID){
     //@TODO -> TEST
  	partyplayer.sendMessage({ns:"funnel", cmd:"vote", params:{userID:userProfile.userID,funnelItemID:funnelItemID}});
-	log("adding Item To Funnel");
+	log("item voted for: " + funnelItemID);
 };
 
 partyplayer.main = {};
@@ -125,7 +125,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 
 partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
-    //something added to the funnel or changed in the funnel
+    //something added to the funnel
     
     //get values from party collection
     var item = $('table#partyCollection tr[itemID="'+param.itemID+'"]');
@@ -147,12 +147,30 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
 	trItem += '<td align="center"><button class="voteBtn" funnelid="'+param.funnelItemID+'">Vote</button></td>'
 	trItem += '</tr>';
 	$('table#partyFunnel').append(trItem);
-	$('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').bind("click", currentCollection.voteClick);   
+	$('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').bind("click", currentCollection.voteClick);  
+	
+}
+
+partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
+    log ('onvotedFunnel Invoked on Funnel');
+    //a funnel item has been voted for
+    if(param.userID != userProfile.userID){
+        return;
+    }
+    
+    if(param.vote){
+        //succesvol vote, disabled vote button
+        $('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').attr('disabled', 'true');
+    } else {
+        //voted failed
+        log('vote for funnelItem: ' + param.funnelItemID + ' failed');
+    }
 }
 
 partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
     log ('onDelete Funnel Item Invoked on Funnel')
-    //something added to the funnel / or changed in the funnel
+    
+    $('.funnel[funnelItemID=' +param.funnelItemID+']').remove();
 }
 
 
@@ -214,8 +232,10 @@ var selectProfile = {
 
 var currentCollection = {
 	voteClick:function(event){
+	    var funnelItemID = $(this).attr('funnelid');
 		console.log("funnel id = "+$(this).attr('funnelid'));
 		console.log("vote+1");
+		partyplayer.voteFunnelItem(funnelItemID);
 	},	
 	preferItemsClick:function(event){
 		var itemID = $(this).attr('itemid');
