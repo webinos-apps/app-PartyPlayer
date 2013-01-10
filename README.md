@@ -55,6 +55,19 @@ Each guest runs a guest app. Using the app you can share your own music collecti
 
 All music that has been added this way is moved to the funnel. This is where the interaction takes place. Think of simply upvoting your favourites, but also of playing mini games to gain power...
 
+### Documentation
+
+Building the documentation requires [PlantUML](http://plantuml.sourceforge.net/), [jsdoc-toolkit](https://code.google.com/p/jsdoc-toolkit/) and [markdown](http://daringfireball.net/projects/markdown/).
+
+#### Building documentation on OSX
+
+1. Download and install [PlantUML](http://plantuml.sourceforge.net/)
+2. Create a script to execute PlantUML and add it to your path. Or you can use [this example script](https://gist.github.com/4502562)
+3. Install jsdoc-toolkit using [Homebrew](http://mxcl.github.com/homebrew/): *brew install jsdoc-toolkit*
+4. Install markdown using [Homebrew](http://mxcl.github.com/homebrew/): *brew install markdown*
+
+Good luck!
+
 ### Acknowledgements
 
 Icons located in apps/guest/icons/icons.js were downloaded from the [Icon Archive](http://www.iconarchive.com/).
