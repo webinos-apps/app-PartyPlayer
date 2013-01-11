@@ -21,6 +21,15 @@ Authors Victor Klos, Arno Pont, Martin Prins
 <html>
     <head>
         <meta charset=utf-8>
+		<meta name="viewport"
+     	 content="
+          width = device-width,
+          initial-scale = 1 ,
+          minimum-scale = 1 ,
+          maximum-scale = 1 ,
+          user-scalable = no,
+          " />
+
         <title>PartyPlayer Guest</title>
         <link rel=stylesheet href=guest.css type=text/css />
         <script type=text/javascript src=../lib/jquery.min.js></script>
@@ -32,15 +41,18 @@ Authors Victor Klos, Arno Pont, Martin Prins
        	<script type=text/javascript src=icons/icons.js></script>
         <script type=text/javascript src=guest.js></script>
         <script type=text/javascript src=../../library/items.js></script>
+        <script type=text/javascript src=swipe.js></script>
+        <script type=text/javascript src=../lib/swipe/jquery.event.move.js></script>
+        <script type=text/javascript src=../lib/swipe/jquery.event.swipe.js></script>
+
     </head>
     <body>
     <!-- TNO Logo -->
     <div id="TNOLogo"><img width="110px" height="20px" src="../../library/logo/logo-TNO.gif" /></div>
   		<!-- Guest App Container -->
 	    <div id="guestApp">
-	    	
 	    	<!-- Opening Screen, choose user profile -->
-	    	<div id="selectProfile" class="screen">
+	    	<div id="selectProfile" class="openingScreen">
 				<h2>Choose a profile</h2>
 				<ul id="profiles">
 					<!-- add profiles as <li> items-->
@@ -49,13 +61,13 @@ Authors Victor Klos, Arno Pont, Martin Prins
 	    	
 	    	<div id="userInfo" class="centeredContainer">
 	    	</div>
-	    		    	
-	    	<!-- Current Collection, what is already in the collection?-->
-	    	<div id="currentCollection" class="screen">
+	    	
+	    	<!-- Funnel, which items are being played?-->
+	    	<div id="funnelCollection" class="screen active">
 				<!-- Funnel -->
-				<h2 class="centeredContainer"><img src="icons/play.png" height="16px" width="16px" /> Playlist</h2>
-				<div class="funnelContainer centeredContainer">
-					<table id="partyFunnel" cellspacing="0"'>
+				<h2 class="centeredContainer"><img src="icons/play.png" height="16px" width="16px" />Playlist</h2>
+				<div class="collectionContainer centeredContainer">
+					<table id="partyFunnel" cellspacing="0" cellpadding="0">
 						<tr class="collectionTop funnel">
 							<td>Artist</td>
 							<td>Title</td>
@@ -64,13 +76,26 @@ Authors Victor Klos, Arno Pont, Martin Prins
 							<td align="center">Selected by</td>
 							<td align="center">Vote</td>
 						</tr>
+						<tr>
+							<td class="default" colspan="6" valign="top">
+								<h4>The playlist is empty...</h4>
+								<p class="intro">Add music from the collection to the playlist.</p>
+								<div id="addItemsBtnContainer" class="centeredContainer">
+									<button id="" class="menuBtn fullWidthBtn">get this party started!</button>
+								</div>
+							</td>
+						</tr>
 					</table>
 				</div>
+	    	</div>
+	    		    	
+	    	<!-- Current Collection, what is already in the collection?-->
+	    	<div id="currentCollection" class="screen">
 				<!-- Collection -->
 				<h2 class="centeredContainer"><img src="icons/folder.png" height="16px" width="16px" /> Collection</h2>				
 				<div class="collectionContainer centeredContainer">
 					<table id="partyCollection" cellspacing="0"'>
-						<tr class="collectionTop">
+						<tr class="collectionTop current">
 							<td>Artist</td>
 							<td>Title</td>
 							<td>Album</td>
@@ -78,12 +103,17 @@ Authors Victor Klos, Arno Pont, Martin Prins
 							<td align="center">Shared by</td>
 							<td align="center">Action</td>
 						</tr>
+						<tr>
+							<td class="default" colspan="6" valign="top">
+								<h4>The collection is empty...</h4>
+								<p class="intro">Add music from your phone to the collection.</p>
+							</td>
+						</tr>
 					</table>
 				</div>
 				<div id="addItemsBtnContainer" class="centeredContainer">
 					<button id="addItemsBtn" class="menuBtn fullWidthBtn">Add Local Items</button>
-				</div>
-				
+				</div>				
 	    	</div>
 	    	
 	    	<!-- Select Local Items, select which local files to add -->
@@ -104,7 +134,12 @@ Authors Victor Klos, Arno Pont, Martin Prins
 					<button id="shareItemsBtn" class="menuBtn fullWidthBtn">Share Items With Collection</button>
 				</div>
 	    	</div>
+	    	
+	    	<!-- About -->
+	    	<div id="about" class="screen">
+		    	<h2 class="centeredContainer">About PartyPlayer App</h2>
+				<img src="icons/fork-banner.png" class="fork" height="143px" width="143px" />
+	    	</div>
 	 	</div>
-	 	
-    </body>
+	 </body>
 </html>

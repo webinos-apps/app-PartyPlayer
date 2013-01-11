@@ -17,22 +17,60 @@
  *
  * Authors Victor Klos, Arno Pont
  */
+ 
+html {
+	margin: 0px;
+	padding: 0px;
+    height: 100%;
+}
+
+
+body{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+} 
+   
+.active{
+	margin-top:0px;	
+}
 
 #guestApp{
-	width:800px;
-	height:600px;
 	position:relative;
-	margin-top: 20px;
-	margin-bottom:20px;
-	padding:20px;
-	background-color:#efefef;
-	border:solid #000000 1px;
+	background-color:#E7EEFF;
+	/*background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc4MDEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNFREVERUQiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNDQ0NDQ0MiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c4MDEpIiAvPgo8L3N2Zz4=);	*/
 }
+
+@media screen and (max-device-width: 720px) {
+	#guestApp{
+		width:100%;
+	}
+}
+
+@media screen and (min-device-width: 720px) {
+	#guestApp{
+		width:480px;
+		height:700px;
+		position:relative;
+		margin-top:20px;
+		margin-bottom:20px;
+		background-color:#CCCCCC;
+		border:solid #000000 1px;
+		overflow:hidden;
+			}
+}
+
 
 #TNOLogo{
 	background-color:#FFFFFF;
 	padding:5px;
 	border-bottom:dotted #CCCCCC 1px;
+}
+
+@media screen and (max-device-width: 720px) {
+	#TNOLogo{
+		display:none;
+	}
 }
 
 /*selectProfile*/
@@ -96,9 +134,16 @@
 	padding:2px;
 }
 .collectionContainer{
-	height:40%;
-	overflow-y:scroll;
+	height:70%;
+	/*overflow-y: auto;*/
 }
+
+@media screen and (min-device-width: 720px) {
+	.collectionContainer{
+		overflow-y: auto;
+	}
+}
+
 .collectionTop{
 	font-weight:bold;
 	font-size:14px;
@@ -111,11 +156,15 @@ tr:nth-child(odd) {
 	background: #E0F1FF;
 	color: #021D29;
 }
-
-.funnelContainer{
-	height:30%;
-	overflow-y:scroll;	
+.current:nth-child(even) {
+	background: #D1A9B2;
+	color: #021D29;
 }
+.current:nth-child(odd) {
+	background: #AF6D77;
+	color: #021D29;
+}
+
 .funnel:nth-child(even) {
 	background: #EFBF1B;
 	color: #021D29;
@@ -123,6 +172,9 @@ tr:nth-child(odd) {
 .funnel:nth-child(odd) {
 	background: #EF791B;
 	color: #021D29;
+}
+.default{
+	padding:20px;
 }
 
 /* General */
@@ -137,6 +189,20 @@ h2{
 	font-size:16px;
 	margin:0px;
 }
+h4{
+	font-size:24px;
+	font-family:serif;
+	font-style:normal;
+	font-style:italic;
+	color: #666666;
+}
+p.intro{
+	font-size:22px;
+	font-family:serif;
+	color: #666666;
+	margin-left:20px;
+	margin-bottom:20px;
+}
 ul {
 	margin-left:0px;
 	padding:0px;
@@ -147,8 +213,15 @@ table{
 	font-size:12px;
 	width:100%;
 }
+.openingScreen{
+	display: none;
+	position:relative;
+	width:100%;
+	height:100%;
+}
 .screen {
 	display: none;
+	position:relative;
 	width:100%;
 	height:100%;
 }
@@ -162,11 +235,11 @@ table{
 	width:100%;
 }
 .menuBtn {
-	-moz-box-shadow:inset 0px 1px 0px 0px #d9fbbe;
+	/*-moz-box-shadow:inset 0px 1px 0px 0px #d9fbbe;*/
 	-webkit-box-shadow:inset 0px 1px 0px 0px #d9fbbe;
 	box-shadow:inset 0px 1px 0px 0px #d9fbbe;
 	background-color:#b8e356;
-	-moz-border-radius:6px;
+	/*-moz-border-radius:6px;*/
 	-webkit-border-radius:6px;
 	border-radius:6px;
 	border:1px solid #83c41a;
@@ -187,11 +260,11 @@ table{
 }
 
 .addBtn {
-	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	/*-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;*/
 	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	box-shadow:inset 0px 1px 0px 0px #ffffff;
 	background-color:#ffb22e;
-	-moz-border-radius:6px;
+	/*-moz-border-radius:6px;*/
 	-webkit-border-radius:6px;
 	border-radius:6px;
 	border:1px solid #dbdbdb;
@@ -211,14 +284,58 @@ table{
 	top:1px;
 }
 
+/* About */
+
+.fork {
+	float:right;
+	position:relative;
+	top:-101px;
+}
+
 /* LOG */
 
 #log { 
 	clear: both;
 }
+
+#logtitle {
+    /*display:none;*/
+}
+
+/* Remove stub control, loglines and TNO banner from mobile version */
+@media screen and (max-device-width: 720px) {
+	#log { 
+		display:none;
+	}
+	
+	#logtitle {
+	    display:none;
+	}
+	
+	#stubControl{
+		display:none;
+	}
+}
+
 .logline {
     font-family: monospace;
     color: #ddd;
     background: #333;
     clear: both;
+    display:none;
+}
+
+/* Slide Logic */
+
+.notransition,
+.notransition .slide {
+	-webkit-transition-duration: 0 !important;
+	  /* -moz-transition-duration: 0 !important;*/
+	  /*  -ms-transition-duration: 0 !important;*/
+	        transition-duration: 0 !important;
+
+	-webkit-transition-delay: 0 !important;
+	 /*  -moz-transition-delay: 0 !important;*/
+	 /*   -ms-transition-delay: 0 !important;*/
+	        transition-delay: 0 !important;
 }
