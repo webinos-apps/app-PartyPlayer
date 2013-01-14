@@ -407,5 +407,3 @@ partyplayer.sendMessageTo = function(to, msg) {
         console.log('No channel present. Not sending messsage <' + msg + '> to <' + to + '>');
     }
 };
-
-
