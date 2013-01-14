@@ -218,8 +218,7 @@ partyplayer.FunnelItem = function(itemID, votes, userID) {
  * Closes the channel
  */
 partyplayer.close = function() {
-    //TODO should I only close when I'm the host?
-    this.channel.close();
+    this.channel.disconnect();
     this.channel = undefined;
 } 
 
@@ -347,7 +346,12 @@ partyplayer.init = function(hostorguest) {
     
     partyplayer.sendMessage = function(msg, key) {
         if (this.channel && this.channel.send) {
-            this.channel.send(msg, key);
+            var payload = {
+                'msg': msg,
+                'key': key
+            };
+            
+            this.channel.send(payload);
         } else {
             console.log('No channel present. Not sending messsage <' + msg + '> with key <' + key + '>');
         }
