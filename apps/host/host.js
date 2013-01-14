@@ -179,8 +179,16 @@ function getRandom(){
     */
 
 $(document).ready(function(){
-    partyplayer.init('host');
-    pc = new PartyCollection("Webinos Party");
-    funnel.init(1000, 5);
-	player.init();
+    webinos.session.addListener('registeredBrowser', function () {
+        partyplayer.init('host');
+        pc = new PartyCollection("Webinos Party");
+        funnel.init(500, 5);
+    	player.init();
+
+    });
+    
+});
+
+$(window).unload(function() {
+    partyplayer.close();
 });

@@ -214,36 +214,145 @@ partyplayer.FunnelItem = function(itemID, votes, userID) {
     this.votes = votes;
 };
 
+/**
+ * Closes the channel
+ */
+partyplayer.close = function() {
+    //TODO should I only close when I'm the host?
+    this.channel.close();
+    this.channel = undefined;
+} 
 
 /**
- * Initialises the websocket and set up the communication protocol
+ * Initialises the webinos app2app channel and set up the communication protocol
  * @param hostorguest either 'host' or 'guest', relevant for a2a-stub behaveour
  */
 partyplayer.init = function(hostorguest) {
-    var channel;
-                            //to make it work for mobiles, change 'localhost' to ip adress
-    webinos.app2app.init('ws:localhost:10666/' + hostorguest, function() {
-        log('Connected to a2a stub server (as ' + hostorguest + ')');
-
-        channel = webinos.app2app.createChannel(
-            'partyplayer', null, null, function(msg, key) {
-                var func, handler;
-                if (msg.ns in partyplayer) {
-                    handler = 'on' + msg.cmd;
-                    if (handler in partyplayer[msg.ns]) {
-                        func = partyplayer[msg.ns][handler];
-                    }
+    var self = this;
+    this.isHost = false;
+    this.channel = undefined;
+    
+    var CHANNEL_NAMESPACE = "urn:nl-tno:partyplayer:host";
+    
+    if (hostorguest === 'host') {
+        this.isHost = true;
+    }
+    
+    webinos.discovery.findServices(new ServiceType("http://webinos.org/api/app2app"), {
+        onFound: function (service) {
+            service.bindService({
+                onBind: function () {
+                    connect(service);
                 }
-                if (typeof func === 'function') {
-                    func(msg.params, msg.ref, key);
-                } else {
-                    log('Can\'t find handler partyplayer.' + msg.ns + '.on' + msg.cmd);
-                }
-        });
-
-        partyplayer.sendMessage = function(msg, key) {
-            channel.send(msg, key);
-        };
+            });
+        },
+        onError: function (error) {
+            alert("Error finding service: " + error.message + " (#" + error.code + ")");
+        }
     });
-}
+    
+    var connect = function (app2app) {
+        if (self.isHost) {
+            var properties = {};
+        
+            // we allow all channel clients to send and receive
+            properties.mode = "send-receive";
+
+            var config = {};
+            // the namespace is an URN which uniquely defines the channel in the personal zone
+            config.namespace = CHANNEL_NAMESPACE;
+            config.properties = properties;
+            // we can attach application-specific information to the channel
+            config.appInfo = {};
+
+            app2app.createChannel(
+                    config,
+                    // callback invoked when a client want to connect to the channel
+                    function(request) {
+                        // we allow all clients to connect (we could also for example check some application-
+                        // specific information in the request.requestInfo to make a decision)
+                        return confirm("Do you allow the party guest to connect?");
+                    },
+                    // callback invoked to receive messages
+                    function(message) {
+                        console.log("The party host received a message: " + message.contents);
+                        handleMessage(message.contents);
+                    },
+                    // callback invoked on success, with the client's channel proxy as parameter
+                    function(channel) {
+                        self.channel = channel;
+                    },
+                    function(error) {
+                        alert("Could not create channel: " + error.message);
+                    }
+            );
+        } else {
+            app2app.searchForChannels(
+                    CHANNEL_NAMESPACE,
+                    // for now no other zones need to be searched, only its own personal zone
+                    [],
+                    // callback invoked on each channel found, we expect it to be called at most once
+                    // because we did not use a wildcard
+                    function(channel) {
+                        // we can include application-specific information to the connect request
+                        var requestInfo = {};
+                        channel.connect(
+                            requestInfo,
+                            // callback invoked to receive messages, only after successful connect
+                            function(message) {
+                                console.log("Party guest received message from party host: " + message.contents);
+                                handleMessage(message.contents);
+                            },
+                            // callback invoked when the client is successfully connected (i.e. authorized by the creator)
+                            function(success) {
+                                // make the proxy available now that we are successfully connected
+                                self.channel = channel;
+                            },
+                            function(error) {
+                                alert("Could not connect to channel: " + error.message);
+                            }
+                        );
+                    },
+                    // callback invoked when the search query is accepted for processing
+                    function(success) {
+                        // ok, but no action needed for now
+                    },
+                    function(error) {
+                        alert("Could not search for channel: " + error.message);
+                    }
+            );
+        }
+    };
+
+    var handleMessage = function (payload) {
+        var msg = payload.msg;
+        var key = payload.key;
+        
+        var func, handler;
+        
+        if (msg.ns in partyplayer) {
+            handler = 'on' + msg.cmd;
+        
+            if (handler in partyplayer[msg.ns]) {
+                func = partyplayer[msg.ns][handler];
+            }
+        }
+        
+        if (typeof func === 'function') {
+            func(msg.params, msg.ref, key);
+        } else {
+            log('Can\'t find handler partyplayer.' + msg.ns + '.on' + msg.cmd);
+        }
+    };
+    
+    partyplayer.sendMessage = function(msg, key) {
+        if (this.channel && this.channel.send) {
+            this.channel.send(msg, key);
+        } else {
+            console.log('No channel present. Not sending messsage <' + msg + '> with key <' + key + '>');
+        }
+    };
+};
+
+
 

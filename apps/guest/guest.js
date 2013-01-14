@@ -18,9 +18,14 @@
  * Authors: Victor Klos, Martin Prins, Arno Pont
  */
 $(document).ready(function(){
+    webinos.session.addListener('registeredBrowser', function () {
+        partyplayer.init('guest');
+        selectProfile.init();
+    });
+});
 
-    partyplayer.init('guest');
-    selectProfile.init();
+$(window).unload(function() {
+    partyplayer.close();
 });
 
 //globals for user
