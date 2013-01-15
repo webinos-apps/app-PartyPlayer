@@ -215,11 +215,13 @@ partyplayer.FunnelItem = function(itemID, votes, userID) {
 };
 
 /**
- * Closes the channel
+ * Closes the current connected channel
  */
 partyplayer.close = function() {
-    this.channel.disconnect();
-    this.channel = undefined;
+    if (this.channel) {
+        this.channel.disconnect();
+        this.channel = undefined;
+    }
 } 
 
 /**
@@ -233,11 +235,17 @@ partyplayer.init = function(hostorguest) {
     
     var CHANNEL_NAMESPACE = "urn:nl-tno:partyplayer:host";
     
+    // when the party player is initialized by the host
     if (hostorguest === 'host') {
         this.isHost = true;
     }
     
     webinos.discovery.findServices(new ServiceType("http://webinos.org/api/app2app"), {
+        /**
+         * When the service is found
+         * @param service The service that is found.
+         * @private
+         */
         onFound: function (service) {
             service.bindService({
                 onBind: function () {
@@ -245,11 +253,22 @@ partyplayer.init = function(hostorguest) {
                 }
             });
         },
+        /**
+         * When an error occurs.
+         * @param error The object describing the error event.
+         * @private
+         */
         onError: function (error) {
             alert("Error finding service: " + error.message + " (#" + error.code + ")");
         }
     });
     
+    /**
+     * Connect to app2app channel. When in host mode this function will create a channel and connect to it. When in
+     * guest mode the function connects to the host channel.
+     * @param app2app The app2app service used for channel interaction.
+     * @private
+     */
     var connect = function (app2app) {
         if (self.isHost) {
             var properties = {};
@@ -323,39 +342,57 @@ partyplayer.init = function(hostorguest) {
         }
     };
 
+    /**
+     * Handles a message that is received on the party channel.
+     * @private
+     * @param payload The payload of the received message
+     */
     var handleMessage = function (payload) {
+        // unwrap the message
         var msg = payload.msg;
         var key = payload.key;
         
         var func, handler;
         
+        // when the message is a party player message
         if (msg.ns in partyplayer) {
             handler = 'on' + msg.cmd;
         
+            // select the apriopiate message handle
             if (handler in partyplayer[msg.ns]) {
-                func = partyplayer[msg.ns][handler];
+                var func = partyplayer[msg.ns][handler];
+
+                // call the message handler
+                if (typeof func === 'function') {
+                    func(msg.params, msg.ref, key);
+                } else {
+                    log('Raise condition. No function registred for handler.' + msg.ns + '.on' + msg.cmd);
+                }
+            } else {
+                log('Can\'t find handler partyplayer.' + msg.ns + '.on' + msg.cmd);
             }
+        } else {
+            log('Don\'t known how to handle messages from this namespace.' + msg.ns + '.on' + msg.cmd);
         }
+    };    
+};
+
+/**
+ * Sends a message to the party channel.
+ * @param msg The message to send
+ * @param key The key for the message
+ */
+partyplayer.sendMessage = function(msg, key) {
+    if (this.channel && this.channel.send) {
+        var payload = {
+            'msg': msg,
+            'key': key
+        };
         
-        if (typeof func === 'function') {
-            func(msg.params, msg.ref, key);
-        } else {
-            log('Can\'t find handler partyplayer.' + msg.ns + '.on' + msg.cmd);
-        }
-    };
-    
-    partyplayer.sendMessage = function(msg, key) {
-        if (this.channel && this.channel.send) {
-            var payload = {
-                'msg': msg,
-                'key': key
-            };
-            
-            this.channel.send(payload);
-        } else {
-            console.log('No channel present. Not sending messsage <' + msg + '> with key <' + key + '>');
-        }
-    };
+        this.channel.send(payload);
+    } else {
+        console.log('No channel present. Not sending messsage <' + msg + '> with key <' + key + '>');
+    }
 };
 
 
