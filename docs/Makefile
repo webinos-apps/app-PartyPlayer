@@ -42,7 +42,7 @@ figures:
 
 apidoc:
 	-@mkdir -p $(JSDOC_DIR)
-	@jsdoc -d=$(PWD)/$(JSDOC_DIR) -p -r=10 --exclude=jquery\* ../apps 
+	@jsdoc -d=$(PWD)/$(JSDOC_DIR) -t=$(PWD)/codeview-1-2-1 -p -r=10 --exclude=jquery\* ../apps 
 
 design:
 	@markdown design.md > generated/design.html
