@@ -39,29 +39,29 @@ var userProfile = {
 var partyPlayerUsers = {};
 
 partyplayer.joinUser = function(name, picture){
-	partyplayer.sendMessage({ns:"main", cmd:"join", params:{alias:name,thumbnail:picture}});
     log(name + " is joining...");
+	partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"join", params:{alias:name,thumbnail:picture}});
 };
 
 partyplayer.addItem = function(item){
- 	partyplayer.sendMessage({ns:"main", cmd:"addItem", params:{userID:userProfile.userID,item:item}});
 	log("adding Item");
+ 	partyplayer.sendMessageTo(partyPlayer.getHost(), {ns:"main", cmd:"addItem", params:{userID:userProfile.userID,item:item}});
 };
 
 partyplayer.removeItem = function(itemID){
-	partyplayer.sendMessage({ns:"main", cmd:"removeItem", params:{userID:userProfile.userID,itemID:itemID}});
 	log("removing Item");
+	partyplayer.sendMessageTo(partyPlayer.getHost(), {ns:"main", cmd:"removeItem", params:{userID:userProfile.userID,itemID:itemID}});
 }
 
 partyplayer.addFunnelItem = function(itemID){
- 	partyplayer.sendMessage({ns:"funnel", cmd:"addItem", params:{userID:userProfile.userID,itemID:itemID}});
 	log("adding Item To Funnel");
+ 	partyplayer.sendMessageTo(partyPlayer.getHost(), {ns:"funnel", cmd:"addItem", params:{userID:userProfile.userID,itemID:itemID}});
 };
 
 partyplayer.voteFunnelItem = function(funnelItemID){
     //@TODO -> TEST
- 	partyplayer.sendMessage({ns:"funnel", cmd:"vote", params:{userID:userProfile.userID,funnelItemID:funnelItemID}});
-	log("item voted for: " + funnelItemID);
+    log("item voted for: " + funnelItemID);
+ 	partyplayer.sendMessageTo(partyPlayer.getHost(), {ns:"funnel", cmd:"vote", params:{userID:userProfile.userID,funnelItemID:funnelItemID}});
 };
 
 partyplayer.main = {};

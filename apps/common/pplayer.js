@@ -225,6 +225,13 @@ partyplayer.close = function() {
 } 
 
 /**
+ * Returns the address of the host.
+ */
+partyplayer.getHost = function() {
+    return this.channel.creator;
+}
+
+/**
  * Initialises the webinos app2app channel and set up the communication protocol
  * @param hostorguest either 'host' or 'guest', relevant for a2a-stub behaveour
  */
@@ -294,7 +301,7 @@ partyplayer.init = function(hostorguest) {
                     // callback invoked to receive messages
                     function(message) {
                         console.log("The party host received a message: " + message.contents);
-                        handleMessage(message.contents);
+                        handleMessage(message);
                     },
                     // callback invoked on success, with the client's channel proxy as parameter
                     function(channel) {
@@ -319,7 +326,7 @@ partyplayer.init = function(hostorguest) {
                             // callback invoked to receive messages, only after successful connect
                             function(message) {
                                 console.log("Party guest received message from party host: " + message.contents);
-                                handleMessage(message.contents);
+                                handleMessage(message);
                             },
                             // callback invoked when the client is successfully connected (i.e. authorized by the creator)
                             function(success) {
@@ -347,10 +354,9 @@ partyplayer.init = function(hostorguest) {
      * @private
      * @param payload The payload of the received message
      */
-    var handleMessage = function (payload) {
-        // unwrap the message
-        var msg = payload.msg;
-        var key = payload.key;
+    var handleMessage = function (message) {
+        var msg = message.contents;
+        var from = message.from;
         
         var func, handler;
         
@@ -364,7 +370,7 @@ partyplayer.init = function(hostorguest) {
 
                 // call the message handler
                 if (typeof func === 'function') {
-                    func(msg.params, msg.ref, key);
+                    func(msg.params, msg.ref, from);
                 } else {
                     log('Raise condition. No function registred for handler.' + msg.ns + '.on' + msg.cmd);
                 }
@@ -380,20 +386,26 @@ partyplayer.init = function(hostorguest) {
 /**
  * Sends a message to the party channel.
  * @param msg The message to send
- * @param key The key for the message
  */
-partyplayer.sendMessage = function(msg, key) {
+partyplayer.sendMessage = function(msg) {
     if (this.channel && this.channel.send) {
-        var payload = {
-            'msg': msg,
-            'key': key
-        };
-        
-        this.channel.send(payload);
+        this.channel.send(msg);
     } else {
-        console.log('No channel present. Not sending messsage <' + msg + '> with key <' + key + '>');
+        console.log('No channel present. Not sending messsage <' + msg + '>');
     }
 };
 
+/**
+ * Sends a message to someone on the party channel.
+ * @param to The address where the message is send to
+ * @param msg The message to send
+ */
+partyplayer.sendMessageTo = function(to, msg) {
+    if (this.channel && this.channel.sendTo) {
+        this.channel.sendTo(to, msg);
+    } else {
+        console.log('No channel present. Not sending messsage <' + msg + '> to <' + to + '>');
+    }
+};
 
 
