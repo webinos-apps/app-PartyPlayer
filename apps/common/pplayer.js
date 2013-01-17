@@ -287,9 +287,9 @@ partyplayer.init = function(hostorguest) {
                     config,
                     // callback invoked when a client want to connect to the channel
                     function(request) {
-                        // we allow all clients to connect (we could also for example check some application-
-                        // specific information in the request.requestInfo to make a decision)
-                        return confirm("Do you allow the party guest to connect?");
+                        // we allow all clients to connect
+                        return true;
+                        //return confirm("Do you allow the party guest to connect?");
                     },
                     // callback invoked to receive messages
                     function(message) {
