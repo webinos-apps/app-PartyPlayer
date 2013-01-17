@@ -136,7 +136,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 
 partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
-    //something added to the funnel
+    //something added to the funnel or changed in the funnel
     
     //get values from party collection
     var item = $('table#partyCollection tr[itemID="'+param.itemID+'"]');
