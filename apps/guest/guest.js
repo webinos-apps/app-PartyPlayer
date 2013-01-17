@@ -26,6 +26,11 @@ $(document).ready(function(){
 });
 
 $(window).unload(function() {
+    if (userProfile && userProfile.userID) {
+        partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave", params:{userID:userProfile.userID}});
+    } else {
+        partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
+    }
     partyplayer.close();
 });
 

@@ -53,8 +53,8 @@ partyplayer.main.onleave= function (params, ref, from) {
             partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:userID}}); 
         }
     }
-    else if (typeof params !== 'undefined' && params[userID] !== undefined ){ //registered on application level
-        userID = params[userID];
+    else if (typeof params !== 'undefined' && params.userID !== undefined ){ //registered on application level
+        userID = params.userID;
         pc.removeUser(userID);
         pc.removeUserItems(userID);
         partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:uID}}); 
