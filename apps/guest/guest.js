@@ -17,6 +17,7 @@
  *
  * Authors: Victor Klos, Martin Prins, Arno Pont
  */
+ 
 $(document).ready(function(){
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('guest');
@@ -125,7 +126,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	}
 	trItem += '</tr>';
 	$('table#partyCollection').append(trItem);
-	$('table#partyCollection .addBtn[itemID="'+param.itemID+'"]').bind("click", currentCollection.preferItemsClick);
+	$('table#partyCollection .addBtn[itemID="'+param.itemID+'"]').unbind("click").bind("click", currentCollection.preferItemsClick);
 };
 
 partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
@@ -152,8 +153,7 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
 	trItem += '<td align="center"><button class="voteBtn" funnelid="'+param.funnelItemID+'">Vote</button></td>'
 	trItem += '</tr>';
 	$('table#partyFunnel').append(trItem);
-	$('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').bind("click", currentCollection.voteClick);  
-	
+    $('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').unbind("click").bind("click", currentCollection.voteClick);   
 }
 
 partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
@@ -182,6 +182,9 @@ partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
 //Opening screen select profile
 var selectProfile = {
 	profileClick:function(event){
+	    event.stopPropagation();
+        event.preventDefault();
+        
 		//collect info
 		var profileName = $('.profileName', this).html();
 		var profilePic = $('.profilePic', this).attr('src');
@@ -231,7 +234,7 @@ var selectProfile = {
 			picList += liItem;
 		}
 		$('div#selectProfile ul#profiles').append(picList);
-		$('ul#profiles li.profileItem').bind("click", selectProfile.profileClick);
+		$('ul#profiles li.profileItem').unbind("click").bind("click", selectProfile.profileClick);
 	}
 };
 
@@ -253,7 +256,7 @@ var currentCollection = {
 	},	
 	init:function(){
 		$('div#currentCollection').show();
-		$('div#addItemsBtnContainer button#addItemsBtn').bind("click", currentCollection.addItemsClick);
+		$('div#addItemsBtnContainer button#addItemsBtn').unbind("click").bind("click", currentCollection.addItemsClick);
 	}	
 };
 
@@ -300,6 +303,6 @@ var selectLocalItems ={
 	},
 	init:function(){
 		$('div#selectLocalItems').show();
-		$('div#shareItemsBtnContainer button#shareItemsBtn').bind("click", selectLocalItems.shareItemsClick);
+		$('div#shareItemsBtnContainer button#shareItemsBtn').unbind("click").bind("click", selectLocalItems.shareItemsClick);
 	}
 };
