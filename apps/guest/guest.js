@@ -182,9 +182,6 @@ partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
 //Opening screen select profile
 var selectProfile = {
 	profileClick:function(event){
-	    event.stopPropagation();
-        event.preventDefault();
-        
 		//collect info
 		var profileName = $('.profileName', this).html();
 		var profilePic = $('.profilePic', this).attr('src');
