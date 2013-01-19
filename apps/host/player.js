@@ -48,6 +48,7 @@ var player = (function(){
 		    
             funnel.animateToPlayer(key);
 		    
+		    console.log(item.item.url);
 		    playerViz.updatePlayer(item.item.url, playerSelector);
 		},
 		/**

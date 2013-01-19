@@ -123,11 +123,11 @@ var visualFunnel = function(name, selector){
 	 *	@param selector string The DOM funnel element to animate
 	 *	@param state int The info to show depending on state
 	**/	
-    var buildSwitcher = function (selector, state) {
+    var buildSwitcher = function (selector, state, itemInfo) {
         var newState;
         switch(state){
             case 1:
-                var trackCover = '<img src='+item.item.cover+' class=cover>';
+                var trackCover = '<img src='+itemInfo.cover+' class=cover>';
                 $(selector).html(trackCover);
                 $(selector + ' .cover').css({
                 'width': inDist * 0.8,
@@ -137,7 +137,7 @@ var visualFunnel = function(name, selector){
 		        newState = 2;
 		        break;
 		    case 2:
-		        var trackInfo = '<p class=title>' + item.item.title +'</p><p class=artist>' + item.item.artist +'</p><p class=album>' + item.item.album +'</p>';
+		        var trackInfo = '<p class=title>' + itemInfo.title +'</p><p class=artist>' + itemInfo.artist +'</p><p class=album>' + itemInfo.album +'</p>';
 		        $(selector).html(trackInfo);
 		        $(selector + ' p').css({
 		            'font-size' : inDist/6,
@@ -163,7 +163,7 @@ var visualFunnel = function(name, selector){
                 newState = 3;
                 break;
 		    case 3:
-		        var userCover = '<p class=usertxt>Added by: </p><img src='+ user.thumbnail +' class=thumbnail>';
+		        var userCover = '<p class=usertxt>Added by: </p><img src='+ itemInfo.thumbnail +' class=thumbnail>';
 		        $(selector).html(userCover);
 		        $(selector + ' p').css({
 		            'font-size' : inDist/6,
@@ -180,8 +180,8 @@ var visualFunnel = function(name, selector){
 		        newState = 1;
 		        break;
         }
-	    console.log(newState);
-	    setTimeout( function() { buildSwitcher(selector, newState) }, 2000)
+	    //console.log(newState);
+	    setTimeout( function() { buildSwitcher(selector, newState, itemInfo) }, 2000)
 	};
 	
 	/**
@@ -268,8 +268,13 @@ var visualFunnel = function(name, selector){
 		});
 		
 		var state = 2;
-        		
-		element.interval = setTimeout(function(){ buildSwitcher(element.selector, state); }, 5000);
+        var itemInfo = {};
+        itemInfo.title = item.item.title;
+        itemInfo.artist = item.item.artist;
+        itemInfo.album = item.item.album;
+        itemInfo.cover = item.item.cover;
+        itemInfo.thumbnail = user.thumbnail;		
+		element.interval = setTimeout(function(){ buildSwitcher(element.selector, state, itemInfo); }, 5000);
 		startArc(element.selector, element.circle);
 		return element;
 	};
