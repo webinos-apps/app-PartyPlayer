@@ -1,4 +1,4 @@
-<!doctype HTML>
+<!DOCTYPE html>
 <!--
 Code contributed to the webinos platform.
 
@@ -16,95 +16,114 @@ limitations under the License.
 
 (C) Copyright 2012, TNO
 
-Authors Victor Klos, Arno Pont, Martin Prins
+Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 -->
 <html>
     <head>
-        <meta charset=utf-8>
+        <meta charset="utf-8">
         <title>PartyPlayer Guest</title>
-        <link rel=stylesheet href=guest.css type=text/css />
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<link rel="stylesheet" href="tno-partyplayer-guest.min.css" type="text/css"/>
+		<link rel="stylesheet" href="jquery.mobile.structure.min.css " type="text/css"/>
 		<script type="text/javascript" src="/webinos.js"></script>
-        <script type=text/javascript src=../lib/jquery.min.js></script>
+        <script type="text/javascript" src="../lib/jquery.min.js"></script>
+        <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
         <!--script type=text/javascript src=../lib/id3v2.js></script>-->
-        <script type=text/javascript src=../common/log.js></script>
-        <script type=text/javascript src=../common/pplayer.js></script>
-       	<script type=text/javascript src=../host/PartyCollection.js></script>
-       	<script type=text/javascript src=icons/icons.js></script>
-        <script type=text/javascript src=guest.js></script>
-        <script type=text/javascript src=../../library/items.js></script>
+        <script type="text/javascript" src="../common/log.js"></script>
+        <script type="text/javascript" src="../common/pplayer.js"></script>
+       	<script type="text/javascript" src="../host/PartyCollection.js"></script>
+       	<script type="text/javascript" src="icons/icons.js"></script>
+        <script type="text/javascript" src="guest.js"></script>
+        <script type="text/javascript" src="../../library/items.js"></script>
+
+		<style>	
+			.nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+			.nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
+			
+			#homepage .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat;  }
+			#playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat;  }
+			#share .ui-icon { background:  url(icons/share.png) 50% 50% no-repeat;  }
+			#guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat;  }
+			#about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat;  }
+		</style>
+
+
     </head>
     <body>
-    <!-- TNO Logo -->
-    <div id="TNOLogo"><img width="110px" height="20px" src="../../library/logo/logo-TNO.gif" /></div>
-  		<!-- Guest App Container -->
-	    <div id="guestApp">
-	    	
-	    	<!-- Opening Screen, choose user profile -->
-	    	<div id="selectProfile" class="screen">
-				<h2>Choose a profile</h2>
-				<ul id="profiles">
+		<div data-role="page" class="type-home" id="profile-select">
+			<div data-role="header">
+				<h1>Party Player</h1>
+			</div>
+			<div data-role="content">
+				<ul id="profiles" data-role="listview" data-inset="true" data-theme="a">
+					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Choose a profile</li>
+					
 					<!-- add profiles as <li> items-->
+					
 				</ul>
-	    	</div>
-	    	
-	    	<div id="userInfo" class="centeredContainer">
-	    	</div>
-	    		    	
-	    	<!-- Current Collection, what is already in the collection?-->
-	    	<div id="currentCollection" class="screen">
-				<!-- Funnel -->
-				<h2 class="centeredContainer"><img src="icons/play.png" height="16px" width="16px" /> Playlist</h2>
-				<div class="funnelContainer centeredContainer">
-					<table id="partyFunnel" cellspacing="0"'>
-						<tr class="collectionTop funnel">
-							<td>Artist</td>
-							<td>Title</td>
-							<td>Album</td>
-							<td align="center">Cover</td>
-							<td align="center">Selected by</td>
-							<td align="center">Vote</td>
-						</tr>
-					</table>
-				</div>
-				<!-- Collection -->
-				<h2 class="centeredContainer"><img src="icons/folder.png" height="16px" width="16px" /> Collection</h2>				
-				<div class="collectionContainer centeredContainer">
-					<table id="partyCollection" cellspacing="0"'>
-						<tr class="collectionTop">
-							<td>Artist</td>
-							<td>Title</td>
-							<td>Album</td>
-							<td align="center">Cover</td>
-							<td align="center">Shared by</td>
-							<td align="center">Action</td>
-						</tr>
-					</table>
-				</div>
-				<div id="addItemsBtnContainer" class="centeredContainer">
-					<button id="addItemsBtn" class="menuBtn fullWidthBtn">Add Local Items</button>
+			</div>
+		</div>
+		<div data-role="page" class="type-home" id="home">
+			<div data-role="header">
+				<h1>Party Player</h1>
+<!--				<a href="#home" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>-->
+			</div>
+			<div data-role="content">
+				<div class="content-secondary">
+					
+	    			<!-- TNO Logo -->
+	    			<div id="TNOLogo" style="text-align: center; margin-left: 0 auto; margin-right: 0auto;" >
+						<img src="../../library/logo/logo-TNO.png" alt="Concept by TNO"/>
+					</div>
+	
+					<ul data-role="listview" data-inset="true" data-theme="a">
+					</ul>
 				</div>
 				
-	    	</div>
-	    	
-	    	<!-- Select Local Items, select which local files to add -->
-	    	<h2 class="centeredContainer"><img src="icons/localfolder.png" height="24px" width="24px" /> Select local items</h2>
-	    	<div id="selectLocalItems" class="screen">
-				<div class="collectionContainer centeredContainer">
-					<table id="localCollection" cellspacing="0"'>
-						<tr class="collectionTop">
-							<td>Artist</td>
-							<td>Title</td>
-							<td>Album</td>
-							<td>Cover</td>
-							<td>Select All</td>
-						</tr>
-					</table>
+				<div class="content-primary">
 				</div>
-				<div id="shareItemsBtnContainer" class="centeredContainer">
-					<button id="shareItemsBtn" class="menuBtn fullWidthBtn">Share Items With Collection</button>
+			</div>
+
+			<div data-role="footer" class="nav" data-poistion="fixed" data-fullscreen="true" data-id="navigation">
+				<div data-role="navbar" class="nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="homepage" data-icon="custom" class="ui-btn-active ui-state-persist">HOME</a></li>
+					<li><a href="#playlist" id="playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#share" id="share" data-icon="custom">SHARE</a></li>
+					<li><a href="#guests" id="guests" data-icon="custom">GUESTS</a></li>
+					<li><a href="#about" id="about" data-icon="custom">ABOUT</a></li>
+				</ul>
 				</div>
-	    	</div>
-	 	</div>
-	 	
-    </body>
+			</div>
+		</div>
+
+		<!-------- GUESTS ------>
+
+		<div data-role="page" class="type-home" id="guests">
+			<div data-role="header">
+				<h1>Party Player</h1>
+			</div>
+			<div data-role="content">
+				<ul id="guest-profiles" data-role="listview" data-inset="true" data-theme="a">
+					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Party People</li>
+					
+					<!-- add guests as <li> items-->
+					
+				</ul>
+			</div>
+
+			<div data-role="footer" class="nav" data-poistion="fixed" data-fullscreen="true" data-id="navigation">
+				<div data-role="navbar" class="nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="homepage" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#share" id="share" data-icon="custom">SHARE</a></li>
+					<li><a href="#guests" id="guests" data-icon="custom" class="ui-btn-active ui-state-persist">GUESTS</a></li>
+					<li><a href="#about" id="about" data-icon="custom">ABOUT</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+	</body>
+	
 </html>

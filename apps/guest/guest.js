@@ -21,8 +21,13 @@
 $(document).ready(function(){
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('guest');
+        $.mobile.changePage("#profile-select", { transition: "slideup"} );
         selectProfile.init();
     });
+});
+
+$('#guests').live('pagebeforeshow', function(event, ui) {
+    $('ul#guest-profiles').trigger('updatelayout');
 });
 
 $(window).unload(function() {
@@ -208,35 +213,34 @@ var selectProfile = {
 	    partyplayer.joinUser(userProfile.userName, userProfile.userPic);
 	    
 		//show next screen and update userInfo on screen
-		$('#selectProfile').fadeOut(200, function(){
-			currentCollection.init();
-			//add userInfo to screen
-			
-			var newUser = '';
-		    newUser += '<div id="yourProfile" class="profile">';
-		    newUser += '<div class="userInfoPic">';
-		    newUser += '<img class="profilePicSmall" id="base64image" src="'+userProfile.userPic+'"/></div>';
-		    newUser += '<div class="userInfoText">'+userProfile.userName+'</div>';
-		    newUser += '</div>';
-		    $('#userInfo').prepend(newUser);
-			$('#userInfo').show();
-		});
+		currentCollection.init();
+		//add userInfo to screen
+		var newUser = '';
+    	newUser += '<li class="ui-li-icon">'
+        newUser += '<img id="base64image" src="'+userProfile.userPic+'"/></div>';
+        newUser += '<div>'+userProfile.userName+'</div>';
+        newUser += '</li>';
+        $('ul#guest-profiles').append(newUser);
+    	//$('ul#guest-profiles').listview('refresh');
+        
+		$.mobile.changePage( "#home", { transition: "slideup"} );
 	},
 	init:function() {
-		$('div#selectProfile').show();
 		//add profile pics to list
 		var picList = '';
 		for(var i=0; i<libUsers.length; i++) {
+		    
 			var liItem = '<li class="profileItem">';
 			liItem += '<img class="profilePic" id="base64image" src="';
 			liItem += profileIcons[i];
 			liItem += '" />';
-			liItem += '<p class="profileName">'+libUsers[i].userName+'</p>';
+			liItem += '<div class="profileName">'+libUsers[i].userName+'</div>';
 			liItem += '</li>';
 			picList += liItem;
 		}
-		$('div#selectProfile ul#profiles').append(picList);
+		$('ul#profiles').append(picList);
 		$('ul#profiles li.profileItem').unbind("click").bind("click", selectProfile.profileClick);
+		$('ul#profiles').listview('refresh');
 	}
 };
 
