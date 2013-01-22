@@ -17,10 +17,21 @@
  *
  * Authors: Victor Klos, Martin Prins, Arno Pont
  */
+ 
 $(document).ready(function(){
+    webinos.session.addListener('registeredBrowser', function () {
+        partyplayer.init('guest');
+        selectProfile.init();
+    });
+});
 
-    partyplayer.init('guest');
-    selectProfile.init();
+$(window).unload(function() {
+    if (userProfile && userProfile.userID) {
+        partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave", params:{userID:userProfile.userID}});
+    } else {
+        partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
+    }
+    partyplayer.close();
 });
 
 //globals for user
@@ -33,29 +44,29 @@ var userProfile = {
 var partyPlayerUsers = {};
 
 partyplayer.joinUser = function(name, picture){
-	partyplayer.sendMessage({ns:"main", cmd:"join", params:{alias:name,thumbnail:picture}});
     log(name + " is joining...");
+	partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"join", params:{alias:name,thumbnail:picture}});
 };
 
 partyplayer.addItem = function(item){
- 	partyplayer.sendMessage({ns:"main", cmd:"addItem", params:{userID:userProfile.userID,item:item}});
 	log("adding Item");
+ 	partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"addItem", params:{userID:userProfile.userID,item:item}});
 };
 
 partyplayer.removeItem = function(itemID){
-	partyplayer.sendMessage({ns:"main", cmd:"removeItem", params:{userID:userProfile.userID,itemID:itemID}});
 	log("removing Item");
+	partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"removeItem", params:{userID:userProfile.userID,itemID:itemID}});
 }
 
 partyplayer.addFunnelItem = function(itemID){
- 	partyplayer.sendMessage({ns:"funnel", cmd:"addItem", params:{userID:userProfile.userID,itemID:itemID}});
 	log("adding Item To Funnel");
+ 	partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"funnel", cmd:"addItem", params:{userID:userProfile.userID,itemID:itemID}});
 };
 
 partyplayer.voteFunnelItem = function(funnelItemID){
     //@TODO -> TEST
- 	partyplayer.sendMessage({ns:"funnel", cmd:"vote", params:{userID:userProfile.userID,funnelItemID:funnelItemID}});
-	log("item voted for: " + funnelItemID);
+    log("item voted for: " + funnelItemID);
+ 	partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"funnel", cmd:"vote", params:{userID:userProfile.userID,funnelItemID:funnelItemID}});
 };
 
 partyplayer.main = {};
@@ -120,12 +131,12 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	}
 	trItem += '</tr>';
 	$('table#partyCollection').append(trItem);
-	$('table#partyCollection .addBtn[itemID="'+param.itemID+'"]').bind("click", currentCollection.preferItemsClick);
+	$('table#partyCollection .addBtn[itemID="'+param.itemID+'"]').unbind("click").bind("click", currentCollection.preferItemsClick);
 };
 
 partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
-    //something added to the funnel
+    //something added to the funnel or changed in the funnel
     
     //get values from party collection
     var item = $('table#partyCollection tr[itemID="'+param.itemID+'"]');
@@ -147,8 +158,7 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
 	trItem += '<td align="center"><button class="voteBtn" funnelid="'+param.funnelItemID+'">Vote</button></td>'
 	trItem += '</tr>';
 	$('table#partyFunnel').append(trItem);
-	$('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').bind("click", currentCollection.voteClick);  
-	
+    $('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').unbind("click").bind("click", currentCollection.voteClick);   
 }
 
 partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
@@ -226,7 +236,7 @@ var selectProfile = {
 			picList += liItem;
 		}
 		$('div#selectProfile ul#profiles').append(picList);
-		$('ul#profiles li.profileItem').bind("click", selectProfile.profileClick);
+		$('ul#profiles li.profileItem').unbind("click").bind("click", selectProfile.profileClick);
 	}
 };
 
@@ -248,7 +258,7 @@ var currentCollection = {
 	},	
 	init:function(){
 		$('div#currentCollection').show();
-		$('div#addItemsBtnContainer button#addItemsBtn').bind("click", currentCollection.addItemsClick);
+		$('div#addItemsBtnContainer button#addItemsBtn').unbind("click").bind("click", currentCollection.addItemsClick);
 	}	
 };
 
@@ -295,6 +305,6 @@ var selectLocalItems ={
 	},
 	init:function(){
 		$('div#selectLocalItems').show();
-		$('div#shareItemsBtnContainer button#shareItemsBtn').bind("click", selectLocalItems.shareItemsClick);
+		$('div#shareItemsBtnContainer button#shareItemsBtn').unbind("click").bind("click", selectLocalItems.shareItemsClick);
 	}
 };

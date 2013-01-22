@@ -23,8 +23,6 @@ Author Victor Klos
 The layout of this project folder is as follows:
 
         |
-        +-- a2a-stub                   -> webinos App2App stub server
-        |
         +-- apps                       -> apps, both host and guest
         |
         +-- docs                       -> documentation, incl generated figures
@@ -33,15 +31,16 @@ The layout of this project folder is as follows:
         |
         +-- README.md                  -> this file
 
+### Installing
+
+The PartyPlayer depends on the webinos platform, in particular the App2App API. For now the PartyPlayer is made part of the webinos testbed application. To use PartyPlayer first install the webinos platform then install PartyPlayer in *<WEBINOS_PLATORM>/webinos/web_root*.
 
 ### Running
 
-The PartyPlayer depends on the webinos platform, in particular the App2App API. As this API is currently missing, a stub is used. This stub is started from the a2a-stub folder by issueing `./server.js`.
+The PartyPlayer consists of two parts, that both must be opened in a recent version of firefox, safari, chrome or chromium:
 
-The PartyPlayer consists of two parts, that both must be opened in a recent version of firefox or chromium:
-
-1. Party **Host** front-end at `apps/host/index.html`. Use a single instance.
-2. Party **Guest** front-end at `apps/guest/index.html`. Use as many as you like.
+1. Party **Host** front-end at `http://localhost:8080/apps/host/index.html`. Use a single instance.
+2. Party **Guest** front-end at `http://localhost:8080/apps/guest/index.html`. Use as many as you like.
 
 Check out [jira for AppParty](http://jira.webinos.org/browse/APPPARTY) for a complete overview of the product backlog, plans for new features or for issueing bugs.
 

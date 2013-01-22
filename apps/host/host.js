@@ -24,18 +24,18 @@ var firstTrack=true;
 partyplayer.main = {};
 partyplayer.funnel = {};
 
-partyplayer.main.onjoin = function(params, ref, key) {
+partyplayer.main.onjoin = function(params, ref, from) {
     uID = pc.addUser(params); //registration on application level
-    users[key]=uID; //registration on connection level.
-    partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID}}, key);
+    users[from]=uID; //registration on connection level.
+    partyplayer.sendMessageTo(from, {ns:"main", cmd:"welcome", params:{userID:uID}});
     pUsers = pc.getUsers();
     for (var u in pUsers){
         if(uID != u){
-            partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}}, key);      
+            partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}});      
         }
     }    
     partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pc.getUser(uID)}});
-    getUsers();
+    updateUsers();
     //send available Items to this user
     pItems = pc.getItems();
     for (var i=0; i<pItems.length;i++){
@@ -43,39 +43,39 @@ partyplayer.main.onjoin = function(params, ref, key) {
     }
 };
 
-partyplayer.main.onleave= function (params, ref, key) {
+partyplayer.main.onleave= function (params, ref, from) {
     //log('leave invoked!');
     if (typeof params === 'undefined'){ //registered on protocol level
-        if (typeof users[key] !== 'undefined'){
-            userID = users[key];
+        if (typeof users[from] !== 'undefined'){
+            userID = users[from];
             pc.removeUser(userID);
             pc.removeUserItems(userID);
             partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:userID}}); 
         }
     }
-    else if (typeof params !== 'undefined' && params[userID] !== undefined ){ //registered on application level
-        userID = params[userID];
+    else if (typeof params !== 'undefined' && params.userID !== undefined ){ //registered on application level
+        userID = params.userID;
         pc.removeUser(userID);
         pc.removeUserItems(userID);
         partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:uID}}); 
     } 
-    delete users.key;
-    getUsers();
-    getItems();
+    delete users.from;
+    updateUsers();
+    updateItems();
 };
 
-partyplayer.main.onaddItem = function (params, ref, key) {
+partyplayer.main.onaddItem = function (params, ref, from) {
     log('adding item');
     itemID = pc.addItem(params.userID,params.item);
     if(itemID!==false){
         partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:params.userID,itemID:itemID,item:params.item}}); 
-        getItems();
+        updateItems();
     }
    
 };
 
 
-partyplayer.funnel.onaddItem = function( params,ref, key) {
+partyplayer.funnel.onaddItem = function( params,ref, from) {
     log("got a new item for the funnel");   
     funnelItemID = funnel.addItem(params.itemID,params.userID);
     partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,vote:0}});
@@ -86,7 +86,7 @@ partyplayer.funnel.onaddItem = function( params,ref, key) {
     }
 }
 
-partyplayer.funnel.onvote = function (params, ref, key) {
+partyplayer.funnel.onvote = function (params, ref, from) {
     log("got a vote");
     var voteResult = funnel.voteItem(params.funnelItemID);
     partyplayer.sendMessage({ns:"funnel", cmd:"votedFunnelItem", params:{userID:params.userID,funnelItemID:params.funnelItemID,vote:voteResult}});
@@ -99,7 +99,7 @@ partyplayer.funnel.removeFunnelItem = function (funnelItemID) {
 
 
 
-function getUsers(){
+function updateUsers(){
     players = pc.getUsers();
     var str = "";
     var nrUsers =0;
@@ -110,7 +110,7 @@ function getUsers(){
     log("Currently "+nrUsers+" User(s):"+str);
 }
 
-function getItems(){
+function updateItems(){
     itemCount = pc.getItemCount();
     log(itemCount)
     var str = "";     
@@ -127,7 +127,7 @@ function getItems(){
 
 
 
-function getRandom(){
+function logRandom(){
     var item = pc.getRandom();
     if (item != 'false'){
         log(item);
@@ -179,8 +179,16 @@ function getRandom(){
     */
 
 $(document).ready(function(){
-    partyplayer.init('host');
-    pc = new PartyCollection("Webinos Party");
-    funnel.init(1000, 5);
-	player.init();
+    webinos.session.addListener('registeredBrowser', function () {
+        partyplayer.init('host');
+        pc = new PartyCollection("Webinos Party");
+        funnel.init(500, 5);
+    	player.init();
+
+    });
+    
+});
+
+$(window).unload(function() {
+    partyplayer.close();
 });
