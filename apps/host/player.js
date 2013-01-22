@@ -28,38 +28,27 @@
  *	player.method(parameters);
 **/
 var player = (function(){
-    var playerSelector;
+    var playerSelector, sortedItems;
     
 	return{
 	    
         /**
-         *  Get the first song in the funnel at the circle, this function loops through all circles until it finds an item
+         *  Get the first song in the funnel, based on votes
          *
-         *  @TODO make the player select funnelItem based on votes in circle
         **/
 		getSong : function(){
-			var theCircle;
-			var key;
-			for(var i = 0; i < funnel.getCircles(); i++){
-				var currentCircle = funnel.getFunnelItemsAtCircle(i+1);
-				for(var j = 0; j < currentCircle.length; j++){
-					if(typeof currentCircle[j] === 'undefined'){
-						
-					}else{
-						console.log('item found at slot: ' + i);
-						theCircle = i+1;
-						key = currentCircle[j];
-						break;
-					}
-				}
-				if(theCircle){break;}
-			}
-			if(!theCircle){console.log("no items found"); return false;}
-			var funnelItem = funnel.getFunnelListItem(key);
-		    var item = pc.getItem(funnelItem.itemID);
-		    //remove?
-		    funnel.removeItem(key);
+		    sortedItems = funnel.getFunnel();
+		    var key = sortedItems[0][0];
+		    if(!key){
+		        return false;
+		    }
 		    
+		    var funnelListItem = funnel.getFunnelListItem(key);
+		    var item = pc.getItem(funnelListItem.itemID); 
+		    
+            funnel.animateToPlayer(key);
+		    
+		    console.log(item.item.url);
 		    playerViz.updatePlayer(item.item.url, playerSelector);
 		},
 		/**
@@ -74,14 +63,42 @@ var player = (function(){
 		        return false;
 		    }
 		},
+		/**
+		 *  Starts the player, calls visual part to build the player onscreen
+		 *
+		**/
 		init : function(){
 		    playerSelector = playerViz.buildPlayer();
 		},
 		start : function(){
 		    player.getSong();
 		},
-		stop : function(){
-		   
-		}
 	}
 })();
+
+/******************||**||**|||**|||**||*****************************
+*******************||**||**||*||*||**||*****************************
+*******************||||||**||****||**|||||**************************/
+ /*
+ @startuml starting_player.png
+ group Starting the Player
+    PartyCollection -> Player: init()
+    Player -> VisualPlayer: buildPlayer()
+    
+    VisualPlayer -> Player: return string playerSelector
+ end
+ @enduml
+ */
+ 
+ /*
+ @startuml protocol_updating_player.png
+ group Updating the Player's source file
+    VisualPlayer -> Player: getSong()
+    
+    Player -> Funnel: animateToPlayer()
+    Funnel -> Funnel: removeItem(key)
+    
+    Player -> VisualPlayer: updatePlayer(url, selector)/false
+ end
+ @enduml
+ */

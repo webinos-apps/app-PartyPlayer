@@ -194,9 +194,9 @@ partyplayer.User = function(id, alias)
 /*
 @startuml common_classes_funnelItem.png
 class FunnelItem {
-    int funnelItemID
-    int itemID
-    int hitpoints
+    string itemID
+    int votes
+    string userID
 }
 @enduml
 */
@@ -204,14 +204,14 @@ class FunnelItem {
 /**
  * Constructor for FunnelItem
  * @constructor
- * @param itemID the itemID in the collection
- * @param hitpoints the "status" of the item 
+ * @param itemID string the itemID in the collection
+ * @param votes int the "votes" of the item
+ * @param userID string the userID in the collection
  */
-partyplayer.FunnelItem = function(itemID, hitpoints, userID) {
+partyplayer.FunnelItem = function(itemID, votes, userID) {
     this.itemID = itemID;
     this.userID = userID;
-    this.hitpoints = hitpoints;
-    this.votes = 100;
+    this.votes = votes;
 };
 
 
@@ -221,7 +221,7 @@ partyplayer.FunnelItem = function(itemID, hitpoints, userID) {
  */
 partyplayer.init = function(hostorguest) {
     var channel;
-
+                            //to make it work for mobiles, change 'localhost' to ip adress
     webinos.app2app.init('ws:localhost:10666/' + hostorguest, function() {
         log('Connected to a2a stub server (as ' + hostorguest + ')');
 

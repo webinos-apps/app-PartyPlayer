@@ -30,7 +30,7 @@ partyplayer.main.onjoin = function(params, ref, key) {
     partyplayer.sendMessage({ns:"main", cmd:"welcome", params:{userID:uID}}, key);
     pUsers = pc.getUsers();
     for (var u in pUsers){
-    	if(uID != u){
+        if(uID != u){
             partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}}, key);      
         }
     }    
@@ -80,15 +80,16 @@ partyplayer.funnel.onaddItem = function( params,ref, key) {
     funnelItemID = funnel.addItem(params.itemID,params.userID);
     partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,vote:0}});
     if(firstTrack == true){
-        firstTrack =false;
+        firstTrack = false;
+        player.start();
         playerViz.setupButton();
     }
 }
 
 partyplayer.funnel.onvote = function (params, ref, key) {
     log("got a vote");
-    funnel.vote(userID,itemID,funnelItemID,vote);
-    partyplayer.sendMessage({ns:"funnel", cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,vote:voteresult}});
+    var voteResult = funnel.voteItem(params.funnelItemID);
+    partyplayer.sendMessage({ns:"funnel", cmd:"votedFunnelItem", params:{userID:params.userID,funnelItemID:params.funnelItemID,vote:voteResult}});
 }
 
 //@TODO: create callback from visual.js to this function 
@@ -180,7 +181,6 @@ function getRandom(){
 $(document).ready(function(){
     partyplayer.init('host');
     pc = new PartyCollection("Webinos Party");
-    funnel.init(500, 5);
+    funnel.init(1000, 5);
 	player.init();
-	
 });
