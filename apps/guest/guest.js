@@ -17,7 +17,7 @@
  *
  * Authors: Victor Klos, Martin Prins, Arno Pont
  */
- 
+
 $(document).ready(function(){
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('guest');
@@ -26,8 +26,8 @@ $(document).ready(function(){
     });
 });
 
-$('#guests').live('pagebeforeshow', function(event, ui) {
-    $('ul#guest-profiles').trigger('updatelayout');
+$('#guests').live('pageinit', function(event) {
+    $('ul#guest-profiles').listview('refresh');
 });
 
 $(window).unload(function() {
@@ -91,12 +91,17 @@ partyplayer.main.onupdateUser = function(param, ref) {
 	    	partyPlayerUsers[param.userID]={name:param.user.alias,picture:param.user.thumbnail};
 	    	 //update users on screen
 		    var newUser = '';
-		    newUser += '<div class="profile" user="'+param.userID+'">';
-		    newUser += '<div class="userInfoPic">';
-		    newUser += '<img class="profilePicSmall" id="base64image" src="'+param.user.thumbnail+'"/></div>';
-		    newUser += '<div class="userInfoText">'+param.user.alias+'</div>';
-		    newUser += '</div>';
-		    $('#userInfo').append(newUser);
+		    newUser += '<li>'
+            newUser += '<img class="ui-li-icon" src="'+param.user.thumbnail+'"/></div>';
+            newUser += '<div>'+param.user.alias+'</div>';
+            newUser += '</li>';
+		    $('ul#guest-profiles').append(newUser);
+
+            try {
+    		    $('ul#guest-profiles').listview('refresh');
+            } catch (err) {
+                
+            }
 	    }
     }
 };
@@ -216,13 +221,13 @@ var selectProfile = {
 		currentCollection.init();
 		//add userInfo to screen
 		var newUser = '';
-    	newUser += '<li class="ui-li-icon">'
-        newUser += '<img id="base64image" src="'+userProfile.userPic+'"/></div>';
+    	newUser += '<li>'
+        newUser += '<img class="ui-li-icon" src="'+userProfile.userPic+'"/></div>';
         newUser += '<div>'+userProfile.userName+'</div>';
-        newUser += '</li>';
+        newUser += '</li>';        
+
         $('ul#guest-profiles').append(newUser);
-    	//$('ul#guest-profiles').listview('refresh');
-        
+		
 		$.mobile.changePage( "#home", { transition: "slideup"} );
 	},
 	init:function() {
@@ -231,7 +236,7 @@ var selectProfile = {
 		for(var i=0; i<libUsers.length; i++) {
 		    
 			var liItem = '<li class="profileItem">';
-			liItem += '<img class="profilePic" id="base64image" src="';
+			liItem += '<img class="profilePic" src="';
 			liItem += profileIcons[i];
 			liItem += '" />';
 			liItem += '<div class="profileName">'+libUsers[i].userName+'</div>';
