@@ -30,6 +30,12 @@ $('#guests').live('pageinit', function(event) {
     $('ul#guest-profiles').listview('refresh');
 });
 
+$('#collection').live('pageinit', function(event) {
+    $('ul#user-collection').listview('refresh');
+    $('ul#party-collection').listview('refresh');
+});
+
+
 $(window).unload(function() {
     if (userProfile && userProfile.userID) {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave", params:{userID:userProfile.userID}});
@@ -37,6 +43,15 @@ $(window).unload(function() {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
     }
     partyplayer.close();
+});
+
+// size it full screen
+$( "#popupPanel" ).on({
+    popupbeforeposition: function() {
+        var h = $( window ).height();
+
+        $( "#popupPanel" ).css( "height", h );
+    }
 });
 
 //globals for user
@@ -92,7 +107,7 @@ partyplayer.main.onupdateUser = function(param, ref) {
 	    	 //update users on screen
 		    var newUser = '';
 		    newUser += '<li id="' + param.userID + '">'
-            newUser += '<img class="ui-li-icon" src="'+param.user.thumbnail+'"/></div>';
+            newUser += '<img class="ui-li-icon" src="'+param.user.thumbnail+'"/>';
             newUser += '<div>'+param.user.alias+'</div>';
             newUser += '</li>';
 		    $('ul#guest-profiles').append(newUser);
@@ -128,26 +143,43 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 		log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
 	//}
     //add items to screen
-	var trItem = '';
-	trItem += '<tr user="'+param.userID+'" itemID="'+param.itemID+'">';
-	trItem += '<td class="artist">'+param.item.artist+'</td>';
-	trItem += '<td class="title">'+param.item.title+'</td>';
-	trItem += '<td class="album">'+param.item.album+'</td>';
-	trItem += '<td align="center" class="cover"><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>'
+
+    var profileImage;
+    
 	if(param.userID == userProfile.userID){
-		// you added this item
-		var profileImage = userProfile.userPic;
-		trItem += '<td align="center" class="user"><img src="'+profileImage+'" width="25" height="25" /></td>';
-		trItem += '<td align="center"><img src="../../library/trash.png" width="30" height="30" /></td>';
-	}else if (param.userID != userProfile.userID){
-		//other user added this item
-		var profileImage = partyPlayerUsers[param.userID].picture;
-		trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>';
-		trItem += '<td align="center"><button class="addBtn" itemid="'+param.itemID+'">Add</button></td>';
+		profileImage = userProfile.userPic;
+
+        // remove the item from the unshared collection
+		var li = $('li[item-id*="' + param.item.localRef + '"]');
+		li.remove();
+		
+		try {
+            $('ul#user-collection').listview('refresh');
+        } catch (err) {
+
+        }
+	} else {
+		profileImage = partyPlayerUsers[param.userID].picture;
 	}
-	trItem += '</tr>';
-	$('table#partyCollection').append(trItem);
-	$('table#partyCollection .addBtn[itemID="'+param.itemID+'"]').unbind("click").bind("click", currentCollection.preferItemsClick);
+
+    var trItem = '';
+	trItem += '<li class="collection-item" id="' + param.itemID + '"><a href="#">';
+    trItem += '<img src="'+param.item.cover+'"/>';
+    trItem += '<h3>'+param.item.title+'</h3>';
+    trItem += '<p>' + param.item.artist + ' / ' + param.item.album + '</p>';
+    if (profileImage) trItem += '<img class="ui-li-icon" src="'+profileImage+'"/>';
+    trItem += '<span class="ui-li-count">0</span>'
+	trItem += '</a></li>';
+
+    $('ul#party-collection').append(trItem);
+	$('#' + param.itemID).unbind("click").bind("click", currentCollection.preferItemsClick);
+
+    try {
+        $('ul#party-collection').listview('refresh');
+    } catch (err) {
+        
+    }
+
 };
 
 partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
@@ -224,7 +256,7 @@ var selectProfile = {
 	    partyplayer.joinUser(userProfile.userName, userProfile.userPic);
 	    
 		//show next screen and update userInfo on screen
-		currentCollection.init();
+		//currentCollection.init();
 		//add userInfo to screen
 		var newUser = '';
     	newUser += '<li>'
@@ -263,35 +295,33 @@ var currentCollection = {
 		partyplayer.voteFunnelItem(funnelItemID);
 	},	
 	preferItemsClick:function(event){
-		var itemID = $(this).attr('itemid');
+		var itemID = $(this).attr('id');
 		partyplayer.addFunnelItem(itemID);
-	},
-	addItemsClick:function(event){
-		$('#currentCollection').fadeOut(200, function(){
-			selectLocalItems.init();
-		});
-	},	
-	init:function(){
-		$('div#currentCollection').show();
-		$('div#addItemsBtnContainer button#addItemsBtn').unbind("click").bind("click", currentCollection.addItemsClick);
-	}	
+	}
+	// ,
+    // addItemsClick:function(event){
+    //  $('#currentCollection').fadeOut(200, function(){
+    //      selectLocalItems.init();
+    //  });
+    // },   
+    // init:function(){
+    //  $('div#currentCollection').show();
+    //  $('div#addItemsBtnContainer button#addItemsBtn').unbind("click").bind("click", currentCollection.addItemsClick);
+    // }    
 };
 
 var selectLocalItems ={
 	localItems:'',
 	shareItemsClick:function(event){
-		//loop through checked checkBoxes
-		$.each($('input:checked'), function(i, item){
-			//get value
-			var itemKey = item.value;
-			var sendItem = selectLocalItems.localItems[itemKey];
-			//send to host
-			partyplayer.addItem(sendItem);
-		}); 
-		//go to previous screen
-		$('#selectLocalItems').fadeOut(200, function(){
-			$('#currentCollection').show();
-		});		
+	    var itemId = $(this).attr('item-id');
+        $('ul#user-collection').listview('refresh');
+	    
+		var sendItem = selectLocalItems.localItems[itemId];
+		sendItem.version = 1;
+		sendItem.localRef = itemId;
+		//send to host
+		partyplayer.addItem(sendItem);
+		return false;
 	},
 	importItems:function(user){
 		//locate collection
@@ -303,23 +333,34 @@ var selectLocalItems ={
 		//append items to table
 		var itemList = '';
 	
+        // selectLocalItems.localItems.sort(function(a, b) {
+        //             if ( a.title < b.title )
+        //               return -1;
+        //             if ( a.title > b.title )
+        //               return 1;
+        //             return 0;        
+        //         });
+	
 		$.each(selectLocalItems.localItems, function(i, item) {
 			var trItem = '';
-			trItem += '<tr>';
-		    trItem += '<td>'+item.artist+'</td>';
-		    trItem += '<td>'+item.title+'</td>';
-		    trItem += '<td>'+item.album+'</td>';
-		    trItem += '<td>'+'<img class="cover" src="'+item.cover+'" width="80px" height="40px" />'+'</td>';
-		    //also add checkBoxes
-		    //checkBoxes get the same name as the fileName, the whole item is passed as value
-		    trItem += '<td><input name="'+item.fileName+'" value="'+i+'" type="checkbox"></td>';
-		    trItem += '</tr>';
+			trItem += '<li class="shareableItem" item-id="' + i + '"><a href="#" class="shareableitemlink">';
+		    trItem += '<img src="'+item.cover+'"/>';
+		    trItem += '<h3>'+item.title+'</h3>';
+		    trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
+			trItem += '</a></li>';
 		    itemList += trItem;
 		});	
-		$('div.collectionContainer table#localCollection').append(itemList);
-	},
-	init:function(){
-		$('div#selectLocalItems').show();
-		$('div#shareItemsBtnContainer button#shareItemsBtn').unbind("click").bind("click", selectLocalItems.shareItemsClick);
+		$('ul#user-collection').append(itemList);
+		$('ul#user-collection li.shareableItem').unbind("click").bind("click", selectLocalItems.shareItemsClick);
+		try {
+    	    $('ul#user-collection').listview('refresh');
+        } catch (err) {
+
+        }
 	}
+    // ,
+    // init:function(){
+    //  $('div#selectLocalItems').show();
+    //  $('div#shareItemsBtnContainer button#shareItemsBtn').unbind("click").bind("click", selectLocalItems.shareItemsClick);
+    // }
 };
