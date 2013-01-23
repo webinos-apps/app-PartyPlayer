@@ -91,7 +91,7 @@ partyplayer.main.onupdateUser = function(param, ref) {
 	    	partyPlayerUsers[param.userID]={name:param.user.alias,picture:param.user.thumbnail};
 	    	 //update users on screen
 		    var newUser = '';
-		    newUser += '<li>'
+		    newUser += '<li id="' + param.userID + '">'
             newUser += '<img class="ui-li-icon" src="'+param.user.thumbnail+'"/></div>';
             newUser += '<div>'+param.user.alias+'</div>';
             newUser += '</li>';
@@ -111,9 +111,15 @@ partyplayer.main.onremoveUser = function(param, ref) {
     
     delete partyPlayerUsers[param.userID];
     //delete user from screen
-    $('.profile[user="'+param.userID+'"]').remove();
+    $('#'+param.userID).remove();
     //delete items from collection
     $('table#partyCollection tr[user="'+param.userID+'"]').remove();
+    
+    try {
+	    $('ul#guest-profiles').listview('refresh');
+    } catch (err) {
+        
+    }
 };
 
 partyplayer.main.onupdateCollectionItem = function (param, ref) {
