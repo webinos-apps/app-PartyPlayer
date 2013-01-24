@@ -26,6 +26,10 @@ $(document).ready(function(){
     });
 });
 
+$('#playlist').live('pageinit', function(event) {
+    $('ul#playlist').listview('refresh');
+});
+
 $('#guests').live('pageinit', function(event) {
     $('ul#guest-profiles').listview('refresh');
 });
@@ -34,7 +38,6 @@ $('#collection').live('pageinit', function(event) {
     $('ul#user-collection').listview('refresh');
     $('ul#party-collection').listview('refresh');
 });
-
 
 $(window).unload(function() {
     if (userProfile && userProfile.userID) {
@@ -146,6 +149,8 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 
     var profileImage;
     
+    currentCollection[param.itemID] = param.item;
+    
 	if(param.userID == userProfile.userID){
 		profileImage = userProfile.userPic;
 
@@ -168,12 +173,23 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
     trItem += '<h3>'+param.item.title+'</h3>';
     trItem += '<p>' + param.item.artist + ' / ' + param.item.album + '</p>';
     if (profileImage) trItem += '<img class="ui-li-icon" src="'+profileImage+'"/>';
-    trItem += '<span class="ui-li-count">0</span>'
 	trItem += '</a></li>';
 
     $('ul#party-collection').append(trItem);
-	$('#' + param.itemID).unbind("click").bind("click", currentCollection.preferItemsClick);
-
+    
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+		$('#' + param.itemID).swipeDelete({
+		    btnLabel: 'Add',
+		    btnTheme: 'a',
+		    click: function(e) {
+		        e.preventDefault();
+		        currentCollection.shareItemsClick(e);
+		    }
+		});
+    } else {
+        $('#' + param.itemID).unbind("click").bind("click", currentCollection.preferItemsClick);
+    }
+    
     try {
         $('ul#party-collection').listview('refresh');
     } catch (err) {
@@ -186,39 +202,52 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
     //something added to the funnel or changed in the funnel
     
-    //get values from party collection
-    var item = $('table#partyCollection tr[itemID="'+param.itemID+'"]');
-    var artist = item.find('.artist').html();
-    var title = item.find('.title').html();
-    var album = item.find('.album').html();
-    var cover = item.find('.cover').html();
+    var item = currentCollection[param.itemID];
 
-    //add items to funnel on screen
-	var trItem = '';
-	trItem += '<tr class="funnel" funnelItemID="'+param.funnelItemID+'">';
-	trItem += '<td>'+artist+'</td>';
-	trItem += '<td>'+title+'</td>';
-	trItem += '<td>'+album+'</td>';
-	trItem += '<td align="center">'+cover+'</td>'
-	//var profileImage = partyPlayerUsers[param.userID].picture;
-	//trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>'
-	trItem += '<td></td>'
-	trItem += '<td align="center"><button class="voteBtn" funnelid="'+param.funnelItemID+'">Vote</button></td>'
-	trItem += '</tr>';
-	$('table#partyFunnel').append(trItem);
-    $('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').unbind("click").bind("click", currentCollection.voteClick);   
+    var trItem = '';
+	trItem += '<li class="playlist-item" id="' + param.funnelItemID + '"><a href="#">';
+    trItem += '<img src="'+item.cover+'"/>';
+    trItem += '<h3>'+item.title+'</h3>';
+    trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
+    trItem += '<span class="ui-li-count">' + param.votes + '</span>'
+	trItem += '</a></li>';
+
+    $('ul#playlist').append(trItem);
+
+    if (param.userID != userProfile.userID) {
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+    		$('#' + param.funnelItemID).swipeDelete({
+    		    btnLabel: 'Vote',
+    		    btnTheme: 'a',
+    		    click: function(e) {
+    		        e.preventDefault();
+    		        currentCollection.voteClick(e);
+    		    }
+    		});
+        } else {
+            $('#' + param.funnelItemID).unbind("click").bind("click", currentCollection.voteClick);
+        }
+    }
+	
+	try {
+	    $('ul#playlist').listview('refresh');
+    } catch (err) {
+
+    }
 }
 
 partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     log ('onvotedFunnel Invoked on Funnel');
-    //a funnel item has been voted for
-    if(param.userID != userProfile.userID){
-        return;
-    }
+
+    $('#' + param.funnelItemID + ' span.ui-li-count').html(param.vote);
     
-    if(param.vote){
+    if(param.userID == userProfile.userID && param.vote > 0){
         //succesvol vote, disabled vote button
-        $('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').attr('disabled', 'true');
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+    		$('#' + param.funnelItemID).swipeDelete();
+        } else {
+            $('#' + param.funnelItemID).unbind("click");
+        }
     } else {
         //voted failed
         log('vote for funnelItem: ' + param.funnelItemID + ' failed');
@@ -227,6 +256,16 @@ partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
 
 partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
     log ('onDelete Funnel Item Invoked on Funnel')
+    
+    // remove the item from the unshared collection
+	var li = $('li[id*="' + param.funnelItemID + '"]');
+	li.remove();
+	
+	try {
+        $('ul#playlist').listview('refresh');
+    } catch (err) {
+
+    }
     
     $('.funnel[funnelItemID=' +param.funnelItemID+']').remove();
 }
@@ -289,8 +328,8 @@ var selectProfile = {
 
 var currentCollection = {
 	voteClick:function(event){
-	    var funnelItemID = $(this).attr('funnelid');
-		console.log("funnel id = "+$(this).attr('funnelid'));
+	    var funnelItemID = $(this).attr('id');
+		console.log("funnel id = "+$(this).attr('id'));
 		console.log("vote+1");
 		partyplayer.voteFunnelItem(funnelItemID);
 	},	
@@ -298,16 +337,6 @@ var currentCollection = {
 		var itemID = $(this).attr('id');
 		partyplayer.addFunnelItem(itemID);
 	}
-	// ,
-    // addItemsClick:function(event){
-    //  $('#currentCollection').fadeOut(200, function(){
-    //      selectLocalItems.init();
-    //  });
-    // },   
-    // init:function(){
-    //  $('div#currentCollection').show();
-    //  $('div#addItemsBtnContainer button#addItemsBtn').unbind("click").bind("click", currentCollection.addItemsClick);
-    // }    
 };
 
 var selectLocalItems ={
@@ -351,16 +380,24 @@ var selectLocalItems ={
 		    itemList += trItem;
 		});	
 		$('ul#user-collection').append(itemList);
-		$('ul#user-collection li.shareableItem').unbind("click").bind("click", selectLocalItems.shareItemsClick);
+
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+    		$('ul#user-collection li.shareableItem').swipeDelete({
+    		    btnLabel: 'Share',
+    		    btnTheme: 'a',
+    		    click: function(e) {
+    		        e.preventDefault();
+    		        selectLocalItems.shareItemsClick(e);
+    		    }
+    		});
+        } else {
+            $('ul#user-collection li.shareableItem').unbind("click").bind("click", selectLocalItems.shareItemsClick);
+        }
+		
 		try {
     	    $('ul#user-collection').listview('refresh');
         } catch (err) {
 
         }
 	}
-    // ,
-    // init:function(){
-    //  $('div#selectLocalItems').show();
-    //  $('div#shareItemsBtnContainer button#shareItemsBtn').unbind("click").bind("click", selectLocalItems.shareItemsClick);
-    // }
 };

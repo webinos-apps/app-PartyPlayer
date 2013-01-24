@@ -25,6 +25,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 		<meta name="viewport" content="width=device-width, initial-scale=1"> 
 		<link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
 		<link rel="stylesheet" href="jquery.mobile.structure.min.css " type="text/css"/>
+		<link rel="stylesheet" href="jquery.swipeButton.css" type="text/css"/>
 
 		<style>	
 			.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
@@ -34,6 +35,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 		<script type="text/javascript" src="/webinos.js"></script>
         <script type="text/javascript" src="../lib/jquery.min.js"></script>
         <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
+		<script type="text/javascript" src="jquery.swipeButton.min.js"></script>
         <!--script type=text/javascript src=../lib/id3v2.js></script>-->
         <script type="text/javascript" src="../common/log.js"></script>
         <script type="text/javascript" src="../common/pplayer.js"></script>
@@ -98,6 +100,43 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</div>
 			</div>
 		</div>
+		
+		<!-------- PLAYLIST ------>
+
+		<div data-role="page" class="type-home" id="playlist">
+			<div data-role="header" data-position="fixed">
+				<h1>Party Player</h1>
+			</div>
+			<div data-role="content">
+				<ul id="playlist" data-role="listview" data-inset="true" data-theme="a">
+					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Playlist</li>
+					
+					<!-- add content as <li> items-->
+					
+				</ul>
+			</div>
+
+			<style>
+				#playlist-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#playlist-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#playlist-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#playlist-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#playlist-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-fullscreen="true" data-id="navigation">
+				<div data-role="navbar" class="party-nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="playlist-home" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="playlist-playlist" data-icon="custom" class="ui-btn-active ui-state-persist">PLAYLIST</a></li>
+					<li><a href="#collection" id="playlist-collection" data-icon="custom">COLLECTION</a></li>
+					<li><a href="#guests" id="playlist-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#about" id="playlist-about" data-icon="custom">ABOUT</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+		
 
 		<!-------- COLLECTION ------>
 
@@ -124,13 +163,6 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				<div data-role="collapsible-set" data-theme="a" data-content-theme="a">
 				</div>
 				
-				<!--
-					<ul id="collection" data-role="listview" data-inset="true" data-theme="a">
-					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Party Collection</li>
-					-->
-					<!-- add guests as <li> items-->
-					
-				</ul>
 			</div>
 
 			<style>
@@ -180,7 +212,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 			<div data-role="footer" class="party-nav" data-position="fixed" data-fullscreen="true" data-id="navigation">
 				<div data-role="navbar" class="party-nav" data-grid="d">
 				<ul>
-					<li><a href="#home" id="guests-homepage" data-icon="custom">HOME</a></li>
+					<li><a href="#home" id="guests-home" data-icon="custom">HOME</a></li>
 					<li><a href="#playlist" id="guests-playlist" data-icon="custom">PLAYLIST</a></li>
 					<li><a href="#collection" id="guests-collection" data-icon="custom">COLLECTION</a></li>
 					<li><a href="#guests" id="guests-guests" data-icon="custom" class="ui-btn-active ui-state-persist">CROWD</a></li>
@@ -211,7 +243,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 			<div data-role="footer" class="party-nav" data-position="fixed" data-fullscreen="true" data-id="navigation">
 				<div data-role="navbar" class="party-nav" data-grid="d">
 				<ul>
-					<li><a href="#home" id="about-homepage" data-icon="custom">HOME</a></li>
+					<li><a href="#home" id="about-home" data-icon="custom">HOME</a></li>
 					<li><a href="#playlist" id="about-playlist" data-icon="custom">PLAYLIST</a></li>
 					<li><a href="#collection" id="about-collection" data-icon="custom">COLLECTION</a></li>
 					<li><a href="#guests" id="about-guests" data-icon="custom">CROWD</a></li>

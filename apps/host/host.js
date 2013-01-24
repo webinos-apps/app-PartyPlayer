@@ -21,6 +21,8 @@
 var pc = null;
 var users = {};
 var firstTrack=true;
+var uID; 
+
 partyplayer.main = {};
 partyplayer.funnel = {};
 
@@ -37,9 +39,14 @@ partyplayer.main.onjoin = function(params, ref, from) {
     partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pc.getUser(uID)}});
     updateUsers();
     //send available Items to this user
-    pItems = pc.getItems();
+    var pItems = pc.getItems();
     for (var i=0; i<pItems.length;i++){
-        partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
+        partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
+    }
+
+    var fItems = funnel.getFunnelList().getItems();
+    for (var item in fItems){
+        partyplayer.sendMessageTo(from, {ns:"funnel", cmd:"updateFunnelItem", params:fItems[item]})
     }
 };
 
@@ -78,7 +85,7 @@ partyplayer.main.onaddItem = function (params, ref, from) {
 partyplayer.funnel.onaddItem = function( params,ref, from) {
     log("got a new item for the funnel");   
     funnelItemID = funnel.addItem(params.itemID,params.userID);
-    partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,vote:0}});
+    partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,votes:1}});
     if(firstTrack == true){
         firstTrack = false;
         player.start();
@@ -96,8 +103,6 @@ partyplayer.funnel.onvote = function (params, ref, from) {
 partyplayer.funnel.removeFunnelItem = function (funnelItemID) {
     partyplayer.sendMessage({ns:"funnel", cmd:"removeFunnelItem", params:{funnelItemID:funnelItemID}});
 };
-
-
 
 function updateUsers(){
     players = pc.getUsers();
