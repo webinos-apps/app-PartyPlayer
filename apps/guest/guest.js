@@ -177,18 +177,18 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 
     $('ul#party-collection').append(trItem);
     
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-		$('#' + param.itemID).swipeDelete({
-		    btnLabel: 'Add',
-		    btnTheme: 'a',
-		    click: function(e) {
-		        e.preventDefault();
-		        currentCollection.shareItemsClick(e);
-		    }
-		});
-    } else {
+        //     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+        // $('#' + param.itemID).swipeDelete({
+        //     btnLabel: 'Add',
+        //     btnTheme: 'a',
+        //     click: function(e) {
+        //         e.preventDefault();
+        //         currentCollection.shareItemsClick(e);
+        //     }
+        // });
+        //     } else {
         $('#' + param.itemID).unbind("click").bind("click", currentCollection.preferItemsClick);
-    }
+    // }
     
     try {
         $('ul#party-collection').listview('refresh');
@@ -215,18 +215,18 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     $('ul#playlist').append(trItem);
 
     if (param.userID != userProfile.userID) {
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-    		$('#' + param.funnelItemID).swipeDelete({
-    		    btnLabel: 'Vote',
-    		    btnTheme: 'a',
-    		    click: function(e) {
-    		        e.preventDefault();
-    		        currentCollection.voteClick(e);
-    		    }
-    		});
-        } else {
+            //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+            // $('#' + param.funnelItemID).swipeDelete({
+            //     btnLabel: 'Vote',
+            //     btnTheme: 'a',
+            //     click: function(e) {
+            //         e.preventDefault();
+            //         currentCollection.voteClick(e);
+            //     }
+            // });
+            //         } else {
             $('#' + param.funnelItemID).unbind("click").bind("click", currentCollection.voteClick);
-        }
+        // }
     }
 	
 	try {
@@ -243,11 +243,11 @@ partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     
     if(param.userID == userProfile.userID && param.vote > 0){
         //succesvol vote, disabled vote button
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-    		$('#' + param.funnelItemID).swipeDelete();
-        } else {
+            //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+            // $('#' + param.funnelItemID).swipeDelete();
+            //         } else {
             $('#' + param.funnelItemID).unbind("click");
-        }
+        // }
     } else {
         //voted failed
         log('vote for funnelItem: ' + param.funnelItemID + ' failed');
@@ -381,18 +381,18 @@ var selectLocalItems ={
 		});	
 		$('ul#user-collection').append(itemList);
 
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-    		$('ul#user-collection li.shareableItem').swipeDelete({
-    		    btnLabel: 'Share',
-    		    btnTheme: 'a',
-    		    click: function(e) {
-    		        e.preventDefault();
-    		        selectLocalItems.shareItemsClick(e);
-    		    }
-    		});
-        } else {
+            //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+            // $('ul#user-collection li.shareableItem').swipeDelete({
+            //     btnLabel: 'Share',
+            //     btnTheme: 'a',
+            //     click: function(e) {
+            //         e.preventDefault();
+            //         selectLocalItems.shareItemsClick(e);
+            //     }
+            // });
+            //         } else {
             $('ul#user-collection li.shareableItem').unbind("click").bind("click", selectLocalItems.shareItemsClick);
-        }
+        // }
 		
 		try {
     	    $('ul#user-collection').listview('refresh');
