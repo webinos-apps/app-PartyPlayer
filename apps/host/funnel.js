@@ -80,6 +80,8 @@ var funnel = (function () {
 		addItem : function (id, userID) {			
             var funnelItem = new partyplayer.FunnelItem(id, 1, userID); //1 = 1 vote
             var key = funnelList.addItem(funnelItem);
+            funnelItem.funnelItemID = key;
+            
             var fnO = funnelVar();
             allItems['key_' + key] = fnO;
             fnO.setKey(key);
@@ -132,7 +134,7 @@ var funnel = (function () {
 	        var funnelItem = funnelList.getItem(key);
 	        
 	        if(!funnelItem){
-	            return false;
+	            return -1;
 	        }
 	        funnelItem.votes += 1;
 	        console.log(funnelItem.votes);
@@ -193,7 +195,7 @@ var funnel = (function () {
 			console.log(oldSorted);
 			console.log(sortedItems);
 			
-			return true;
+			return funnelItem.votes;
 		},
 		/**
 		 *  Calls the visual function to animate the to-be-played Item

@@ -17,12 +17,26 @@
  *
  * Authors: Victor Klos, Martin Prins, Arno Pont
  */
- 
+
 $(document).ready(function(){
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('guest');
+        $.mobile.changePage("#profile-select", { transition: "slideup"} );
         selectProfile.init();
     });
+});
+
+$('#playlist').live('pageinit', function(event) {
+    $('ul#playlist').listview('refresh');
+});
+
+$('#guests').live('pageinit', function(event) {
+    $('ul#guest-profiles').listview('refresh');
+});
+
+$('#collection').live('pageinit', function(event) {
+    $('ul#user-collection').listview('refresh');
+    $('ul#party-collection').listview('refresh');
 });
 
 $(window).unload(function() {
@@ -32,6 +46,15 @@ $(window).unload(function() {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
     }
     partyplayer.close();
+});
+
+// size it full screen
+$( "#popupPanel" ).on({
+    popupbeforeposition: function() {
+        var h = $( window ).height();
+
+        $( "#popupPanel" ).css( "height", h );
+    }
 });
 
 //globals for user
@@ -86,12 +109,17 @@ partyplayer.main.onupdateUser = function(param, ref) {
 	    	partyPlayerUsers[param.userID]={name:param.user.alias,picture:param.user.thumbnail};
 	    	 //update users on screen
 		    var newUser = '';
-		    newUser += '<div class="profile" user="'+param.userID+'">';
-		    newUser += '<div class="userInfoPic">';
-		    newUser += '<img class="profilePicSmall" id="base64image" src="'+param.user.thumbnail+'"/></div>';
-		    newUser += '<div class="userInfoText">'+param.user.alias+'</div>';
-		    newUser += '</div>';
-		    $('#userInfo').append(newUser);
+		    newUser += '<li id="' + param.userID + '">'
+            newUser += '<img class="ui-li-icon" src="'+param.user.thumbnail+'"/>';
+            newUser += '<div>'+param.user.alias+'</div>';
+            newUser += '</li>';
+		    $('ul#guest-profiles').append(newUser);
+
+            try {
+    		    $('ul#guest-profiles').listview('refresh');
+            } catch (err) {
+                
+            }
 	    }
     }
 };
@@ -101,9 +129,15 @@ partyplayer.main.onremoveUser = function(param, ref) {
     
     delete partyPlayerUsers[param.userID];
     //delete user from screen
-    $('.profile[user="'+param.userID+'"]').remove();
+    $('#'+param.userID).remove();
     //delete items from collection
     $('table#partyCollection tr[user="'+param.userID+'"]').remove();
+    
+    try {
+	    $('ul#guest-profiles').listview('refresh');
+    } catch (err) {
+        
+    }
 };
 
 partyplayer.main.onupdateCollectionItem = function (param, ref) {
@@ -112,65 +146,108 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 		log (param.userID +" added \""+param.item.artist +" - "+param.item.title + "\" to the collection");
 	//}
     //add items to screen
-	var trItem = '';
-	trItem += '<tr user="'+param.userID+'" itemID="'+param.itemID+'">';
-	trItem += '<td class="artist">'+param.item.artist+'</td>';
-	trItem += '<td class="title">'+param.item.title+'</td>';
-	trItem += '<td class="album">'+param.item.album+'</td>';
-	trItem += '<td align="center" class="cover"><img class="cover" src="'+param.item.cover+'" width="80" height="40" /></td>'
+
+    var profileImage;
+    
+    currentCollection[param.itemID] = param.item;
+    
 	if(param.userID == userProfile.userID){
-		// you added this item
-		var profileImage = userProfile.userPic;
-		trItem += '<td align="center" class="user"><img src="'+profileImage+'" width="25" height="25" /></td>';
-		trItem += '<td align="center"><img src="../../library/trash.png" width="30" height="30" /></td>';
-	}else if (param.userID != userProfile.userID){
-		//other user added this item
-		var profileImage = partyPlayerUsers[param.userID].picture;
-		trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>';
-		trItem += '<td align="center"><button class="addBtn" itemid="'+param.itemID+'">Add</button></td>';
+		profileImage = userProfile.userPic;
+
+        // remove the item from the unshared collection
+		var li = $('li[item-id*="' + param.item.localRef + '"]');
+		li.remove();
+		
+		try {
+            $('ul#user-collection').listview('refresh');
+        } catch (err) {
+
+        }
+	} else {
+		profileImage = partyPlayerUsers[param.userID].picture;
 	}
-	trItem += '</tr>';
-	$('table#partyCollection').append(trItem);
-	$('table#partyCollection .addBtn[itemID="'+param.itemID+'"]').unbind("click").bind("click", currentCollection.preferItemsClick);
+
+    var trItem = '';
+	trItem += '<li class="collection-item" id="' + param.itemID + '"><a href="#">';
+    trItem += '<img src="'+param.item.cover+'"/>';
+    trItem += '<h3>'+param.item.title+'</h3>';
+    trItem += '<p>' + param.item.artist + ' / ' + param.item.album + '</p>';
+    if (profileImage) trItem += '<img class="ui-li-icon" src="'+profileImage+'"/>';
+	trItem += '</a></li>';
+
+    $('ul#party-collection').append(trItem);
+    
+        //     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+        // $('#' + param.itemID).swipeDelete({
+        //     btnLabel: 'Add',
+        //     btnTheme: 'a',
+        //     click: function(e) {
+        //         e.preventDefault();
+        //         currentCollection.shareItemsClick(e);
+        //     }
+        // });
+        //     } else {
+        $('#' + param.itemID).unbind("click").bind("click", currentCollection.preferItemsClick);
+    // }
+    
+    try {
+        $('ul#party-collection').listview('refresh');
+    } catch (err) {
+        
+    }
+
 };
 
 partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
     //something added to the funnel or changed in the funnel
     
-    //get values from party collection
-    var item = $('table#partyCollection tr[itemID="'+param.itemID+'"]');
-    var artist = item.find('.artist').html();
-    var title = item.find('.title').html();
-    var album = item.find('.album').html();
-    var cover = item.find('.cover').html();
+    var item = currentCollection[param.itemID];
 
-    //add items to funnel on screen
-	var trItem = '';
-	trItem += '<tr class="funnel" funnelItemID="'+param.funnelItemID+'">';
-	trItem += '<td>'+artist+'</td>';
-	trItem += '<td>'+title+'</td>';
-	trItem += '<td>'+album+'</td>';
-	trItem += '<td align="center">'+cover+'</td>'
-	//var profileImage = partyPlayerUsers[param.userID].picture;
-	//trItem += '<td align="center"><img src="'+profileImage+'" width="25" height="25" /></td>'
-	trItem += '<td></td>'
-	trItem += '<td align="center"><button class="voteBtn" funnelid="'+param.funnelItemID+'">Vote</button></td>'
-	trItem += '</tr>';
-	$('table#partyFunnel').append(trItem);
-    $('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').unbind("click").bind("click", currentCollection.voteClick);   
+    var trItem = '';
+	trItem += '<li class="playlist-item" id="' + param.funnelItemID + '"><a href="#">';
+    trItem += '<img src="'+item.cover+'"/>';
+    trItem += '<h3>'+item.title+'</h3>';
+    trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
+    trItem += '<span class="ui-li-count">' + param.votes + '</span>'
+	trItem += '</a></li>';
+
+    $('ul#playlist').append(trItem);
+
+    if (param.userID != userProfile.userID) {
+            //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+            // $('#' + param.funnelItemID).swipeDelete({
+            //     btnLabel: 'Vote',
+            //     btnTheme: 'a',
+            //     click: function(e) {
+            //         e.preventDefault();
+            //         currentCollection.voteClick(e);
+            //     }
+            // });
+            //         } else {
+            $('#' + param.funnelItemID).unbind("click").bind("click", currentCollection.voteClick);
+        // }
+    }
+	
+	try {
+	    $('ul#playlist').listview('refresh');
+    } catch (err) {
+
+    }
 }
 
 partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     log ('onvotedFunnel Invoked on Funnel');
-    //a funnel item has been voted for
-    if(param.userID != userProfile.userID){
-        return;
-    }
+
+    $('#' + param.funnelItemID + ' span.ui-li-count').html(param.vote);
     
-    if(param.vote){
+    if(param.userID == userProfile.userID && param.vote > 0){
         //succesvol vote, disabled vote button
-        $('table#partyFunnel .voteBtn[funnelid='+param.funnelItemID+']').attr('disabled', 'true');
+            //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+            // $('#' + param.funnelItemID).swipeDelete();
+            //         } else {
+            $('#' + param.funnelItemID).unbind("click");
+        // }
     } else {
         //voted failed
         log('vote for funnelItem: ' + param.funnelItemID + ' failed');
@@ -179,6 +256,16 @@ partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
 
 partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
     log ('onDelete Funnel Item Invoked on Funnel')
+    
+    // remove the item from the unshared collection
+	var li = $('li[id*="' + param.funnelItemID + '"]');
+	li.remove();
+	
+	try {
+        $('ul#playlist').listview('refresh');
+    } catch (err) {
+
+    }
     
     $('.funnel[funnelItemID=' +param.funnelItemID+']').remove();
 }
@@ -208,75 +295,62 @@ var selectProfile = {
 	    partyplayer.joinUser(userProfile.userName, userProfile.userPic);
 	    
 		//show next screen and update userInfo on screen
-		$('#selectProfile').fadeOut(200, function(){
-			currentCollection.init();
-			//add userInfo to screen
-			
-			var newUser = '';
-		    newUser += '<div id="yourProfile" class="profile">';
-		    newUser += '<div class="userInfoPic">';
-		    newUser += '<img class="profilePicSmall" id="base64image" src="'+userProfile.userPic+'"/></div>';
-		    newUser += '<div class="userInfoText">'+userProfile.userName+'</div>';
-		    newUser += '</div>';
-		    $('#userInfo').prepend(newUser);
-			$('#userInfo').show();
-		});
+		//currentCollection.init();
+		//add userInfo to screen
+		var newUser = '';
+    	newUser += '<li>'
+        newUser += '<img class="ui-li-icon" src="'+userProfile.userPic+'"/></div>';
+        newUser += '<div>'+userProfile.userName+'</div>';
+        newUser += '</li>';        
+
+        $('ul#guest-profiles').append(newUser);
+		
+		$.mobile.changePage( "#home", { transition: "slideup"} );
 	},
 	init:function() {
-		$('div#selectProfile').show();
 		//add profile pics to list
 		var picList = '';
 		for(var i=0; i<libUsers.length; i++) {
+		    
 			var liItem = '<li class="profileItem">';
-			liItem += '<img class="profilePic" id="base64image" src="';
+			liItem += '<img class="profilePic" src="';
 			liItem += profileIcons[i];
 			liItem += '" />';
-			liItem += '<p class="profileName">'+libUsers[i].userName+'</p>';
+			liItem += '<div class="profileName">'+libUsers[i].userName+'</div>';
 			liItem += '</li>';
 			picList += liItem;
 		}
-		$('div#selectProfile ul#profiles').append(picList);
+		$('ul#profiles').append(picList);
 		$('ul#profiles li.profileItem').unbind("click").bind("click", selectProfile.profileClick);
+		$('ul#profiles').listview('refresh');
 	}
 };
 
 var currentCollection = {
 	voteClick:function(event){
-	    var funnelItemID = $(this).attr('funnelid');
-		console.log("funnel id = "+$(this).attr('funnelid'));
+	    var funnelItemID = $(this).attr('id');
+		console.log("funnel id = "+$(this).attr('id'));
 		console.log("vote+1");
 		partyplayer.voteFunnelItem(funnelItemID);
 	},	
 	preferItemsClick:function(event){
-		var itemID = $(this).attr('itemid');
+		var itemID = $(this).attr('id');
 		partyplayer.addFunnelItem(itemID);
-	},
-	addItemsClick:function(event){
-		$('#currentCollection').fadeOut(200, function(){
-			selectLocalItems.init();
-		});
-	},	
-	init:function(){
-		$('div#currentCollection').show();
-		$('div#addItemsBtnContainer button#addItemsBtn').unbind("click").bind("click", currentCollection.addItemsClick);
-	}	
+	}
 };
 
 var selectLocalItems ={
 	localItems:'',
 	shareItemsClick:function(event){
-		//loop through checked checkBoxes
-		$.each($('input:checked'), function(i, item){
-			//get value
-			var itemKey = item.value;
-			var sendItem = selectLocalItems.localItems[itemKey];
-			//send to host
-			partyplayer.addItem(sendItem);
-		}); 
-		//go to previous screen
-		$('#selectLocalItems').fadeOut(200, function(){
-			$('#currentCollection').show();
-		});		
+	    var itemId = $(this).attr('item-id');
+        $('ul#user-collection').listview('refresh');
+	    
+		var sendItem = selectLocalItems.localItems[itemId];
+		sendItem.version = 1;
+		sendItem.localRef = itemId;
+		//send to host
+		partyplayer.addItem(sendItem);
+		return false;
 	},
 	importItems:function(user){
 		//locate collection
@@ -288,23 +362,42 @@ var selectLocalItems ={
 		//append items to table
 		var itemList = '';
 	
+        // selectLocalItems.localItems.sort(function(a, b) {
+        //             if ( a.title < b.title )
+        //               return -1;
+        //             if ( a.title > b.title )
+        //               return 1;
+        //             return 0;        
+        //         });
+	
 		$.each(selectLocalItems.localItems, function(i, item) {
 			var trItem = '';
-			trItem += '<tr>';
-		    trItem += '<td>'+item.artist+'</td>';
-		    trItem += '<td>'+item.title+'</td>';
-		    trItem += '<td>'+item.album+'</td>';
-		    trItem += '<td>'+'<img class="cover" src="'+item.cover+'" width="80px" height="40px" />'+'</td>';
-		    //also add checkBoxes
-		    //checkBoxes get the same name as the fileName, the whole item is passed as value
-		    trItem += '<td><input name="'+item.fileName+'" value="'+i+'" type="checkbox"></td>';
-		    trItem += '</tr>';
+			trItem += '<li class="shareableItem" item-id="' + i + '"><a href="#" class="shareableitemlink">';
+		    trItem += '<img src="'+item.cover+'"/>';
+		    trItem += '<h3>'+item.title+'</h3>';
+		    trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
+			trItem += '</a></li>';
 		    itemList += trItem;
 		});	
-		$('div.collectionContainer table#localCollection').append(itemList);
-	},
-	init:function(){
-		$('div#selectLocalItems').show();
-		$('div#shareItemsBtnContainer button#shareItemsBtn').unbind("click").bind("click", selectLocalItems.shareItemsClick);
+		$('ul#user-collection').append(itemList);
+
+            //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+            // $('ul#user-collection li.shareableItem').swipeDelete({
+            //     btnLabel: 'Share',
+            //     btnTheme: 'a',
+            //     click: function(e) {
+            //         e.preventDefault();
+            //         selectLocalItems.shareItemsClick(e);
+            //     }
+            // });
+            //         } else {
+            $('ul#user-collection li.shareableItem').unbind("click").bind("click", selectLocalItems.shareItemsClick);
+        // }
+		
+		try {
+    	    $('ul#user-collection').listview('refresh');
+        } catch (err) {
+
+        }
 	}
 };
