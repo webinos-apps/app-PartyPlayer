@@ -23,19 +23,14 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
         <meta charset="utf-8">
         <title>PartyPlayer Guest</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
+		<link rel="stylesheet" href="jquery.mobile.structure.min.css " type="text/css"/>
+
 		<style>	
 			.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
 			.party-nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
-		
-			#homepage .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
-			#playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
-			#collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
-			#guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
-			#about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
 		</style>
-		
-		<link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
-		<link rel="stylesheet" href="jquery.mobile.structure.min.css " type="text/css"/>
+
 		<script type="text/javascript" src="/webinos.js"></script>
         <script type="text/javascript" src="../lib/jquery.min.js"></script>
         <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
@@ -61,16 +56,17 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</ul>
 			</div>
 		</div>
-		<div data-role="page" class="type-home" id="home">
-			<div data-role="header">
+
+		<div data-role="page" id="home">
+			<div data-role="header" data-position="fixed">
 				<h1>Party Player</h1>
 <!--				<a href="#home" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>-->
 			</div>
 			<div data-role="content">
 				<div class="content-secondary">
-					
+					<p/>
 	    			<!-- TNO Logo -->
-	    			<div id="TNOLogo" style="text-align: center; margin-left: 0 auto; margin-right: 0auto;" >
+	    			<div id="TNOLogo" style="text-align: center; margin-left: 0 auto; margin-right: 0 auto; margin-top: 10px auto;" >
 						<img src="../../library/logo/logo-TNO.png" alt="Concept by TNO"/>
 					</div>
 	
@@ -82,14 +78,22 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</div>
 			</div>
 
-			<div data-role="footer" class="party-nav" data-poistion="fixed" data-fullscreen="true" data-id="navigation">
+			<style>
+				#home-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#home-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#home-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#home-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#home-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-fullscreen="true" data-id="navigation">
 				<div data-role="navbar" class="party-nav" data-grid="d">
 				<ul>
-					<li><a href="#home" id="homepage" data-icon="custom" class="ui-btn-active ui-state-persist">HOME</a></li>
-					<li><a href="#playlist" id="playlist" data-icon="custom">PLAYLIST</a></li>
-					<li><a href="#collection" id="collection" data-icon="custom">COLLECTION</a></li>
-					<li><a href="#guests" id="guests" data-icon="custom">CROWD</a></li>
-					<li><a href="#about" id="about" data-icon="custom">ABOUT</a></li>
+					<li><a href="#home" id="home-home" data-icon="custom" class="ui-btn-active ui-state-persist">HOME</a></li>
+					<li><a href="#playlist" id="home-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="home-collection" data-icon="custom">COLLECTION</a></li>
+					<li><a href="#guests" id="home-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#about" id="home-about" data-icon="custom">ABOUT</a></li>
 				</ul>
 				</div>
 			</div>
@@ -97,8 +101,8 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 
 		<!-------- COLLECTION ------>
 
-		<div data-role="page" class="type-home" id="collection">
-			<div data-role="header">
+		<div data-role="page" id="collection">
+			<div data-role="header" data-position="fixed">
 				<h1>Party Player</h1>
 			</div>
 			
@@ -129,14 +133,22 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</ul>
 			</div>
 
-			<div data-role="footer" class="party-nav" data-poistion="fixed" data-fullscreen="true" data-id="navigation">
+			<style>
+				#collection-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#collection-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#collection-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#collection-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#collection-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-fullscreen="true" data-id="navigation">
 				<div data-role="navbar" class="party-nav" data-grid="d">
 				<ul>
-					<li><a href="#home" id="homepage" data-icon="custom">HOME</a></li>
-					<li><a href="#playlist" id="playlist" data-icon="custom">PLAYLIST</a></li>
-					<li><a href="#collection" id="collection" data-icon="custom" class="ui-btn-active ui-state-persist">COLLECTION</a></li>
-					<li><a href="#guests" id="guests" data-icon="custom">CROWD</a></li>
-					<li><a href="#about" id="about" data-icon="custom">ABOUT</a></li>
+					<li><a href="#home" id="collection-home" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="collection-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="collection-collection" data-icon="custom" class="ui-btn-active ui-state-persist">COLLECTION</a></li>
+					<li><a href="#guests" id="collection-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#about" id="collection-about" data-icon="custom">ABOUT</a></li>
 				</ul>
 				</div>
 			</div>
@@ -145,7 +157,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 		<!-------- GUESTS ------>
 
 		<div data-role="page" class="type-home" id="guests">
-			<div data-role="header">
+			<div data-role="header" data-position="fixed">
 				<h1>Party Player</h1>
 			</div>
 			<div data-role="content">
@@ -157,14 +169,53 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</ul>
 			</div>
 
-			<div data-role="footer" class="party-nav" data-poistion="fixed" data-fullscreen="true" data-id="navigation">
+			<style>
+				#guests-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#guests-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#guests-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#guests-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#guests-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-fullscreen="true" data-id="navigation">
 				<div data-role="navbar" class="party-nav" data-grid="d">
 				<ul>
-					<li><a href="#home" id="homepage" data-icon="custom">HOME</a></li>
-					<li><a href="#playlist" id="playlist" data-icon="custom">PLAYLIST</a></li>
-					<li><a href="#collection" id="collection" data-icon="custom">COLLECTION</a></li>
-					<li><a href="#guests" id="guests" data-icon="custom" class="ui-btn-active ui-state-persist">CROWD</a></li>
-					<li><a href="#about" id="about" data-icon="custom">ABOUT</a></li>
+					<li><a href="#home" id="guests-homepage" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="guests-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="guests-collection" data-icon="custom">COLLECTION</a></li>
+					<li><a href="#guests" id="guests-guests" data-icon="custom" class="ui-btn-active ui-state-persist">CROWD</a></li>
+					<li><a href="#about" id="guests-about" data-icon="custom">ABOUT</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+		
+		<!-------- ABOUT ------>
+
+		<div data-role="page" class="type-home" id="about">
+			<div data-role="header" data-position="fixed">
+				<h1>Party Player</h1>
+			</div>
+
+			<div data-role="content">
+			</div>
+
+			<style>
+				#about-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#about-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#about-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#about-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#about-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-fullscreen="true" data-id="navigation">
+				<div data-role="navbar" class="party-nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="about-homepage" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="about-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="about-collection" data-icon="custom">COLLECTION</a></li>
+					<li><a href="#guests" id="about-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#about" id="about-about" data-icon="custom" class="ui-btn-active ui-state-persist">ABOUT</a></li>
 				</ul>
 				</div>
 			</div>
