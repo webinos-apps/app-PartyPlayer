@@ -35,7 +35,7 @@ partyplayer.main.onjoin = function(params, ref, from) {
          * @private
          */
         onFound: function (service) {
-            if (from.peerId.substring(0, service.serviceAddress.length) === service.serviceAddress) {
+            if (params.serviceAddress === service.serviceAddress) {
                 service.bindService({
                     onBind: function () {
                         partyplayer.files.services[from] = service;
@@ -107,9 +107,10 @@ partyplayer.main.onaddItem = function (params, ref, from) {
 		service.requestFileSystem(1, 1024, function (fileSystem) {
 		    fileSystem.root.getFile(params.item.fileName, null, function(entry) {
     		    entry.file(function (blob) {
-    		        console.log('piece');
-
                     itemID = pc.addItem(params.userID,params.item);
+                    
+                    params.item.blob = blob;
+    		        
                     if(itemID!==false){
                         partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:params.userID,itemID:itemID,item:params.item}}); 
                         updateItems();
