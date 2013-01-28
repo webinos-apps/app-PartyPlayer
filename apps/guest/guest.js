@@ -68,7 +68,9 @@ var partyPlayerUsers = {};
 
 partyplayer.joinUser = function(name, picture){
     log(name + " is joining...");
-	partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"join", params:{alias:name,thumbnail:picture}});
+
+    var serviceAddress = webinos.session.getPZPId();
+	partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"join", params:{alias:name,thumbnail:picture, 'serviceAddress':serviceAddress}});
 };
 
 partyplayer.addItem = function(item){
