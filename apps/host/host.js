@@ -25,29 +25,56 @@ var uID;
 
 partyplayer.main = {};
 partyplayer.funnel = {};
+partyplayer.files = { services: {}};
 
 partyplayer.main.onjoin = function(params, ref, from) {
-    uID = pc.addUser(params); //registration on application level
-    users[from]=uID; //registration on connection level.
-    partyplayer.sendMessageTo(from, {ns:"main", cmd:"welcome", params:{userID:uID}});
-    pUsers = pc.getUsers();
-    for (var u in pUsers){
-        if(uID != u){
-            partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}});      
-        }
-    }    
-    partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pc.getUser(uID)}});
-    updateUsers();
-    //send available Items to this user
-    var pItems = pc.getItems();
-    for (var i=0; i<pItems.length;i++){
-        partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
-    }
+    webinos.discovery.findServices(new ServiceType("http://webinos.org/api/file"), {
+        /**
+         * When the service is found
+         * @param service The service that is found.
+         * @private
+         */
+        onFound: function (service) {
+            if (from.peerId.substring(0, service.serviceAddress.length) === service.serviceAddress) {
+                service.bindService({
+                    onBind: function () {
+                        partyplayer.files.services[from] = service;
+                        
+                        uID = pc.addUser(params); //registration on application level
+                        users[from]=uID; //registration on connection level.
+                        partyplayer.sendMessageTo(from, {ns:"main", cmd:"welcome", params:{userID:uID}});
+                        pUsers = pc.getUsers();
+                        for (var u in pUsers){
+                            if(uID != u){
+                                partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}});      
+                            }
+                        }    
+                        partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pc.getUser(uID)}});
+                        updateUsers();
+                        //send available Items to this user
+                        var pItems = pc.getItems();
+                        for (var i=0; i<pItems.length;i++){
+                            partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
+                        }
 
-    var fItems = funnel.getFunnelList().getItems();
-    for (var item in fItems){
-        partyplayer.sendMessageTo(from, {ns:"funnel", cmd:"updateFunnelItem", params:fItems[item]})
-    }
+                        var fItems = funnel.getFunnelList().getItems();
+                        for (var item in fItems){
+                            partyplayer.sendMessageTo(from, {ns:"funnel", cmd:"updateFunnelItem", params:fItems[item]})
+                        }
+                        
+                    }
+                });
+            }
+        },
+        /**
+         * When an error occurs.
+         * @param error The object describing the error event.
+         * @private
+         */
+        onError: function (error) {
+            alert("Error finding service: " + error.message + " (#" + error.code + ")");
+        }
+    });
 };
 
 partyplayer.main.onleave= function (params, ref, from) {
@@ -73,12 +100,28 @@ partyplayer.main.onleave= function (params, ref, from) {
 
 partyplayer.main.onaddItem = function (params, ref, from) {
     log('adding item');
-    itemID = pc.addItem(params.userID,params.item);
-    if(itemID!==false){
-        partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:params.userID,itemID:itemID,item:params.item}}); 
-        updateItems();
+    
+    var service = partyplayer.files.services[from];
+    
+    if (service) {
+		service.requestFileSystem(1, 1024, function (fileSystem) {
+		    fileSystem.root.getFile(params.item.fileName, null, function(entry) {
+    		    entry.file(function (blob) {
+    		        console.log('piece');
+
+                    itemID = pc.addItem(params.userID,params.item);
+                    if(itemID!==false){
+                        partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:params.userID,itemID:itemID,item:params.item}}); 
+                        updateItems();
+                    }
+                });
+		    }, function (error) {
+    			alert("Error getting file (#" + error.code + ")");
+		    });
+		}, function (error) {
+			alert("Error requesting filesystem (#" + error.code + ")");
+		});
     }
-   
 };
 
 
