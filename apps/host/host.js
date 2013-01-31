@@ -229,14 +229,14 @@ function logRandom(){
 
 $(document).ready(function(){
     webinos.session.addListener('registeredBrowser', function () {
-        partyplayer.init('host');
-        pc = new PartyCollection("Webinos Party");
-        player.init();
-        funnel.init(5);    
-    	
-
+        partyplayer.init('host', function(connected) {
+            if (connected) {
+                pc = new PartyCollection("Webinos Party");
+                player.init();
+                funnel.init(5);    
+            }
+        });
     });
-    
 });
 
 $(window).unload(function() {

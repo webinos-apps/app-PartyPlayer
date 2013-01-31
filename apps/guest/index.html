@@ -42,30 +42,31 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
        	<script type="text/javascript" src="../host/PartyCollection.js"></script>
        	<script type="text/javascript" src="icons/icons.js"></script>
         <script type="text/javascript" src="guest.js"></script>
-        <script type="text/javascript" src="../../library/items.js"></script>
 		<script type="text/javascript" src="id3-minimized.js"></script>
     </head>
     <body>
-		<div data-role="page" class="type-home" id="profile-select">
-			<div data-role="header">
-				<h1>Party Player</h1>
-			</div>
-			<div data-role="content">
-				<ul id="profiles" data-role="listview" data-inset="true" data-theme="a">
-					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Choose a profile</li>
-					
-					<!-- add profiles as <li> items-->
-					
-				</ul>
-			</div>
-		</div>
-
 		<div data-role="page" id="home">
 			<div data-role="header" data-position="fixed">
 				<h1>Party Player</h1>
 <!--				<a href="#home" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>-->
 			</div>
 			<div data-role="content">
+				<div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+					<form>
+						<div style="padding:10px 20px;">
+						  <h3>Please enter your info</h3>
+						  <p>This is required only once and we promise not to spam you.</p>
+				          <label for="name" class="ui-hidden-accessible">Name:</label>
+				          <input type="text" name="name" id="name" value="" placeholder="name" data-theme="a" />
+
+				          <label for="mail" class="ui-hidden-accessible">E-mail address:</label>
+				          <input type="text" name="mail" id="mail" value="" placeholder="email" data-theme="a" />
+
+				    	  <button type="button" id="login" data-theme="a">Proceed...</button>
+						</div>
+					</form>
+				</div>
+
 				<div class="content-secondary">
 					<p/>
 	    			<!-- TNO Logo -->
@@ -100,7 +101,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</ul>
 				</div>
 			</div>
-		</div>
+		</div>		
 		
 		<!-------- PLAYLIST ------>
 
