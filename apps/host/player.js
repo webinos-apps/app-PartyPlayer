@@ -38,6 +38,9 @@ var player = (function(){
         **/
 		getSong : function(){
 		    sortedItems = funnel.getFunnel();
+        if(sortedItems.length == 0){
+          return false;
+        }
 		    var key = sortedItems[0][0];
 		    if(!key){
 		        return false;

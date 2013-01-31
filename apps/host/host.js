@@ -187,8 +187,9 @@ $(document).ready(function(){
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('host');
         pc = new PartyCollection("Webinos Party");
-        funnel.init(500, 5);
-    	player.init();
+        player.init();
+        funnel.init(5);    
+    	
 
     });
     

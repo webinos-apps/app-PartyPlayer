@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * (C) Copyright 2012, TNO
- * Author: Arno Pont, Martin Prins, Daryll Rinzema
+ * (C) Copyright 2012, TNO, BMW Forschung & Technik GmbH
+ * Author: Arno Pont, Martin Prins, Daryll Rinzema, Simon Isenberg
  */
 
 //
@@ -49,24 +49,32 @@ Object.size = function (obj) {
 **/
 var funnel = (function () {
 	//note: key == ID in collection
-	var funnelWidth = 500;
+	
 	var funnelList = new Collection("Funnel");
-	var allItems = {}; //object to push all funnelVars
+	//var allItems = {}; //object to push all funnelVars
 	var sortedItems = []; //array for sorting
 	var circles = 6;
 	var nextItem = false; //true if center circle is taken
 	
+	var onInitCallback = function(circles){};
+	var onAddItemCallback = function(key){};
+	var onVoteItemCallback = function(key){};
+	var onRemoveItemCallback = function(key){}; 
+	var onAnimateCallback = function(key){}; 
+
+
 	return{
 		/**
 		 *  Initialize function to setup circle slots.
 		 *
-		 *  @param funnelSize int The size of the funnel (width & height) in pixels
-		 *  @param circles int The amount of circles the funnel holds 
 		**/
-		init : function (funnelSize, the_circles) {
-		    funnelWidth = funnelSize;
-		    circles = the_circles;
-			funnelViz.setupCircles(funnelWidth, circles);
+		init : function (levels) {
+			circles = levels
+			onInitCallback(circles);
+		},
+
+		onInit : function(callback){
+			onInitCallback = callback;
 		},
 		/**
 		 *  Add an item to the funnel. Creates a funnelItem (for in funnelList) and funnelVar 
@@ -78,18 +86,26 @@ var funnel = (function () {
 		 * 
 		**/
 		addItem : function (id, userID) {			
-            var funnelItem = new partyplayer.FunnelItem(id, 1, userID); //1 = 1 vote
-            var key = funnelList.addItem(funnelItem);
-            funnelItem.funnelItemID = key;
-            
-            var fnO = funnelVar();
-            allItems['key_' + key] = fnO;
-            fnO.setKey(key);
-            fnO.init();
+	    var funnelItem = new partyplayer.FunnelItem(id, 1, userID); //1 = 1 vote
+	    var key = funnelList.addItem(funnelItem);
+	    funnelItem.funnelItemID = key;
+	    
 
-            sortedItems.push([key, funnelItem.votes]);
+	    sortedItems.push([key, funnelItem.votes]);
 
-            return key;
+	    onAddItemCallback(key);
+	    return key;
+		},
+
+		/**
+		 *  Register the callback for adding an item to the playlist
+		 * 
+		 *  @param callback method which is triggered when the an item is added to the funnel.
+		 *  The callback handler receives the key of the add item
+		 * 
+		**/
+		onAddItem : function (callback){
+			onAddItemCallback = callback;
 		},
 		/**
 		 *  Removes an item from the funnelList and from sortedItems
@@ -100,29 +116,26 @@ var funnel = (function () {
 		 *  @param callback function The function to call if succesful remove
 		**/
 		removeItem : function (key, callback) {
-			var fnO = allItems['key_' + key];
-			if(fnO){
-			    funnelViz.destroySingle(allItems['key_' + key].getSelector());
-			    funnelList.removeItem(key);
-			    delete allItems['key_' + key];
-			    
-			    for(var i = 0; i < sortedItems.length; i++){
-			        if(sortedItems[i][0] == key){
-			            sortedItems.splice(i, 1);
-			        }
-			    }
-			    
-			    //automatically set highest item to 'Next Item'
-			    if(sortedItems[0]){
-			        if(sortedItems[0][1] >= circles){
-			            funnelViz.setCenter(allItems['key_' + sortedItems[0][0]].getSelector());
-			        }
-			    }
-			    
-			    callback(key);
-			} else {
-			    return false;
+			for(var i = 0; i < sortedItems.length; i++){
+				if(sortedItems[i][0] == key){
+				      sortedItems.splice(i, 1);
+				  }
 			}
+			onRemoveItemCallback(key);
+			callback(key);
+			funnelList.removeItem(key);
+			return true;
+		},
+		/**
+		 *  Register the callback for removing an item from the funnel
+		 * 
+		 *  @param callback method which is triggered when the an item is removed from the funnel.
+		 *  The callback handler receives the key of the removed item
+		 * 
+		**/
+		onRemoveItem : function(callback){
+			onRemoveItemCallback = callback;
+
 		},
 		/**
 		 *  Vote for an item inside the Funnel
@@ -150,13 +163,15 @@ var funnel = (function () {
 	                }
 	            }
 	        } else {
-	            sortedItems = [];
-			    for(var oldKey in allItems){
+	        
+	          sortedItems = [];
+			    	for(var oldKey in allItems){
 			        newKey = oldKey.replace("key_", "");
-				    sortedItems.push([newKey, funnelList.getItem(newKey).votes]);
-			    }
+				    	sortedItems.push([newKey, funnelList.getItem(newKey).votes]);
+			    	}
 			    sortedItems.sort(function(a,b){return b[1]-a[1]});
-			}
+					
+				}
 			
 			//check if items moved a position
 			var oldPos, newPos;
@@ -173,52 +188,37 @@ var funnel = (function () {
 			    }
 			}
 			
-			//make the visual part update Item to next circle
-			if(funnelItem.votes < circles){
-			    allItems['key_' + key].setCircle(circles + 1 - funnelItem.votes);
-			    funnelViz.updateCircle(allItems['key_' + key].getSelector(), allItems['key_' + key].getCircle());
-			} else if (!nextItem && funnelItem.votes >= circles) {
-			    allItems['key_' + key].setCircle(circles + 1 - funnelItem.votes);
-			    funnelViz.setCenter(allItems['key_' + key].getSelector());
-			    nextItem = true;
-			}
-			
-			if(nextItem && funnelItem.votes >= circles){
-			    if(funnelItem.votes >= oldSorted[0][1]){
-			        var oldItem = allItems['key_' + oldSorted[0][0]];
-			        oldItem.setCircle(2);
-			        funnelViz.updateCircle(oldItem.getSelector(), oldItem.getCircle());
-			        allItems['key_' + key].setCircle(1);
-			        funnelViz.setCenter(allItems['key_' + key].getSelector());
-			    }
-			}
+			onVoteItemCallback(funnelItem, key);
+
 			console.log(oldSorted);
 			console.log(sortedItems);
 			
 			return funnelItem.votes;
 		},
 		/**
+		 *  Register the callback for voting on an item
+		 * 
+		 *  @param callback method which is triggered when the an item has received a vote.
+		 *  The callback handler receives the key of the item, which has been voted on.
+		 * 
+		**/
+		onVoteItem : function(callback){
+			onVoteItemCallback = callback;
+		},
+
+
+		/**
 		 *  Calls the visual function to animate the to-be-played Item
 		 *
 		 *  @param key string The funnelItemID
 		**/
 		animateToPlayer : function (key) {
-		    clearInterval(allItems['key_' + key].getInterval());
-		    funnelViz.animateToPlayer(allItems['key_' + key].getSelector());
+				onAnimateCallback(key);
+				funnel.removeItem(key, partyplayer.funnel.removeFunnelItem);
 		},
-		/**
-		 *  int Returns The amount of circles the funnel consists of
-		 *
-		**/
-		getCircles : function () {
-			return circles;
-		},
-		/**
-		 *  int Returns The total funnel size (in pixels)
-		 *
-		**/
-		getFunnelWidth : function () {
-			return funnelWidth;
+
+		onAnimate : function(callback){
+			onAnimateCallback = callback;
 		},
 		/**
 		 *  object Returns funnelItem as in funnelList
@@ -242,78 +242,24 @@ var funnel = (function () {
 		getFunnel : function () {
 		    return sortedItems;
 		},
+		/**
+		 *  int Returns The amount of circles the funnel consists of
+		 *
+		**/
+		getCircles : function () {
+			return circles;
+		},
+		/**
+		 *  boolean Returns If the next Item is already chosen
+		 *
+		**/
+		nextItem : function () {
+			return nextItem;
+		}
 	}	
 })();
 
-/**
- *	The funnelVar is a seperate Object that will be created when a funnelItem is created in funnelList. 
- *	funnelVar holds the ID of the funnelItem as it is in funnelList. funnelVar holds an object called 'element'.
- *	This object contains many properties that the visual part uses in order to update a specific Item on the Front-End
- *
- *	@constructor funnelVar
- *	@example var funnelObject = funnelVar();
-**/
-var funnelVar = function(){
-	var key, element = {}; // selector / circle / state / interval
-	
-	return{
-		/**
-		 *	Sets up the element object that gets returned after building it in the DOM
-		 *
-		**/
-		init : function(){
-			element = funnelViz.renderSingle(key);
-		},
-		/**
-		 *	Sets the key of this Item
-		 *
-		 *	@param key int The key to be set to
-		**/
-		setKey : function(newKey){
-			key = newKey;
-		},
-		/**
-		 *	Sets the circle this Item is at in the element Object
-		 *
-		 *	@param circle int Circle number to be set to
-		**/
-		setCircle : function(circle){
-			element.circle = circle;
-		},
-		/**
-		 *	Sets the interval this Item has.
-		 *
-		 *	@param interval Object Interval to set to
-		**/		
-		setInterval : function(interval){
-		    element.interval = interval;
-		},
-		/**
-		 *	string Returns The key of the Item
-		**/
-		getKey : function(){
-			return key;
-		},
-		/**
-		 *	string Returns The selector the element Object
-		**/
-		getSelector : function(){
-			return element.selector;
-		},
-		/**
-		 *	int Returns The circle the Item is at
-		**/
-		getCircle : function(){
-			return element.circle;
-		},
-		/**
-		 *	Object Returns The interval reference for the timer
-		**/
-		getInterval : function(){
-		    return element.interval;
-		}
-	}	
-}
+
 
 /******************||**||**|||**|||**||*****************************
 *******************||**||**||*||*||**||*****************************

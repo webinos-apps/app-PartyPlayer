@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Webinos Travel</title>
+<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript">
+		function switchView(width, height, url){
+			
+			var halfHeight = height/2;
+			var halfWidth = width/2;
+			
+			
+			
+			$('#diver').removeAttr('style');
+			$('#diver').attr('style', 'position: fixed; margin-left: 50%; margin-top: 50%; width:' + width +'px; heigth:'+ height + 'px; left:-'+ halfWidth +'px; top:-' +halfHeight+ 'px');
+			
+			$('#iframer').removeAttr('style');
+			$('#iframer').attr('style', 'outline: 0; border: 0; height: '+height+'px; width: '+width+'px;');
+			$('#iframer').attr('src', url);
+		}
+	
+</script>
+
+</head>
+<body style='font-family: Helvetica, Arial; font-size: 12px; color: #313131;'>
+	<div id='diver' style='width:1280px; height:480px; top: -240px; margin-top: 50%; left: -640px; margin-left: 50%; position: fixed;'>
+		<iframe id='iframer' src='index.html' scrolling='none' style='outline: 0; border: 0; height: 480px; width: 1280px;'>not supported</iframe>
+	</div>
+		<p><b>IVI-SYSTEMES (Prototype):</b> <a href='javascript:switchView(1280,480,"index.html");'>CID (1280x480)</a> | <a href='javascript:switchView(800,480,"index.html");'>Pandaboard & RSE(800x480)</a></p>
+</body>
+</html>
