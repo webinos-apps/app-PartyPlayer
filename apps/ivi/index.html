@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Webinos Travel</title>
+    <title>webinos PartyPlayer :: in vehicle system</title>
     <link rel="stylesheet" href="css/automotive.css"/>
     <script type="text/javascript" src="../lib/jquery.min.js"></script>
+    <script type="text/javascript" src="/webinos.js"></script>
+    <script type="text/javascript" src="../common/log.js"></script>
+    <script type="text/javascript" src="../common/pplayer.js"></script>
+    <script type="text/javascript" src="../common/Collection.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../host/PartyCollection.js"></script>
+    <script type="text/javascript" src="../host/funnel.js"></script>
+    <script type="text/javascript" src="../host/host.js"></script>
+    <script type="text/javascript" src="../host/player.js"></script>
+    <script type="text/javascript" src="../host/visual.js"></script>
+    <script type="text/javascript" src="../host/visualPlayer.js"></script>
     <script type="text/javascript" src="js/automotive.js"></script>
   </head>
   
@@ -12,8 +22,8 @@
     <div id='home'>
 
     </div>
-    <div id='player'>
-        <div id='currentlyPlaying'>
+    <div id='playerview'>
+        <div id='currentlyPlaying' class='fullscreen disabled'>
             <div id='cChosen'>
               <div id='cChosenInner'></div>
             </div>
@@ -23,70 +33,66 @@
                 3:24
             </div>
             <div id='containerMeta'><b>
-              <span id='cSong'>From Here On Out</span><br/>
-              <span id='cArtist'>The Killers</span>
+              <span id='cSong'></span><br/>
+              <span id='cArtist'></span>
             </div>  
+            <div id='progressbar'>
+                <div id='progressbar-inner'></div>
+            </div>
         </div>
-        <div id='arrow'>
-
-        </div>
-        <div id='cNext'>
-              <div id='cNextInner'>
-                <span class='vtitle'>Sweet Nothing</span><br><span class='vartist'>Calvin Harris feat. </span>
-
+        <div id='cNext' class='disabled'>
+          <div id='arrow'></div>
+          <div id='cNextInner'>
+                <span class='vtitle'></span><br><span class='vartist'></span>
           </div>
-
+          <div class='csPerson'></div>
+          <div class='csTrend'></div>
         </div>
-          <div id='cSongs'>
+          <div id='cSongs' class='disabled'>
             <div id='cs1' class='cVote'>
                 <div class='csVoteInner'>
-                  <span class='vtitle'>Imagine</span></br>
-                  <span class='vartist'>Armin van Buren</span>
+                  <span class='vtitle'></span></br>
+                  <span class='vartist'></span>
                 </div>
-                <div class='csTrend'>
-                  <img src='images/icons/up.png'>
-                </div>
+                <div class='csPerson'></div>
+                <div class='csTrend'></div>
             </div>
             <div id='cs2' class='cVote'>
                 <div class='csVoteInner'>
-                  <span class='vtitle'>Satelitte</span></br>
-                  <span class='vartist'>Rise against</span>
+                  <span class='vtitle'></span></br>
+                  <span class='vartist'></span>
                 </div>
-                <div class='csTrend'>
-                  <img src='images/icons/up.png'>
-                </div>
+                <div class='csPerson'></div>
+                <div class='csTrend'></div>
             </div>
             <div id='cs3' class='cVote'>
                 <div class='csVoteInner'>
-                  <span class='vtitle'>45</span></br>
-                  <span class='vartist'>The Gaslight Anthem</span>
+                  <span class='vtitle'></span></br>
+                  <span class='vartist'></span>
                 </div>
-                <div class='csTrend'>
-                  <img src='images/icons/down.png'>
-                </div>
+                <div class='csPerson'></div>
+                <div class='csTrend'></div>
             </div>
             <div id='cs4' class='cVote'>
                 <div class='csVoteInner'>
-                  <span class='vtitle'>I love it</span></br>
-                  <span class='vartist'>Icona Pop</span>
+                  <span class='vtitle'></span></br>
+                  <span class='vartist'></span>
                 </div>
-                <div class='csTrend'>
-                  <img src='images/icons/up.png'>
-                </div>
+                <div class='csTrend'></div>
             </div>
             <div id='cs5' class='cVote'>
                 <div class='csVoteInner'>
-                  <span class='vtitle'>She Wolf</span></br>
-                  <span class='vartist'>David Guetta</span>
+                  <span class='vtitle'></span></br>
+                  <span class='vartist'></span>
                 </div>
-                <div class='csTrend'>
-                  <img src='images/icons/up.png'>
-                </div>
+                <div class='csPerson'></div>
+                <div class='csTrend'></div>
+                
             </div>
        
         </div>
         <div id='connectedUsers'></div>
     </div>
-
+    <div id='player'></div>
   </body>
 </html>
