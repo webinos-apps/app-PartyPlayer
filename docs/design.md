@@ -34,6 +34,8 @@ home media domain.
 The host keeps the `PartyCollection`, the `PartyItemFunnel` and the `PartyPlayList`. These are distinct entities.
 All these entities extend `Collecion`, which provides generic entities.
 
+The host will search the personal zone it is in for media items and will add these to the `PartyCollection`. Guests can also add their media items to the `PartyCollection` by using the guest application.
+
 ### Media items
 
 ![item Classes](figures/common_classes.png "Media Classes defined in partyplayer.common").
