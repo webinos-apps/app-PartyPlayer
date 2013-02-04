@@ -1,0 +1,22 @@
+{
+  "name": "indexer",
+  "version": "0.1.0",
+  "description": "Indexes a collection of mp3 files.",
+  "keywords": [ "mp3" ],
+  "author": { "name": "Eelco Cramer", "email": "eelco@hailendal.org" },
+  "main": "./indexer",
+  "engines": { "node": ">=0.8.8" },
+  "dependencies": {
+    "id3": ">=0.0.2",
+    "canvas": ">=1.0.0"
+  },
+  "licenses": [ {
+    "type": "MIT",
+    "url": "http://github.com/jacobrask/node-upnp-device/raw/master/LICENSE"
+  } ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jacobrask/node-upnp-device.git"
+  },
+  "contributors": ["Eelco Cramer"]
+}

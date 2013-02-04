@@ -27,20 +27,36 @@ The layout of this project folder is as follows:
         |
         +-- docs                       -> documentation, incl generated figures
         |
-        +-- library                    -> content
+        +-- indexer                    -> the content indexer
+        |
+        +-- library                    -> shared files
         |
         +-- README.md                  -> this file
 
 ### Installing
 
-The PartyPlayer depends on the webinos platform, in particular the App2App API. For now the PartyPlayer is made part of the webinos testbed application. To use PartyPlayer first install the webinos platform then install PartyPlayer in *<WEBINOS_PLATORM>/webinos/web_root*.
+The PartyPlayer depends on the webinos platform, in particular the App2App API. For now the PartyPlayer is made part of the webinos testbed application. To use PartyPlayer first install the webinos platform then install PartyPlayer in *<WEBINOS_PLATORM>/webinos/web_root* by cloning it from the repository:
+
+*git clone https://github.com/webinos/app-PartyPlayer.git PartyPlayer*
+
+### Indexing your content
+
+To be able to share media items you will have to manually put *mp3* files into the root file system of your PZP following the steps below:
+
+1. Make sure your PZP has been started and connected to a PZH before continuing these steps so that the needed base folder structure is already created.
+2. Create the folder that is going to hold your media collection: *mkdir -p ~/.webinos/${HOSTNAME}_Pzp/userData/file/default/partyplayer/collection*
+3. Copy the mp3 that you want to share into the newly created folder.
+4. Install the indexer pre-requests by executing *npm install* from the indexer folder. Note: this will need [node-canvas](https://github.com/learnboost/node-canvas).
+5. Run the indexer by executing: *./indexer.js --lib=~/.webinos/${HOSTNAME}_Pzp/userData/file/default/partyplayer/collection*
+
+When you add more media items to your collection you should always re-run the indexer to have them picked up by the partyplayer.
 
 ### Running
 
 The PartyPlayer consists of two parts, that both must be opened in a recent version of firefox, safari, chrome or chromium:
 
-1. Party **Host** front-end at `http://localhost:8080/apps/host/index.html`. Use a single instance.
-2. Party **Guest** front-end at `http://localhost:8080/apps/guest/index.html`. Use as many as you like.
+1. Party **Host** front-end at `http://localhost:8080/PartyPlayer/apps/host/index.html`. Use a single instance.
+2. Party **Guest** front-end at `http://localhost:8080/PartyPlayer/apps/guest/index.html`. Use as many as you like.
 
 Check out [jira for AppParty](http://jira.webinos.org/browse/APPPARTY) for a complete overview of the product backlog, plans for new features or for issueing bugs.
 

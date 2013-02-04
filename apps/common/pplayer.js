@@ -228,14 +228,17 @@ partyplayer.close = function() {
  * Returns the address of the host.
  */
 partyplayer.getHost = function() {
-    return this.channel.creator;
+    if (this.channel) {
+        return this.channel.creator;
+    }
 }
 
 /**
  * Initialises the webinos app2app channel and set up the communication protocol
  * @param hostorguest either 'host' or 'guest', relevant for a2a-stub behaveour
+ * @param callback gets called when the player is initialized.
  */
-partyplayer.init = function(hostorguest) {
+partyplayer.init = function(hostorguest, callback) {
     var self = this;
     this.isHost = false;
     this.channel = undefined;
@@ -306,9 +309,11 @@ partyplayer.init = function(hostorguest) {
                     // callback invoked on success, with the client's channel proxy as parameter
                     function(channel) {
                         self.channel = channel;
+                        callback(true);
                     },
                     function(error) {
                         alert("Could not create channel: " + error.message);
+                        callback(false);
                     }
             );
         } else {
@@ -332,9 +337,11 @@ partyplayer.init = function(hostorguest) {
                             function(success) {
                                 // make the proxy available now that we are successfully connected
                                 self.channel = channel;
+                                callback(true);
                             },
                             function(error) {
                                 alert("Could not connect to channel: " + error.message);
+                                callback(false);
                             }
                         );
                     },
