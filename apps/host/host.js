@@ -233,8 +233,8 @@ $(document).ready(function(){
         controlNav: false,
         animationLoop: true,
         slideshow: true,
-        slideshowSpeed: 2000,
-        animationSpeed: 300,
+        slideshowSpeed: 5000,
+        animationSpeed: 600,
         randomize: true,
         directionNav: false        
     });
