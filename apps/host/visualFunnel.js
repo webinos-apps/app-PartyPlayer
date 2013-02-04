@@ -81,7 +81,7 @@ var visualFunnel = function(name, selector){
                 if (itemInfo.cover) {
                     trackCover = '<img src="'+itemInfo.cover+'" class="cover"/>';
                 } else {
-                    trackCover = '<img src="../../library/album-art-unknown.png"/>';;
+                    trackCover = '<img src="../library/album-art-unknown.png"/>';;
                 }
                 $(selector).html(trackCover);
                 $(selector + ' .cover').css({
@@ -227,7 +227,7 @@ var visualFunnel = function(name, selector){
 		if (item.item.cover) {
     		trackCover = '<img src="'+item.item.cover+'" class="cover"/>';
 		} else {
-		    trackCover = '<img src="../../library/album-art-unknown.png"/>';
+		    trackCover = '<img src="../library/album-art-unknown.png"/>';
 		}
 		$('<div class="funnelObject" _funnelItemID=' + key + '>' + trackCover + '</div>').appendTo('#funnel');
 		
