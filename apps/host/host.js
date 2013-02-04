@@ -228,6 +228,18 @@ function logRandom(){
     */
 
 $(document).ready(function(){
+    $('.flexslider').flexslider({
+        animation: "slide",
+        controlNav: false,
+        animationLoop: true,
+        slideshow: true,
+        slideshowSpeed: 2000,
+        animationSpeed: 300,
+        randomize: true,
+        directionNav: false        
+    });
+
+    
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('host', function(connected) {
             if (connected) {

@@ -22,27 +22,28 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
     <head>
         <meta charset="utf-8">
         <title>PartyPlayer Guest</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1"> 
-		<link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
-		<link rel="stylesheet" href="jquery.mobile.structure.min.css " type="text/css"/>
-		<link rel="stylesheet" href="jquery.swipeButton.css" type="text/css"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1"> 
+				<link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
+				<link rel="stylesheet" href="../lib/jquery.mobile.structure.min.css " type="text/css"/>
+				<link rel="stylesheet" href="../lib/jquery.swipeButton.css" type="text/css"/>
+				<link rel="stylesheet" herf="../lib/flexslider.css" type="text/css"/>
 
-		<style>	
-			.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
-			.party-nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
-		</style>
+				<style>	
+					.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+					.party-nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
+				</style>
 
-		<script type="text/javascript" src="/webinos.js"></script>
+				<script type="text/javascript" src="/webinos.js"></script>
         <script type="text/javascript" src="../lib/jquery.min.js"></script>
         <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
-		<script type="text/javascript" src="jquery.swipeButton.min.js"></script>
+				<script type="text/javascript" src="../lib/jquery.swipeButton.min.js"></script>
         <!--script type=text/javascript src=../lib/id3v2.js></script>-->
         <script type="text/javascript" src="../common/log.js"></script>
         <script type="text/javascript" src="../common/pplayer.js"></script>
        	<script type="text/javascript" src="../host/PartyCollection.js"></script>
        	<script type="text/javascript" src="icons/icons.js"></script>
         <script type="text/javascript" src="guest.js"></script>
-		<script type="text/javascript" src="id3-minimized.js"></script>
+				<script type="text/javascript" src="../lib/jquery.flexslider-min.js"></script>
     </head>
     <body>
 		<div data-role="page" id="home">
@@ -72,10 +73,21 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</div>
 
 				<div class="content-secondary">
-					<p/>
-	    			<!-- TNO Logo -->
-	    			<div id="TNOLogo" style="text-align: center; margin-left: 0 auto; margin-right: 0 auto; margin-top: 10px auto;" >
-						<img src="../../library/logo/logo-TNO.png" alt="Concept by TNO"/>
+					
+    			<!-- Logos -->
+
+					<div class="flexslider" style="text-align: center;margin-left: -90px;">
+						<ul class="slides">
+							<li>
+								<img src="../library/logos/logo-TNO.png" alt="Concept by TNO" style="width: 224px;"/>
+							</li>
+							<li>
+								<img src="../library/logos/bmw.png" alt="Brought to the car by BMW"/>
+							</li>
+							<li>
+								<img src="../library/logos/webinos.png" alt="Powered by Webinos"/>
+							</li>
+						</ul>
 					</div>
 	
 					<ul data-role="listview" data-inset="true" data-theme="a">

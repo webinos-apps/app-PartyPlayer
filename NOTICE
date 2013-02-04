@@ -1,0 +1,8 @@
+The Party Player is released under the Apache License, Version 2.0. 
+
+The Party Player uses and delivers, as part of the project, 
+the following 3rd party software:
+* FlexSlider 2: GPLv2 license, http://www.woothemes.com/flexslider/
+* node-canvas: MIT license, https://github.com/learnboost/node-canvas
+* jQuery: MIT/GPL license
+* jQuery Mobile: MIT/GPL license

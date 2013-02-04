@@ -84,6 +84,17 @@ function initProfile() {
 }
 
 $('#home').live('pageshow', function(event) {
+    $('.flexslider').flexslider({
+        animation: "slide",
+        controlNav: false,
+        animationLoop: true,
+        slideshow: true,
+        slideshowSpeed: 2000,
+        animationSpeed: 300,
+        randomize: true,
+        directionNav: false        
+    });
+
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('guest', function(connected) {
             if (connected) {
@@ -247,7 +258,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	if (param.item.cover) {
         trItem += '<img src="'+param.item.cover+'"/>';
 	} else {
-        trItem += '<img src="/library/album-art-unknown.png"/>';
+        trItem += '<img src="../library/album-art-unknown.png"/>';
 	}
 	
     trItem += '<h3>'+param.item.title+'</h3>';
@@ -454,7 +465,7 @@ var localItems = {
 			if (item.cover) {
     		    trItem += '<img src="'+item.cover+'"/>';
 			} else {
-    		    trItem += '<img src="../../library/album-art-unknown.png"/>';
+    		    trItem += '<img src="../library/album-art-unknown.png"/>';
 			}
 			
 			if (item.title) {

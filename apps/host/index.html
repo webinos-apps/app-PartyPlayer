@@ -24,6 +24,8 @@ Authors Victor Klos, Martin Prins
         <title>PartyPlayer Host</title>
         <!--<link rel=stylesheet href=host.css type=text/css />-->
         <link rel="stylesheet" type="text/css" href="index2.css" />
+				<link rel="stylesheet" herf="../lib/flexslider.css" type="text/css"/>
+
 				<script type="text/javascript" src="/webinos.js"></script>
 				<script type="text/javascript" src="../lib/jquery.min.js"></script>
 				<script type='text/javascript' src='../lib/jquery.transit.js'></script>
@@ -40,9 +42,22 @@ Authors Victor Klos, Martin Prins
 				<script type='text/javascript' src='visualPlayer.js'></script>
 				<script type='text/javascript' src='funnel2visual.js'></script>
 				<script type='text/javascript' src='visualFunnel.js'></script>
+				<script type="text/javascript" src="../lib/jquery.flexslider-min.js"></script>
     </head>
     <body>
-        <div id="TNOLogo"><img width="110px" height="20px" src="../../library/logo/logo-TNO.gif" /></div>
+				<div class="flexslider">
+					<ul class="slides">
+						<li>
+							<img src="../library/logos/logo-TNO.png" alt="Concept by TNO" style="width: 224px;"/>
+						</li>
+						<li>
+							<img src="../library/logos/bmw.png" alt="Brought to the car by BMW"/>
+						</li>
+						<li>
+							<img src="../library/logos/webinos.png" alt="Powered by Webinos"/>
+						</li>
+					</ul>
+				</div>
         <div id=main style=height:10px>
             <h1>PartyPlayer Host</h1>
         </div>
