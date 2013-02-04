@@ -15,10 +15,10 @@ limitations under the License.
 
 (C) Copyright 2012, TNO
 
-Author Victor Klos
+Author Eelco Cramer
 -->
 
-# /library
+# /indexer
 
-This folder is to store shared images and logos.
+The indexer is used to create an index from a folder containing media items.
 
