@@ -228,7 +228,9 @@ partyplayer.close = function() {
  * Returns the address of the host.
  */
 partyplayer.getHost = function() {
-    return this.channel.creator;
+    if (this.channel) {
+        return this.channel.creator;
+    }
 }
 
 /**

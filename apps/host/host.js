@@ -105,7 +105,7 @@ partyplayer.main.onaddItem = function (params, ref, from) {
     
     if (service) {
 		service.requestFileSystem(1, 1024, function (fileSystem) {
-		    fileSystem.root.getFile(params.item.fileName, null, function(entry) {
+		    fileSystem.root.getFile('/partyplayer/collection/' + params.item.filename, null, function(entry) {
     		    entry.file(function (blob) {
                     itemID = pc.addItem(params.userID,params.item);
                     

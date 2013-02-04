@@ -107,6 +107,10 @@ $('#collection').live('pageinit', function(event) {
     $('ul#party-collection').listview('refresh');
 });
 
+$(document).ready(function() {
+    $.mobile.changePage("#home", { transition: "slideup"} );
+});
+
 $(window).unload(function() {
     if (userProfile && userProfile.userID) {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave", params:{userID:userProfile.userID}});
@@ -239,7 +243,13 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 
     var trItem = '';
 	trItem += '<li class="collection-item" id="' + param.itemID + '"><a href="#">';
-    trItem += '<img src="'+param.item.cover+'"/>';
+	
+	if (param.item.cover) {
+        trItem += '<img src="'+param.item.cover+'"/>';
+	} else {
+        trItem += '<img src="/library/album-art-unknown.png"/>';
+	}
+	
     trItem += '<h3>'+param.item.title+'</h3>';
     trItem += '<p>' + param.item.artist + ' / ' + param.item.album + '</p>';
     if (profileImage) trItem += '<img class="ui-li-icon" src="'+profileImage+'"/>';
@@ -399,28 +409,25 @@ var localItems = {
 		return false;
 	},
 	importItems:function() {
+	    var self = this;
+	    
 	    if (!this.fileService) {
 	        alert('Invalid state! File service not initialized.');
 	        return;
 	    }
 	    
+	    $('#popupLoading').popup();
+	    
 		//read collection
 		this.fileService.requestFileSystem(1, 1024, function (fileSystem) {
-		    fileSystem.root.getDirectory('/partyplayer/collection/', null, function(entry) {
-		        reader = entry.createReader();
-		        
-		        reader.readEntries(function(contentEntries) {
-		            for (var index in contentEntries) {
-		                var contentEntry = contentEntries[index];
-		                
-    		            if (contentEntry.isFile) {
-    		                var reader = FileAPIReader(contentEntry);
-                            ID3.loadTags(contentEntry.toURL(), function() {
-                                var tags = ID3.getAllTags(filename);
-                                console.log(tags.artist + " - " + tags.title + ", " + tags.album);
-                            }, { dataReader: reader });
-    		            }
-		            }
+		    fileSystem.root.getFile('/partyplayer/collection/index.json', null, function(entry) {
+    		    entry.file(function (blob) {
+                    var url = window.URL.createObjectURL(blob);
+                    $.getJSON(url, function(data) {
+                        self.items = data;
+                        self.drawItems();
+                        $('#popupLoading').popup('close');
+                    });
 		        });
 		    }, function (error) {
     			alert("Error getting file (#" + error.code + ")");
@@ -428,28 +435,34 @@ var localItems = {
 		}, function (error) {
 			alert("Error requesting filesystem (#" + error.code + ")");
 		});
-		
-        // for(var i=0; i<libUsers.length; i++){
-        //  if(libUsers[i].userName==user){
-        //      localItems.items = libUsers[i].items;
-        //  }
-        // }
-		//append items to table
+	},
+	drawItems:function() {
 		var itemList = '';
-	
-        // localItems.items.sort(function(a, b) {
-        //             if ( a.title < b.title )
-        //               return -1;
-        //             if ( a.title > b.title )
-        //               return 1;
-        //             return 0;        
-        //         });
+
+        this.items.sort(function(a, b) {
+                    if ( a.title < b.title )
+                      return -1;
+                    if ( a.title > b.title )
+                      return 1;
+                    return 0;        
+        });
 	
 		$.each(localItems.items, function(i, item) {
 			var trItem = '';
 			trItem += '<li class="shareableItem" item-id="' + i + '"><a href="#" class="shareableitemlink">';
-		    trItem += '<img src="'+item.cover+'"/>';
-		    trItem += '<h3>'+item.title+'</h3>';
+			
+			if (item.cover) {
+    		    trItem += '<img src="'+item.cover+'"/>';
+			} else {
+    		    trItem += '<img src="../../library/album-art-unknown.png"/>';
+			}
+			
+			if (item.title) {
+    		    trItem += '<h3>'+item.title+'</h3>';
+			} else {
+			    trItem += '<h3>'+item.filename+'</h3>';
+			}
+
 		    trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
 			trItem += '</a></li>';
 		    itemList += trItem;
