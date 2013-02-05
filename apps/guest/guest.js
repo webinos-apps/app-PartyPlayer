@@ -447,29 +447,40 @@ var localItems = {
 	    }
 
         popupLoading = true;
+
+        $.getJSON('index.json', {}, function(data) {
+            self.items = data;
+            self.drawItems();
+            
+            if (!popupLogin) {
+                $('#popupLoading').popup('close');
+            }
+            
+            popupLoading = false;
+        });
 	    
 		//read collection
-		this.fileService.requestFileSystem(1, 1024, function (fileSystem) {
-		    fileSystem.root.getFile('/partyplayer/collection/index.json', null, function(entry) {
-    		    entry.file(function (blob) {
-                    var url = window.URL.createObjectURL(blob);
-                    $.getJSON(url, {}, function(data) {
-                        self.items = data;
-                        self.drawItems();
-                        
-                        if (!popupLogin) {
-                            $('#popupLoading').popup('close');
-                        }
-                        
-                        popupLoading = false;
-                    });
-		        });
-		    }, function (error) {
-    			alert("Error getting file (#" + error.code + ")");
-		    });
-		}, function (error) {
-			alert("Error requesting filesystem (#" + error.code + ")");
-		});
+        // this.fileService.requestFileSystem(1, 1024, function (fileSystem) {
+        //     fileSystem.root.getFile('/partyplayer/collection/index.json', null, function(entry) {
+        //              entry.file(function (blob) {
+        //                     var url = window.URL.createObjectURL(blob);
+        //                     $.getJSON(url, {}, function(data) {
+        //                         self.items = data;
+        //                         self.drawItems();
+        //                         
+        //                         if (!popupLogin) {
+        //                             $('#popupLoading').popup('close');
+        //                         }
+        //                         
+        //                         popupLoading = false;
+        //                     });
+        //         });
+        //     }, function (error) {
+        //              alert("Error getting file (#" + error.code + ")");
+        //     });
+        // }, function (error) {
+        //  alert("Error requesting filesystem (#" + error.code + ")");
+        // });
 	},
 	drawItems:function() {
 		var itemList = '';
