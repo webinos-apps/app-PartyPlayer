@@ -17,6 +17,9 @@
  *
  * Authors: Victor Klos, Martin Prins, Arno Pont
  */
+ 
+var popupLogin = false;
+var popupLoading = false;
 
 function bindFileAPI() {
     webinos.discovery.findServices(new ServiceType("http://webinos.org/api/file"), {
@@ -67,6 +70,11 @@ function initProfile() {
             
             if (localStorage.username && localStorage.mailAddress) {
                 $( "#popupLogin" ).popup( "close" );
+                popupLogin = false;
+                
+                if (popupLoading) {
+                    $( "#popupLoading" ).popup( "open" );
+                }
             }
         });
         
@@ -77,7 +85,12 @@ function initProfile() {
             }
         });
 
+        if (popupLoading) {
+            $('#popupLoading').popup("close");
+        }
+        
         $( "#popupLogin" ).popup( "open" );
+        popupLogin = true;
     } else {
         enterTheParty(localStorage.username, localStorage.mailAddress);
     }
@@ -98,8 +111,8 @@ $('#home').live('pageshow', function(event) {
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('guest', function(connected) {
             if (connected) {
-                bindFileAPI();
                 initProfile();
+                bindFileAPI();
             }
         });
     });
@@ -427,7 +440,11 @@ var localItems = {
 	        return;
 	    }
 	    
-	    $('#popupLoading').popup();
+	    if (!popupLogin) {
+            $('#popupLoading').popup("open");
+	    }
+
+        popupLoading = true;
 	    
 		//read collection
 		this.fileService.requestFileSystem(1, 1024, function (fileSystem) {
@@ -437,7 +454,12 @@ var localItems = {
                     $.getJSON(url, function(data) {
                         self.items = data;
                         self.drawItems();
-                        $('#popupLoading').popup('close');
+                        
+                        if (!popupLogin) {
+                            $('#popupLoading').popup('close');
+                        }
+                        
+                        popupLoading = false;
                     });
 		        });
 		    }, function (error) {
