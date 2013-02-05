@@ -63,7 +63,7 @@ for (var i in filenames) {
             artist: id3.get('artist'),
             title: id3.get('title'),
             album: id3.get('album'),
-            cover: cover.isPresent ? 'data:image/png;base64,' + cover.toString('base64') : undefined
+            cover: cover.isPresent ? 'data:image/png;base64,' + cover.buffer.toString('base64') : undefined
         }
 
         items.push(item);

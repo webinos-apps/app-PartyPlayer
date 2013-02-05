@@ -453,7 +453,7 @@ var localItems = {
 		    fileSystem.root.getFile('/partyplayer/collection/index.json', null, function(entry) {
     		    entry.file(function (blob) {
                     var url = window.URL.createObjectURL(blob);
-                    $.getJSON(url, function(data) {
+                    $.getJSON(url, {}, function(data) {
                         self.items = data;
                         self.drawItems();
                         
@@ -475,11 +475,11 @@ var localItems = {
 		var itemList = '';
 
         this.items.sort(function(a, b) {
-                    if ( a.title < b.title )
-                      return -1;
-                    if ( a.title > b.title )
-                      return 1;
-                    return 0;        
+            if ( a.title < b.title )
+              return -1;
+            if ( a.title > b.title )
+              return 1;
+            return 0;        
         });
 	
 		$.each(localItems.items, function(i, item) {
