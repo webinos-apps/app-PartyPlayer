@@ -37,19 +37,25 @@ for (var i in filenames) {
         var file = fs.readFileSync(path.join(argv.lib, filenames[i]));
     
         var id3 = new ID3(file);
-        var cover;
+        var cover = { 
+            isPresent: false
+        };
         
         id3.parse();
 
-        
-        if (id3.get('picture')) {
-            // resize it
-            var canvas = new Canvas(90, 90);
-            var ctx = canvas.getContext('2d');
-            var img = new Canvas.Image;
-            img.src = id3.get('picture').data;
-            ctx.drawImage(img, 0, 0, 90, 90);
-            cover = canvas.toBuffer();
+        try {
+            if (id3.get('picture')) {
+                // resize it
+                var canvas = new Canvas(90, 90);
+                var ctx = canvas.getContext('2d');
+                var img = new Canvas.Image;
+                img.src = id3.get('picture').data;
+                ctx.drawImage(img, 0, 0, 90, 90);
+                cover.buffer = canvas.toBuffer();
+                cover.isPresent = true;
+            }
+        } catch (err) {
+            console.log('Error getting album art from: ' + filenames[i] + ' - ignoring the album art for this file.')
         }
     
         var item = {
@@ -57,7 +63,7 @@ for (var i in filenames) {
             artist: id3.get('artist'),
             title: id3.get('title'),
             album: id3.get('album'),
-            cover: id3.get('picture') ? 'data:image/png;base64,' + cover.toString('base64') : undefined
+            cover: cover.isPresent ? 'data:image/png;base64,' + cover.toString('base64') : undefined
         }
 
         items.push(item);
