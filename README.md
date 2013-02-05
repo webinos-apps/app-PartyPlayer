@@ -49,10 +49,6 @@ To be able to share media items you will have to manually put *mp3* files into t
 4. Install the indexer pre-requests by executing *npm install* from the indexer folder. Note: this will need [node-canvas](https://github.com/learnboost/node-canvas).
 5. Run the indexer by executing: *./indexer.js --lib=~/.webinos/${HOSTNAME}_Pzp/userData/file/default/partyplayer/collection*
 
-For the moment an additional step is needed because cross platform access to the generated index file is not working yet:
-
-6. Copy the index file to the guest app: *cp /.webinos/${HOSTNAME}_Pzp/userData/file/default/partyplayer/collection/index.json ../apps/guest*
-
 When you add more media items to your collection you should always re-run the indexer to have them picked up by the partyplayer.
 
 ### Running
