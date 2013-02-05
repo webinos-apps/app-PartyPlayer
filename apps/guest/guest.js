@@ -75,6 +75,8 @@ function initProfile() {
                 if (popupLoading) {
                     $( "#popupLoading" ).popup( "open" );
                 }
+                
+                enterTheParty(localStorage.username, localStorage.mailAddress);
             }
         });
         
