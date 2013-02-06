@@ -109,7 +109,9 @@ $('#home').live('pageshow', function(event) {
         randomize: true,
         directionNav: false        
     });
+});
 
+$('#home').live('pageinit', function(event) {
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('guest', function(connected) {
             if (connected) {
@@ -249,8 +251,6 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 
     var profileImage;
     
-    currentCollection[param.itemID] = param.item;
-    
 	if(param.userID == userProfile.userID){
 		profileImage = userProfile.userPic;
 
@@ -266,22 +266,41 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	} else {
 		profileImage = partyPlayerUsers[param.userID].picture;
 	}
-
-    var trItem = '';
-	trItem += '<li class="collection-item" id="' + param.itemID + '"><a href="#">';
 	
-	if (param.item.cover) {
-        trItem += '<img src="'+param.item.cover+'"/>';
-	} else {
-        trItem += '<img src="../library/album-art-unknown.png"/>';
-	}
-	
-    trItem += '<h3>'+param.item.title+'</h3>';
-    trItem += '<p>' + param.item.artist + ' / ' + param.item.album + '</p>';
-    if (profileImage) trItem += '<img class="ui-li-icon" src="'+profileImage+'"/>';
-	trItem += '</a></li>';
+	param.item.itemID = param.itemID;
+    param.item.profileImage = profileImage;
+    currentCollection.collection.push(param.item);
 
-    $('ul#party-collection').append(trItem);
+    currentCollection.collection.sort(function(a, b) {
+        if ( a.title < b.title )
+          return -1;
+        if ( a.title > b.title )
+          return 1;
+        return 0;        
+    });
+
+    // remove and rebuild the list
+    $('ul#party-collection').empty();
+
+    var itemList = "";
+    $.each(currentCollection.collection, function(i, item) {
+        var trItem = '';
+    	trItem += '<li class="collection-item" id="' + item.itemID + '"><a href="#">';
+	
+    	if (item.cover) {
+            trItem += '<img src="'+item.cover+'"/>';
+    	} else {
+            trItem += '<img src="../library/album-art-unknown.png"/>';
+    	}
+	
+        trItem += '<h3>'+item.title+'</h3>';
+        trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
+        if (item.profileImage) trItem += '<img class="ui-li-icon" src="'+item.profileImage+'"/>';
+    	trItem += '</a></li>';
+    	itemList += trItem;
+	});
+
+    $('ul#party-collection').append(itemList);
     
         //     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
         // $('#' + param.itemID).swipeDelete({
@@ -293,7 +312,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
         //     }
         // });
         //     } else {
-        $('#' + param.itemID).unbind("click").bind("click", currentCollection.preferItemsClick);
+        $('ul#party-collection li.collection-item').unbind("click").bind("click", currentCollection.preferItemsClick);
     // }
     
     try {
@@ -308,37 +327,47 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
     log ('onUpdateItem Invoked on Funnel')
     //something added to the funnel or changed in the funnel
     
-    var item = currentCollection[param.itemID];
-
-    var trItem = '';
-	trItem += '<li class="playlist-item" id="' + param.funnelItemID + '"><a href="#">';
-    trItem += '<img src="'+item.cover+'"/>';
-    trItem += '<h3>'+item.title+'</h3>';
-    trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
-    trItem += '<span class="ui-li-count">' + param.votes + '</span>'
-	trItem += '</a></li>';
-
-    $('ul#playlist').append(trItem);
-
-    if (param.userID != userProfile.userID) {
-            //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-            // $('#' + param.funnelItemID).swipeDelete({
-            //     btnLabel: 'Vote',
-            //     btnTheme: 'a',
-            //     click: function(e) {
-            //         e.preventDefault();
-            //         currentCollection.voteClick(e);
-            //     }
-            // });
-            //         } else {
-            $('#' + param.funnelItemID).unbind("click").bind("click", currentCollection.voteClick);
-        // }
+    var item;
+    
+    for (var i in currentCollection.collection) {
+        var candidate = currentCollection.collection[i];
+        if (candidate.itemID == param.itemID) {
+            item = candidate;
+            break;
+        }
     }
-	
-	try {
-	    $('ul#playlist').listview('refresh');
-    } catch (err) {
 
+    if (item) {
+        var trItem = '';
+    	trItem += '<li class="playlist-item" id="' + param.funnelItemID + '"><a href="#">';
+        trItem += '<img src="'+item.cover+'"/>';
+        trItem += '<h3>'+item.title+'</h3>';
+        trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
+        trItem += '<span class="ui-li-count">' + param.votes + '</span>'
+    	trItem += '</a></li>';
+
+        $('ul#playlist').append(trItem);
+
+        if (param.userID != userProfile.userID) {
+                //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+                // $('#' + param.funnelItemID).swipeDelete({
+                //     btnLabel: 'Vote',
+                //     btnTheme: 'a',
+                //     click: function(e) {
+                //         e.preventDefault();
+                //         currentCollection.voteClick(e);
+                //     }
+                // });
+                //         } else {
+                $('#' + param.funnelItemID).unbind("click").bind("click", currentCollection.voteClick);
+            // }
+        }
+
+    	try {
+    	    $('ul#playlist').listview('refresh');
+        } catch (err) {
+
+        }
     }
 }
 
@@ -409,13 +438,14 @@ function enterTheParty(username, mailAddress) {
 }
 
 var currentCollection = {
-	voteClick:function(event){
+    collection: new Array(),
+	voteClick: function(event){
 	    var funnelItemID = $(this).attr('id');
 		console.log("funnel id = "+$(this).attr('id'));
 		console.log("vote+1");
 		partyplayer.voteFunnelItem(funnelItemID);
 	},	
-	preferItemsClick:function(event){
+	preferItemsClick: function(event){
 		var itemID = $(this).attr('id');
 		partyplayer.addFunnelItem(itemID);
 	}

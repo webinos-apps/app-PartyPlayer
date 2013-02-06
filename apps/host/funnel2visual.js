@@ -26,7 +26,7 @@ var funnel2visual = (function(){
 
   var allItems = {}; //object to push all funnelVars
   funnel.onInit(function(circles){
-    funnelViz.setupCircles(500, circles);
+    funnelViz.setupCircles(500, funnel.getCircles());
   }); 
 
   funnel.onAddItem(function(key){
@@ -47,7 +47,7 @@ var funnel2visual = (function(){
     funnelViz.destroySingle(allItems['key_' + key].getSelector());
     delete allItems['key_' + key];
     if(sortedItems[0]){
-      if(sortedItems[0][1] >= circles){
+      if(sortedItems[0][1] >= funnel.getCircles()){
 
           funnelViz.setCenter(allItems['key_' + sortedItems[0][0]].getSelector());
       }
@@ -55,7 +55,7 @@ var funnel2visual = (function(){
   });
 
   funnel.onVoteItem(function(funnelItem, key){
-        circles = funnel.getCircles();
+        var circles = funnel.getCircles();
           //make the visual part update Item to next circle
         if(funnelItem.votes < circles){
             allItems['key_' + key].setCircle(circles + 1 - funnelItem.votes);

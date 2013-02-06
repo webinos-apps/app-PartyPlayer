@@ -86,15 +86,15 @@ var funnel = (function () {
 		 * 
 		**/
 		addItem : function (id, userID) {			
-	    var funnelItem = new partyplayer.FunnelItem(id, 1, userID); //1 = 1 vote
-	    var key = funnelList.addItem(funnelItem);
-	    funnelItem.funnelItemID = key;
+    	    var funnelItem = new partyplayer.FunnelItem(id, 1, userID); //1 = 1 vote
+    	    var key = funnelList.addItem(funnelItem);
+    	    funnelItem.funnelItemID = key;
 	    
 
-	    sortedItems.push([key, funnelItem.votes]);
+    	    sortedItems.push([key, funnelItem.votes]);
 
-	    onAddItemCallback(key);
-	    return key;
+    	    onAddItemCallback(key);
+    	    return key;
 		},
 
 		/**
@@ -213,8 +213,8 @@ var funnel = (function () {
 		 *  @param key string The funnelItemID
 		**/
 		animateToPlayer : function (key) {
-				onAnimateCallback(key);
-				funnel.removeItem(key, partyplayer.funnel.removeFunnelItem);
+			onAnimateCallback(key);
+			funnel.removeItem(key, partyplayer.funnel.removeFunnelItem);
 		},
 
 		onAnimate : function(callback){
@@ -255,6 +255,11 @@ var funnel = (function () {
 		**/
 		nextItem : function () {
 			return nextItem;
+		},
+		bump: function () {
+		    if (!player.isPlaying()) {
+                player.start();
+		    }
 		}
 	}	
 })();
