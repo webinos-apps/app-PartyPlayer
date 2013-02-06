@@ -28,7 +28,8 @@
  *	player.method(parameters);
 **/
 var player = (function(){
-    var playerSelector, sortedItems;
+    var playerSelector, sortedItems, playing = false;
+    var url;
     
 	return{
 	    
@@ -37,12 +38,19 @@ var player = (function(){
          *
         **/
 		getSong : function(){
+		    // if a song is being played let it play
+		    if (playing) return;
+		    
 		    sortedItems = funnel.getFunnel();
-        if(sortedItems.length == 0){
-          return false;
-        }
+
+            if(sortedItems.length == 0){
+                playing = false;
+                return false;
+            }
+
 		    var key = sortedItems[0][0];
 		    if(!key){
+                playing = false;
 		        return false;
 		    }
 		    
@@ -51,11 +59,14 @@ var player = (function(){
 		    
             funnel.animateToPlayer(key);
 		    
-		    console.log(item.item.url);
-
-            var url = window.URL.createObjectURL(item.item.blob);
+		    if (url) {
+		        window.URL.revokeObjectURL(url);
+		    }
+		    
+            url = window.URL.createObjectURL(item.item.blob);
             
 		    playerViz.updatePlayer(url, playerSelector);
+		    playing = true;
 		},
 		/**
 		 *  Let the player directly play the given URL
@@ -75,10 +86,18 @@ var player = (function(){
 		**/
 		init : function(){
 		    playerSelector = playerViz.buildPlayer();
+		    playerViz.setupButton();
 		},
 		start : function(){
 		    player.getSong();
 		},
+		isPlaying: function() {
+		    return playing;
+		},
+		skipSong : function() {
+		    playing = false;
+		    player.getSong();
+		}
 	}
 })();
 

@@ -55,7 +55,7 @@ var visualPlayer = function(name, selector){
   that.setupButton = function(){
       if(!disabledButtons){
         $(selector).append('<button id="setupButton">Play next track</button>');
-        $('#setupButton').bind('click', player.getSong);
+        $('#setupButton').bind('click', player.skipSong);
       }
     };
   /**

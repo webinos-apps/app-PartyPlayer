@@ -20,7 +20,6 @@
 
 var pc = null;
 var users = {};
-var firstTrack=true;
 var uID; 
 
 partyplayer.main = {};
@@ -28,6 +27,33 @@ partyplayer.funnel = {};
 partyplayer.files = { services: {}};
 
 partyplayer.main.onjoin = function(params, ref, from) {
+    uID = pc.addUser(params); //registration on application level
+    users[from]=uID; //registration on connection level.
+    partyplayer.sendMessageTo(from, {ns:"main", cmd:"welcome", params:{userID:uID}});
+    pUsers = pc.getUsers();
+    
+    for (var u in pUsers){
+        if(uID != u){
+            partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}});      
+        }
+    }    
+    
+    partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pc.getUser(uID)}});
+    updateUsers();
+    
+    //send available Items to this user
+    var pItems = pc.getItems();
+    for (var i=0; i<pItems.length;i++){
+        partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
+    }
+
+    var fItems = funnel.getFunnelList().getItems();
+    for (var item in fItems){
+        partyplayer.sendMessageTo(from, {ns:"funnel", cmd:"updateFunnelItem", params:fItems[item]})
+    }
+
+    // Try to bind the file service of the user that is connecting. The file service is needed to be able
+    // to transfer the files.
     webinos.discovery.findServices(new ServiceType("http://webinos.org/api/file"), {
         /**
          * When the service is found
@@ -38,30 +64,7 @@ partyplayer.main.onjoin = function(params, ref, from) {
             if (params.serviceAddress === service.serviceAddress) {
                 service.bindService({
                     onBind: function () {
-                        partyplayer.files.services[from] = service;
-                        
-                        uID = pc.addUser(params); //registration on application level
-                        users[from]=uID; //registration on connection level.
-                        partyplayer.sendMessageTo(from, {ns:"main", cmd:"welcome", params:{userID:uID}});
-                        pUsers = pc.getUsers();
-                        for (var u in pUsers){
-                            if(uID != u){
-                                partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateUser", params:{userID:u,user:pUsers[u]}});      
-                            }
-                        }    
-                        partyplayer.sendMessage({ns:"main", cmd:"updateUser", params:{userID:uID,user:pc.getUser(uID)}});
-                        updateUsers();
-                        //send available Items to this user
-                        var pItems = pc.getItems();
-                        for (var i=0; i<pItems.length;i++){
-                            partyplayer.sendMessageTo(from, {ns:"main", cmd:"updateCollectionItem", params:pItems[i]})
-                        }
-
-                        var fItems = funnel.getFunnelList().getItems();
-                        for (var item in fItems){
-                            partyplayer.sendMessageTo(from, {ns:"funnel", cmd:"updateFunnelItem", params:fItems[item]})
-                        }
-                        
+                        partyplayer.files.services[uID] = service;
                     }
                 });
             }
@@ -72,68 +75,74 @@ partyplayer.main.onjoin = function(params, ref, from) {
          * @private
          */
         onError: function (error) {
-            alert("Error finding service: " + error.message + " (#" + error.code + ")");
+            //alert("Error finding service: " + error.message + " (#" + error.code + ")");
         }
     });
 };
 
 partyplayer.main.onleave= function (params, ref, from) {
     //log('leave invoked!');
+    var userID;
+    
     if (typeof params === 'undefined'){ //registered on protocol level
         if (typeof users[from] !== 'undefined'){
             userID = users[from];
-            pc.removeUser(userID);
-            pc.removeUserItems(userID);
-            partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:userID}}); 
         }
-    }
-    else if (typeof params !== 'undefined' && params.userID !== undefined ){ //registered on application level
+    } else if (typeof params !== 'undefined' && params.userID !== undefined ){ //registered on application level
         userID = params.userID;
+    } 
+
+    if (userID) {
         pc.removeUser(userID);
         pc.removeUserItems(userID);
-        partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:uID}}); 
-    } 
+        partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:userID}}); 
+
+        // remove the reference to the file service for the user that is leaving
+        delete partyplayer.files.services[userID];
+    }
+    
     delete users.from;
     updateUsers();
     updateItems();
+    
 };
 
 partyplayer.main.onaddItem = function (params, ref, from) {
     log('adding item');
-    
-    var service = partyplayer.files.services[from];
-    
-    if (service) {
-		service.requestFileSystem(1, 1024, function (fileSystem) {
-		    fileSystem.root.getFile('/partyplayer/collection/' + params.item.filename, null, function(entry) {
-    		    entry.file(function (blob) {
-                    itemID = pc.addItem(params.userID,params.item);
-                    
-                    params.item.blob = blob;
-    		        
-                    if(itemID!==false){
-                        partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{userID:params.userID,itemID:itemID,item:params.item}}); 
-                        updateItems();
-                    }
-                });
-		    }, function (error) {
-    			alert("Error getting file (#" + error.code + ")");
-		    });
-		}, function (error) {
-			alert("Error requesting filesystem (#" + error.code + ")");
-		});
+
+    // only add an item to the party collection when a user is sharing the file service.
+    // otherwise it is impossible to get the item when it should be played.
+    if (partyplayer.files.services[params.userID]) {
+        itemID = pc.addItem(params.userID, params.item);
+
+        if(itemID!==false){
+            partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{ userID: params.userID,itemID: itemID,item: params.item }}); 
+            updateItems();
+        }
     }
 };
 
-
-partyplayer.funnel.onaddItem = function( params,ref, from) {
+partyplayer.funnel.onaddItem = function(params, ref, from) {
     log("got a new item for the funnel");   
-    funnelItemID = funnel.addItem(params.itemID,params.userID);
+    funnelItemID = funnel.addItem(params.itemID, params.userID);
     partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,votes:1}});
-    if(firstTrack == true){
-        firstTrack = false;
-        player.start();
-        playerViz.setupButton();
+    
+    var item = pc.getItem(params.itemID);
+    var service = partyplayer.files.services[item.userID];
+    
+    if (service) {
+		service.requestFileSystem(1, 1024, function (fileSystem) {
+		    fileSystem.root.getFile('/partyplayer/collection/' + item.item.filename, null, function(entry) {
+    		    entry.file(function (blob) {
+                    item.item.blob = blob;
+                    funnel.bump();
+                });
+		    }, function (error) {
+    			//alert("Error getting file (#" + error.code + ")");
+		    });
+		}, function (error) {
+			//alert("Error requesting filesystem (#" + error.code + ")");
+		});
     }
 }
 
