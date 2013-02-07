@@ -18,6 +18,10 @@
  * Author Daryll Rinzema
  */
 
+#tv-api-table{
+    display: none;
+} 
+
 #funnel{
 	position: relative;
 	margin-left: auto;

@@ -21,10 +21,13 @@
 var pc = null;
 var users = {};
 var uID; 
+var streamURLs={};
 
 partyplayer.main = {};
 partyplayer.funnel = {};
 partyplayer.files = { services: {}};
+partyplayer.player = {};
+partyplayer.player.streaming="False";
 
 partyplayer.main.onjoin = function(params, ref, from) {
     uID = pc.addUser(params); //registration on application level
@@ -156,6 +159,36 @@ partyplayer.funnel.onvote = function (params, ref, from) {
 partyplayer.funnel.removeFunnelItem = function (funnelItemID) {
     partyplayer.sendMessage({ns:"funnel", cmd:"removeFunnelItem", params:{funnelItemID:funnelItemID}});
 };
+
+partyplayer.player.updateItem = function () {
+    log("updating item");
+    partyplayer.sendMessage({ns:"player", cmd:"itemUpdate", params:{nowPlaying:{title:"test"}, nextItem:{title:"test2"}}}); 
+}
+
+
+partyplayer.player.startScreencast = function (params) {
+    log("starting screencast");
+    $('#scStatus').attr('fill', 'Green');
+    partyplayer.player.streaming="True";
+    
+    for (channel in params){
+		if (params[channel].name == "audio/mp3"){
+			streamURLs["mp3"]=params[channel].stream;
+		}
+		if (params[channel].name == "audio/ogg"){
+			streamURLs["oga"]=params[channel].stream;
+		}
+	}
+    partyplayer.sendMessage({ns:"player", cmd:"streamUpdate", params:{enabled:"True", streams:streamURLs}}); 
+}
+
+partyplayer.player.stopScreencast = function () {
+    //log("starting screencast");
+    $('#scStatus').attr('fill', 'Red');
+    partyplayer.player.streaming="False";
+    partyplayer.sendMessage({ns:"player", cmd:"streamUpdate", params:{enabled:"False"}}); 
+}
+
 
 function updateUsers(){
     players = pc.getUsers();
