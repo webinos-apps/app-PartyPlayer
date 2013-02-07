@@ -196,6 +196,7 @@ partyplayer.voteFunnelItem = function(funnelItemID){
 
 partyplayer.main = {};
 partyplayer.funnel = {};
+partyplayer.player = {};
 partyplayer.main.onwelcome = function(param, ref) {
     userProfile.userID = param.userID;
     log('onwelcome invoked! userID = '+ userProfile.userID); 
@@ -397,6 +398,27 @@ partyplayer.funnel.onremoveFunnelItem = function (param, ref) {
     }
     
     $('.funnel[funnelItemID=' +param.funnelItemID+']').remove();
+}
+
+partyplayer.player.onstreamUpdate = function (param, ref) {
+    log ('onstreamUpdate Invoked on player')
+    if (param.enabled == "True"){
+        $('#streamStatus').text("Online");
+  
+        $("#jquery_jplayer_1").jPlayer({
+            ready: function () {
+            },
+        supplied: "mp3, oga"
+        });
+        
+        $('#jquery_jplayer_1').jPlayer('setMedia', 
+          param.streams  
+       ); 
+    }
+    else {
+        $('#streamStatus').text("Offline");
+        
+    }
 }
 
 function getGravatar(email, size) {
