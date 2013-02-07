@@ -124,6 +124,7 @@ $('#home').live('pageinit', function(event) {
 
 $('#playlist').live('pageinit', function(event) {
     $('ul#playlist li.playlist-item').tsort('span:eq(0)', {order:'desc'});
+    $('ul#playlist li.playlist-item').unbind("click").bind("click", currentCollection.voteClick);
     $('ul#playlist').listview('refresh');
 });
 
@@ -386,6 +387,7 @@ partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     
     // sort
     $('ul#playlist li.playlist-item').tsort('span:eq(0)', {order:'desc'});
+    $('ul#playlist li.playlist-item').unbind("click").bind("click", currentCollection.voteClick);
 
 	try {
 	    $('ul#playlist').listview('refresh');
