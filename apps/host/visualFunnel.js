@@ -77,12 +77,7 @@ var visualFunnel = function(name, selector){
         var newState;
         switch(state){
             case 1:
-                var trackCover;
-                if (itemInfo.cover) {
-                    trackCover = '<img src="'+itemInfo.cover+'" class="cover"/>';
-                } else {
-                    trackCover = '<img src="../library/album-art-unknown.png"/>';;
-                }
+                var trackCover = '<img src="'+itemInfo.cover+'" class="cover"/>';
                 $(selector).html(trackCover);
                 $(selector + ' .cover').css({
                 'width': inDist * 0.8,
@@ -224,11 +219,7 @@ var visualFunnel = function(name, selector){
 		 //.userID).alias;
 		//log(user.alias); 
 		
-		if (item.item.cover) {
-    		trackCover = '<img src="'+item.item.cover+'" class="cover"/>';
-		} else {
-		    trackCover = '<img src="../library/album-art-unknown.png"/>';
-		}
+		trackCover = '<img src="'+item.item.cover+'" class="cover"/>';
 		$('<div class="funnelObject" _funnelItemID=' + key + '>' + trackCover + '</div>').appendTo('#funnel');
 		
 		//make object switch between states (intervals)?
