@@ -286,13 +286,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
     $.each(currentCollection.collection, function(i, item) {
         var trItem = '';
     	trItem += '<li class="collection-item" id="' + item.itemID + '"><a href="#">';
-	
-    	if (item.cover) {
-            trItem += '<img src="'+item.cover+'"/>';
-    	} else {
-            trItem += '<img src="../library/album-art-unknown.png"/>';
-    	}
-	
+        trItem += '<img src="'+item.cover+'"/>';
         trItem += '<h3>'+item.title+'</h3>';
         trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
         if (item.profileImage) trItem += '<img class="ui-li-icon" src="'+item.profileImage+'"/>';
@@ -529,12 +523,7 @@ var localItems = {
 		$.each(localItems.items, function(i, item) {
 			var trItem = '';
 			trItem += '<li class="shareableItem" item-id="' + i + '"><a href="#" class="shareableitemlink">';
-			
-			if (item.cover) {
-    		    trItem += '<img src="'+item.cover+'"/>';
-			} else {
-    		    trItem += '<img src="../library/album-art-unknown.png"/>';
-			}
+		    trItem += '<img src="'+item.cover+'"/>';
 			
 			if (item.title) {
     		    trItem += '<h3>'+item.title+'</h3>';

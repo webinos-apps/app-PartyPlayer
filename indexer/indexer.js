@@ -23,12 +23,22 @@ var path = require('path');
 var Canvas = require('canvas');
 var argv = require('optimist').argv;
 
+var DEFAULT_COVER = '../apps/library/album-art-unknown.png';
+
 var argv = require('optimist')
-    .usage('Usage: indexer.js --lib=<folder containing the media items>')
+    .usage('Usage: indexer.js --lib=<folder containing the media items> [--defaultCover=' + DEFAULT_COVER + ']')
     .demand(['lib'])
     .argv;
     
 var filenames = fs.readdirSync(argv.lib);
+
+var defaultCover;
+
+if (argv.defaultCover) {
+    defaultCover = fs.readFileSync(artv.defaultCover)
+} else {
+    defaultCover = fs.readFileSync(DEFAULT_COVER);
+}
 
 var items = new Array;
 
@@ -37,22 +47,21 @@ for (var i in filenames) {
         var file = fs.readFileSync(path.join(argv.lib, filenames[i]));
     
         var id3 = new ID3(file);
-        var cover = { 
-            isPresent: false
-        };
+        var cover;
         
         id3.parse();
 
         try {
             if (id3.get('picture')) {
                 // resize it
-                var canvas = new Canvas(90, 90);
+                var canvas = new Canvas(150, 150);
                 var ctx = canvas.getContext('2d');
                 var img = new Canvas.Image;
                 img.src = id3.get('picture').data;
-                ctx.drawImage(img, 0, 0, 90, 90);
-                cover.buffer = canvas.toBuffer();
-                cover.isPresent = true;
+                ctx.drawImage(img, 0, 0, 150, 150);
+                cover = canvas.toBuffer();
+            } else {
+                cover = defaultCover;
             }
         } catch (err) {
             console.log('Error getting album art from: ' + filenames[i] + ' - ignoring the album art for this file.')
@@ -63,7 +72,7 @@ for (var i in filenames) {
             artist: id3.get('artist'),
             title: id3.get('title'),
             album: id3.get('album'),
-            cover: cover.isPresent ? 'data:image/png;base64,' + cover.buffer.toString('base64') : undefined
+            cover: 'data:image/png;base64,' + cover.toString('base64')
         }
 
         items.push(item);

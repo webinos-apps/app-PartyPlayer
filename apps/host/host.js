@@ -237,17 +237,18 @@ function logRandom(){
     */
 
 $(document).ready(function(){
-    $('.flexslider').flexslider({
-        animation: "slide",
-        controlNav: false,
-        animationLoop: true,
-        slideshow: true,
-        slideshowSpeed: 5000,
-        animationSpeed: 600,
-        randomize: true,
-        directionNav: false        
-    });
-
+    if ($('.flexslider').flexslider) {
+        $('.flexslider').flexslider({
+            animation: "slide",
+            controlNav: false,
+            animationLoop: true,
+            slideshow: true,
+            slideshowSpeed: 5000,
+            animationSpeed: 600,
+            randomize: true,
+            directionNav: false        
+        });
+    }
     
     webinos.session.addListener('registeredBrowser', function () {
         partyplayer.init('host', function(connected) {

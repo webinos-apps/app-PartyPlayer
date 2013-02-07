@@ -86,7 +86,7 @@ var player = (function(){
 		**/
 		init : function(){
 		    playerSelector = playerViz.buildPlayer();
-		    playerViz.setupButton();
+		    //playerViz.setupButton();
 		},
 		start : function(){
 		    player.getSong();

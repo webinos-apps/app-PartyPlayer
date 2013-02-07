@@ -47,7 +47,7 @@ To be able to share media items you will have to manually put *mp3* files into t
 2. Create the folder that is going to hold your media collection: *mkdir -p ~/.webinos/${HOSTNAME}_Pzp/userData/file/default/partyplayer/collection*
 3. Copy the mp3 that you want to share into the newly created folder.
 4. Install the indexer pre-requests by executing *npm install* from the indexer folder. Note: this will need [node-canvas](https://github.com/learnboost/node-canvas).
-5. Run the indexer by executing: *./indexer.js --lib=~/.webinos/${HOSTNAME}_Pzp/userData/file/default/partyplayer/collection*
+5. Run the indexer by executing: *./indexer.js --lib=$HOME/.webinos/${HOSTNAME}_Pzp/userData/file/default/partyplayer/collection*
 
 When you add more media items to your collection you should always re-run the indexer to have them picked up by the partyplayer.
 
