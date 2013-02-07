@@ -44,6 +44,8 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
        	<script type="text/javascript" src="icons/icons.js"></script>
         <script type="text/javascript" src="guest.js"></script>
 				<script type="text/javascript" src="../lib/jquery.flexslider-min.js"></script>
+		<link type="text/css" href="./skin/jplayer.blue.monday.css" rel="stylesheet" />
+        <script type="text/javascript" src="jquery.jplayer.min.js"></script>
     </head>
     <body>
 		<div data-role="page" id="home">
@@ -95,6 +97,45 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</div>
 				
 				<div class="content-primary">
+				    <div data-role="collapsible-set" data-theme="a" data-content-theme="a">
+					    <div data-role="collapsible" data-collapsed="true">
+						    <h2>Stream Player</h2>
+									    <div class="content-primary">
+				        Stream is: <span id="streamStatus">Offline</span>
+				        
+				        <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+                          <div id="jp_container_1" class="jp-audio">
+                            <div class="jp-type-single">
+                              <div class="jp-gui jp-interface">
+                                <ul class="jp-controls">
+                                  <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+                                  <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+                                  <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+                                
+                                </ul>
+                                <div class="jp-progress">
+                                  <div class="jp-seek-bar">
+                                    <div class="jp-play-bar"></div>
+                                  </div>
+                                </div>
+                             
+                              </div>
+                              <div class="jp-title">
+                                <ul>
+                                  <li>Party Player Stream</li>
+                                </ul>
+                              </div>
+                              <div class="jp-no-solution">
+                                <span>Update Required</span>
+                                To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+                              </div>
+                            </div>
+                          </div>
+				        <!--<audio id = "audioplayer" height="50" controls="controls">
+				            <source id="oggSource" type="audio/ogg">
+                            <source id="mp3Source" type="audio/mpeg">
+                        </audio>!-->
+				    </div>
 				</div>
 			</div>
 
