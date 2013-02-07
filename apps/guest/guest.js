@@ -123,6 +123,8 @@ $('#home').live('pageinit', function(event) {
 });
 
 $('#playlist').live('pageinit', function(event) {
+    $('ul#playlist li.playlist-item').tsort('span:eq(0)', {order:'desc'});
+    $('ul#playlist li.playlist-item').unbind("click").bind("click", currentCollection.voteClick);
     $('ul#playlist').listview('refresh');
 });
 
@@ -381,6 +383,16 @@ partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     } else {
         //voted failed
         log('vote for funnelItem: ' + param.funnelItemID + ' failed');
+    }
+    
+    // sort
+    $('ul#playlist li.playlist-item').tsort('span:eq(0)', {order:'desc'});
+    $('ul#playlist li.playlist-item').unbind("click").bind("click", currentCollection.voteClick);
+
+	try {
+	    $('ul#playlist').listview('refresh');
+    } catch (err) {
+
     }
 }
 
