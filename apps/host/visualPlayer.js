@@ -11,7 +11,7 @@ var visualPlayer = function(name, selector){
    *  @methodOf visualPlayer
   **/
   that.buildPlayer = function(){
-        $(selector).html('<audio id="playback" autoplay controls onended="player.getSong()">' + 
+        $(selector).html('<audio id="playback" autoplay controls onended="player.getNextSong()">' + 
       '<source src="" type="audio/ogg">' +
       '<source src="" type="audio/mpeg">' +
       'Your browser does not support the audio element.</audio>');

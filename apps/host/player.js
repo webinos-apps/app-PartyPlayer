@@ -44,13 +44,11 @@ var player = (function(){
 		    sortedItems = funnel.getFunnel();
 
             if(sortedItems.length == 0){
-                playing = false;
                 return false;
             }
 
 		    var key = sortedItems[0][0];
 		    if(!key){
-                playing = false;
 		        return false;
 		    }
 		    
@@ -94,9 +92,12 @@ var player = (function(){
 		isPlaying: function() {
 		    return playing;
 		},
-		skipSong : function() {
+		getNextSong : function() {
 		    playing = false;
 		    player.getSong();
+		},
+		skipSong : function() {
+		    player.getNextSong();
 		}
 	}
 })();
