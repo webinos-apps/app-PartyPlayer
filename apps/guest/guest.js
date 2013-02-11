@@ -537,10 +537,20 @@ var localItems = {
                     reader.readAsText(blob);
                 });
             }, function (error) {
-                     alert("Error getting file (#" + error.code + ")");
+                 if (!popupLogin) {
+                     $('#popupLoading').popup('close');
+                 }
+                 
+                 popupLoading = false;
+                 alert("Error reading the index file");
             });
         }, function (error) {
-         alert("Error requesting filesystem (#" + error.code + ")");
+            if (!popupLogin) {
+                $('#popupLoading').popup('close');
+            }
+            
+            popupLoading = false;
+            alert("Error requesting the root file system");
         });
 	},
 	drawItems:function() {
