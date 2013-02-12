@@ -55,6 +55,8 @@ var player = (function(){
 		    var funnelListItem = funnel.getFunnelListItem(key);
 		    var item = pc.getItem(funnelListItem.itemID); 
 		    
+		    if (!item.item.bumped) return false;
+		    
             funnel.animateToPlayer(key);
 		    
 		    if (url) {

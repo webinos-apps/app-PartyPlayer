@@ -159,6 +159,7 @@ partyplayer.funnel.onaddItem = function(params, ref, from) {
     		    fileSystem.root.getFile('/partyplayer/collection/' + item.item.filename, null, function(entry) {
         		    entry.file(function (blob) {
                         item.item.blob = blob;
+                        item.item.bumped = true;
                         funnel.bump();
                     });
     		    }, function (error) {
