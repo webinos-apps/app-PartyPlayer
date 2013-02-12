@@ -85,11 +85,7 @@ Good luck!
 
 ### Acknowledgements
 
-Icons located in apps/guest/icons/icons.js were downloaded from the [Icon Archive](http://www.iconarchive.com/).
-
-PartyPlayer uses the following libararies:
-
-- jPlayer: //www.jplayer.org/
+Check the NOTICE file to see what 3rd party code the PartyPlayer is using.
 
 
 
