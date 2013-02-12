@@ -146,7 +146,6 @@ $(window).unload(function() {
 });
 
 function joinAnotherParty() {
-    
     $( "#join").unbind('click').bind('click', function (event) {
         var partyAddress = $('#partyAddress').val();
 
@@ -155,7 +154,8 @@ function joinAnotherParty() {
             leaveTheParty();
             partyplayer.init('guest', function(connected) {
                 if (connected) {
-                    enterTheParty(localStorage.username, localStorage.mailAddress);
+                    initProfile();
+                    bindFileAPI();
                 }
             }, partyAddress);
         }
