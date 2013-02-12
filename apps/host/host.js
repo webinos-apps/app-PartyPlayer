@@ -183,9 +183,9 @@ partyplayer.funnel.removeFunnelItem = function (funnelItemID) {
     partyplayer.sendMessage({ns:"funnel", cmd:"removeFunnelItem", params:{funnelItemID:funnelItemID}});
 };
 
-partyplayer.player.updateItem = function () {
+partyplayer.player.updateItem = function (itemID, duration) {
     log("updating item");
-    partyplayer.sendMessage({ns:"player", cmd:"itemUpdate", params:{nowPlaying:{title:"test"}, nextItem:{title:"test2"}}}); 
+    partyplayer.sendMessage({ns:"player", cmd:"updateItem", params:{nowPlaying:{itemID:itemID, duration:duration}}}); 
 }
 
 

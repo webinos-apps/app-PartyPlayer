@@ -64,8 +64,10 @@ var player = (function(){
 		    }
 		    
             url = window.URL.createObjectURL(item.item.blob);
-            
+            partyplayer.player.updateItem(funnelListItem.itemID, "00:01:00");
+            $("#albumArtImg").attr("src", item.item.cover);
 		    playerViz.updatePlayer(url, playerSelector);
+
 		    playing = true;
 		},
 		/**
