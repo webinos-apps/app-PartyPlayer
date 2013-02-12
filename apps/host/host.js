@@ -29,6 +29,8 @@ partyplayer.files = { services: {}};
 partyplayer.player = {};
 partyplayer.player.streaming="False";
 
+var bootstrapped = false;
+
 partyplayer.main.onjoin = function(params, ref, from) {
     uID = pc.addUser(params); //registration on application level
     users[from]=uID; //registration on connection level.
@@ -71,6 +73,20 @@ partyplayer.main.onjoin = function(params, ref, from) {
                     }
                 });
             }
+            
+            if (!bootstrapped && service.serviceAddress.substring(0, webinos.session.getPZHId().length) === webinos.session.getPZHId()) {
+                // first PZP of this PZ has connected as guest. Adding all content from this PZP
+                bootstrapped = true;
+                
+                // this guest is the host
+                pc.getUser(uID).isHost = true;
+
+                service.bindService({
+                    onBind: function () {
+                        addHostCollection(service, uID);
+                    }
+                });
+            }
         },
         /**
          * When an error occurs.
@@ -94,8 +110,11 @@ partyplayer.main.onleave= function (params, ref, from) {
     } else if (typeof params !== 'undefined' && params.userID !== undefined ){ //registered on application level
         userID = params.userID;
     } 
-
-    if (userID) {
+    
+    var user = pc.getUser(userID);
+    
+    if (user && !user.isHost) {
+        // the host never leaves
         pc.removeUser(userID);
         pc.removeUserItems(userID);
         partyplayer.sendMessage({ns:"main", cmd:"removeUser", params:{userID:userID}}); 
@@ -127,25 +146,28 @@ partyplayer.main.onaddItem = function (params, ref, from) {
 
 partyplayer.funnel.onaddItem = function(params, ref, from) {
     log("got a new item for the funnel");   
-    funnelItemID = funnel.addItem(params.itemID, params.userID);
-    partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,votes:1}});
     
-    var item = pc.getItem(params.itemID);
-    var service = partyplayer.files.services[item.userID];
-    
-    if (service) {
-		service.requestFileSystem(1, 1024, function (fileSystem) {
-		    fileSystem.root.getFile('/partyplayer/collection/' + item.item.filename, null, function(entry) {
-    		    entry.file(function (blob) {
-                    item.item.blob = blob;
-                    funnel.bump();
-                });
-		    }, function (error) {
-    			//alert("Error getting file (#" + error.code + ")");
-		    });
-		}, function (error) {
-			//alert("Error requesting filesystem (#" + error.code + ")");
-		});
+    if (bootstrapped) { // the party host must enable the party by visiting as guest on one of his devices
+        funnelItemID = funnel.addItem(params.itemID, params.userID);
+        partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,votes:1}});
+
+        var item = pc.getItem(params.itemID);
+        var service = partyplayer.files.services[item.userID];
+
+        if (service) {
+    		service.requestFileSystem(1, 1024, function (fileSystem) {
+    		    fileSystem.root.getFile('/partyplayer/collection/' + item.item.filename, null, function(entry) {
+        		    entry.file(function (blob) {
+                        item.item.blob = blob;
+                        funnel.bump();
+                    });
+    		    }, function (error) {
+        			//alert("Error getting file (#" + error.code + ")");
+    		    });
+    		}, function (error) {
+    			//alert("Error requesting filesystem (#" + error.code + ")");
+    		});
+        }
     }
 }
 
@@ -216,7 +238,33 @@ function updateItems(){
     console.log("COLLECTION="+str);
 }
 
+function addHostCollection(fileService, uID) {
+    fileService.requestFileSystem(1, 1024, function (fileSystem) {
+        fileSystem.root.getFile('/partyplayer/collection/index.json', null, function(entry) {
+             entry.file(function (blob) {
+                var reader = new FileReader();
+                
+                reader.onloadend = function() {
+                    var items = JSON.parse(reader.result);
+                    
+                    for (var i in items) {
+                        items[i].version = 1;
+                        var itemID = pc.addItem(uID, items[i]);
 
+                        if(itemID){
+                            partyplayer.sendMessage({ns:"main", cmd:"updateCollectionItem", params:{ userID: uID, itemID: itemID, item: items[i] }}); 
+                            updateItems();
+                        }                        
+                    }
+                }
+                
+                reader.readAsText(blob);
+            });
+        }, function (error) {
+        });
+    }, function (error) {
+    });
+}
 
 function logRandom(){
     var item = pc.getRandom();

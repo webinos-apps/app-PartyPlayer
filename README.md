@@ -66,6 +66,8 @@ For details on the implementation please refer to the docs.
 
 The Host app is supposed to run large, on a TV screen for example. It plays the media, shows upcoming songs, displays chats and invites people at the party to join in the interactive experience.
 
+The party has to be started by the guest app of the host. For now this is the first guest that arrives and uses the same Personal Zone as the party host uses. All content of this guest is automatically added to the party collection. Once the party host has arrived the party is started and media items can be added to the playlist.
+
 Each guest runs a guest app. Using the app you can share your own music collection with 'Add local items'. Doing so will extend the Collection that is seen by everyone, visually too. Other guests can then proceed to actually 'Add' the content. Note that this scheme requires you to convince others that your shared music should be played!
 
 All music that has been added this way is moved to the funnel. This is where the interaction takes place. Think of simply upvoting your favourites, but also of playing mini games to gain power...
@@ -85,11 +87,7 @@ Good luck!
 
 ### Acknowledgements
 
-Icons located in apps/guest/icons/icons.js were downloaded from the [Icon Archive](http://www.iconarchive.com/).
-
-PartyPlayer uses the following libararies:
-
-- jPlayer: //www.jplayer.org/
+Check the NOTICE file to see what 3rd party code the PartyPlayer is using.
 
 
 
