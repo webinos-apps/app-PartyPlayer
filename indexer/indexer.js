@@ -54,11 +54,12 @@ for (var i in filenames) {
         try {
             if (id3.get('picture')) {
                 // resize it
-                var canvas = new Canvas(150, 150);
+                // note: webinos constraints frame size (and thus image) to 64kbytes
+                var canvas = new Canvas(140, 140);
                 var ctx = canvas.getContext('2d');
                 var img = new Canvas.Image;
                 img.src = id3.get('picture').data;
-                ctx.drawImage(img, 0, 0, 150, 150);
+                ctx.drawImage(img, 0, 0, 140, 140);
                 cover = canvas.toBuffer();
             } else {
                 cover = defaultCover;
