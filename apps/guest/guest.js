@@ -142,13 +142,40 @@ $(document).ready(function() {
 });
 
 $(window).unload(function() {
+    leaveTheParty();
+});
+
+function joinAnotherParty() {
+    
+    $( "#join").unbind('click').bind('click', function (event) {
+        var partyAddress = $('#partyAddress').val();
+
+        if (partyAddress && partyAddress.length > 0) {
+            $( "#popupJoin" ).popup( "close" );
+            leaveTheParty();
+            partyplayer.init('guest', function(connected) {
+                if (connected) {
+                    enterTheParty(localStorage.username, localStorage.mailAddress);
+                }
+            }, partyAddress);
+        }
+    });
+    
+    $( "#cancelJoin").unbind('click').bind('click', function (event) {
+        $( "#popupJoin" ).popup( "close" );
+    });
+    
+    $( "#popupJoin" ).popup("open");
+}
+
+function leaveTheParty() {
     if (userProfile && userProfile.userID) {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave", params:{userID:userProfile.userID}});
     } else {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
     }
     partyplayer.close();
-});
+}
 
 // size it full screen
 $( "#popupPanel" ).on({

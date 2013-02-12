@@ -238,7 +238,7 @@ partyplayer.getHost = function() {
  * @param hostorguest either 'host' or 'guest', relevant for a2a-stub behaveour
  * @param callback gets called when the player is initialized.
  */
-partyplayer.init = function(hostorguest, callback) {
+partyplayer.init = function(hostorguest, callback, partyAddress) {
     var self = this;
     this.isHost = false;
     this.channel = undefined;
@@ -248,6 +248,14 @@ partyplayer.init = function(hostorguest, callback) {
     // when the party player is initialized by the host
     if (hostorguest === 'host') {
         this.isHost = true;
+    }
+    
+    var zoneId;
+    
+    if (partyAddress) {
+        zoneId = {
+            zoneId: partyAddress
+        }
     }
     
     webinos.discovery.findServices(new ServiceType("http://webinos.org/api/app2app"), {
@@ -271,7 +279,7 @@ partyplayer.init = function(hostorguest, callback) {
         onError: function (error) {
             alert("Error finding service: " + error.message + " (#" + error.code + ")");
         }
-    });
+    }, null, zoneId);
     
     /**
      * Connect to app2app channel. When in host mode this function will create a channel and connect to it. When in

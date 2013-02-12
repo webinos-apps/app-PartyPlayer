@@ -62,17 +62,17 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 						<div style="padding:10px 20px;">
 						  <h3>Please enter your info</h3>
 						  <p>This is required only once and we promise not to spam you.</p>
-				          <label for="name" class="ui-hidden-accessible">Name:</label>
-				          <input type="text" name="name" id="name" value="" placeholder="name" data-theme="a" />
+		          <label for="name" class="ui-hidden-accessible">Name:</label>
+		          <input type="text" name="name" id="name" value="" placeholder="name" data-theme="a" />
 
-				          <label for="mail" class="ui-hidden-accessible">E-mail address:</label>
-				          <input type="text" name="mail" id="mail" value="" placeholder="email" data-theme="a" />
+		          <label for="mail" class="ui-hidden-accessible">E-mail address:</label>
+		          <input type="text" name="mail" id="mail" value="" placeholder="email" data-theme="a" />
 
-				    	  <button type="button" id="login" data-theme="a">Proceed...</button>
+			    	  <button type="button" id="login" data-theme="a">Proceed...</button>
 						</div>
 					</form>
 				</div>
-			
+
 				<div data-role="popup" id="popupLoading" data-theme="a" class="ui-content">
 					<p>The party player is loading your music collection...</p>
 				</div>
@@ -244,6 +244,21 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				<h1>Party Player</h1>
 			</div>
 			<div data-role="content">
+				<div data-role="popup" id="popupJoin" data-theme="a" class="ui-corner-all">
+					<form>
+						<div style="padding:10px 20px;">
+						  <h3>Who's party do you want to join?</h3>
+		          <label for="partyAddress" class="ui-hidden-accessible">Address:</label>
+		          <input type="text" name="partyAddress" id="partyAddress" value="" placeholder="partyAddress" data-theme="a" />
+
+			    	  <button type="button" id="join" data-theme="a">Join...</button>
+							<button type="button" id="cancelJoin" data-theme="a">Stay here</button>
+						</div>
+					</form>
+				</div>
+			
+				<a href="javascript:joinAnotherParty();" data-role="button" data-theme="a">Join another party...</a>
+				
 				<ul id="guest-profiles" data-role="listview" data-inset="true" data-theme="a">
 					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Party Crowd</li>
 					
