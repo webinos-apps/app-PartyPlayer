@@ -146,25 +146,28 @@ partyplayer.main.onaddItem = function (params, ref, from) {
 
 partyplayer.funnel.onaddItem = function(params, ref, from) {
     log("got a new item for the funnel");   
-    funnelItemID = funnel.addItem(params.itemID, params.userID);
-    partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,votes:1}});
     
-    var item = pc.getItem(params.itemID);
-    var service = partyplayer.files.services[item.userID];
-    
-    if (service) {
-		service.requestFileSystem(1, 1024, function (fileSystem) {
-		    fileSystem.root.getFile('/partyplayer/collection/' + item.item.filename, null, function(entry) {
-    		    entry.file(function (blob) {
-                    item.item.blob = blob;
-                    funnel.bump();
-                });
-		    }, function (error) {
-    			//alert("Error getting file (#" + error.code + ")");
-		    });
-		}, function (error) {
-			//alert("Error requesting filesystem (#" + error.code + ")");
-		});
+    if (bootstrapped) { // the party host must enable the party by visiting as guest on one of his devices
+        funnelItemID = funnel.addItem(params.itemID, params.userID);
+        partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,votes:1}});
+
+        var item = pc.getItem(params.itemID);
+        var service = partyplayer.files.services[item.userID];
+
+        if (service) {
+    		service.requestFileSystem(1, 1024, function (fileSystem) {
+    		    fileSystem.root.getFile('/partyplayer/collection/' + item.item.filename, null, function(entry) {
+        		    entry.file(function (blob) {
+                        item.item.blob = blob;
+                        funnel.bump();
+                    });
+    		    }, function (error) {
+        			//alert("Error getting file (#" + error.code + ")");
+    		    });
+    		}, function (error) {
+    			//alert("Error requesting filesystem (#" + error.code + ")");
+    		});
+        }
     }
 }
 

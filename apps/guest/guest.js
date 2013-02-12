@@ -275,10 +275,16 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
     currentCollection.collection.push(param.item);
 
     currentCollection.collection.sort(function(a, b) {
-        if ( a.title < b.title )
+        var compA, compB;
+        
+        compA = (a.title ? a.title : a.filename).toLowerCase();
+        compB = (b.title ? b.title : b.filename).toLowerCase();
+        
+        if ( compA < compB )
           return -1;
-        if ( a.title > b.title )
+        if ( compA > compB )
           return 1;
+          
         return 0;        
     });
 
@@ -290,7 +296,13 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
         var trItem = '';
     	trItem += '<li class="collection-item" id="' + item.itemID + '"><a href="#">';
         trItem += '<img src="'+item.cover+'"/>';
-        trItem += '<h3>'+item.title+'</h3>';
+
+        if (item.title) {
+		    trItem += '<h3>'+item.title+'</h3>';
+		} else {
+		    trItem += '<h3>'+item.filename+'</h3>';
+		}
+		
         trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
         if (item.profileImage) trItem += '<img class="ui-li-icon" src="'+item.profileImage+'"/>';
     	trItem += '</a></li>';
@@ -338,7 +350,13 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
         var trItem = '';
     	trItem += '<li class="playlist-item" id="' + param.funnelItemID + '"><a href="#">';
         trItem += '<img src="'+item.cover+'"/>';
-        trItem += '<h3>'+item.title+'</h3>';
+        
+        if (item.title) {
+		    trItem += '<h3>'+item.title+'</h3>';
+		} else {
+		    trItem += '<h3>'+item.filename+'</h3>';
+		}
+
         trItem += '<p>' + item.artist + ' / ' + item.album + '</p>';
         trItem += '<span class="ui-li-count">' + param.votes + '</span>'
     	trItem += '</a></li>';
@@ -557,10 +575,16 @@ var localItems = {
 		var itemList = '';
 
         this.items.sort(function(a, b) {
-            if ( a.title < b.title )
+            var compA, compB;
+            
+            compA = (a.title ? a.title : a.filename).toLowerCase();
+            compB = (b.title ? b.title : b.filename).toLowerCase();
+            
+            if ( compA < compB )
               return -1;
-            if ( a.title > b.title )
+            if ( compA > compB )
               return 1;
+              
             return 0;        
         });
 	
