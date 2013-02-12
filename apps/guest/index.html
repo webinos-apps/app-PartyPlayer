@@ -22,32 +22,34 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
     <head>
         <meta charset="utf-8">
         <title>PartyPlayer Guest</title>
-				<meta name="viewport" content="width=device-width, initial-scale=1"> 
-				<link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
-				<link rel="stylesheet" href="../lib/jquery.mobile.structure.min.css " type="text/css"/>
-				<link rel="stylesheet" href="../lib/jquery.swipeButton.css" type="text/css"/>
-				<link rel="stylesheet" herf="../lib/flexslider.css" type="text/css"/>
+		    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+		    <link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
+		    <link rel="stylesheet" href="../lib/jquery.mobile.structure.min.css " type="text/css"/>
+		    <link rel="stylesheet" href="../lib/jquery.swipeButton.css" type="text/css"/>
+		    <link rel="stylesheet" herf="../lib/flexslider.css" type="text/css"/>
 
-				<style>	
-					.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
-					.party-nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
-				</style>
+			<style>	
+				.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+				.party-nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
+			</style>
 
-				<script type="text/javascript" src="/webinos.js"></script>
-        <script type="text/javascript" src="../lib/jquery.min.js"></script>
-        <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
-				<script type="text/javascript" src="../lib/jquery.swipeButton.min.js"></script>
-				<script type="text/javascript" src="jquery.tinysort.min.js"></script>
-				<script type="text/javascript" src="jquery.tinysort.charorder.min.js"></script>
-        <!--script type=text/javascript src=../lib/id3v2.js></script>-->
-        <script type="text/javascript" src="../common/log.js"></script>
-        <script type="text/javascript" src="../common/pplayer.js"></script>
-       	<script type="text/javascript" src="../host/PartyCollection.js"></script>
-       	<script type="text/javascript" src="icons/icons.js"></script>
-        <script type="text/javascript" src="guest.js"></script>
-				<script type="text/javascript" src="../lib/jquery.flexslider-min.js"></script>
-				<link type="text/css" href="./skin/jplayer.blue.monday.css" rel="stylesheet" />
-        <script type="text/javascript" src="jquery.jplayer.min.js"></script>
+			<script type="text/javascript" src="/webinos.js"></script>
+            <script type="text/javascript" src="../lib/jquery.min.js"></script>
+            <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
+			<script type="text/javascript" src="../lib/jquery.swipeButton.min.js"></script>
+			<script type="text/javascript" src="jquery.tinysort.min.js"></script>
+			<script type="text/javascript" src="jquery.tinysort.charorder.min.js"></script>
+            <!--script type=text/javascript src=../lib/id3v2.js></script>-->
+            <script type="text/javascript" src="../common/log.js"></script>
+            <script type="text/javascript" src="../common/pplayer.js"></script>
+           	<script type="text/javascript" src="../host/PartyCollection.js"></script>
+           	<script type="text/javascript" src="icons/icons.js"></script>
+            <script type="text/javascript" src="guest.js"></script>
+			<script type="text/javascript" src="../lib/jquery.flexslider-min.js"></script>
+			<link type="text/css" href="./skin/jplayer.blue.monday.css" rel="stylesheet" />
+            <script type="text/javascript" src="jquery.jplayer.min.js"></script>
+            <script type="text/javascript" src="../lib/reflection.js"></script>
+            
     </head>
     <body>
 		<div data-role="page" id="home">
@@ -120,6 +122,14 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
                     </div>
 				    </div>
 				</div>
+				<div class="content-primary">
+				    <div id="albumart">
+	                    <img id="albumArtImg" src="images/party.gif" width="100px" class="reflect"/><br>
+	                     Now Playing: <span id="nowPlaying">nothing...</span><br>
+	                     Duration: <span id="nowDuration"> ... </span>
+	                </div>
+				</div>
+				
 			</div>
 
 			<style>

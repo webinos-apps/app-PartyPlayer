@@ -451,6 +451,26 @@ partyplayer.player.onstreamUpdate = function (param, ref) {
     }
 }
 
+partyplayer.player.onupdateItem = function (param, ref){
+    var item;
+    log("player.onUpdateItem - "+param.nowPlaying.itemID)
+    for (var i in currentCollection.collection) {
+        var candidate = currentCollection.collection[i];
+        if (candidate.itemID == param.nowPlaying.itemID) {
+            item = candidate;
+            break;
+        }
+    }
+    if(item != undefined){
+        log("found an item:"+item.artist +" - " + item.title);
+        $("#albumArtImg").attr("src", item.cover);
+        $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+        $('#nowPlaying').text(item.artist +" - " + item.title);
+        //$('#nowDuration').text(param.nowPlaying.duration);
+    }
+    
+}
+
 function getGravatar(email, size) {
     // MD5 (Message-Digest Algorithm) by WebToolkit
     // 
