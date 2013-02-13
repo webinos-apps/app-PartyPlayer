@@ -265,6 +265,11 @@ partyplayer.init = function(hostorguest, callback, partyAddress) {
          * @private
          */
         onFound: function (service) {
+            
+            if (partyAddress && service.serviceAddress.indexOf(partyAddress) === -1) {
+                return;
+            } 
+
             service.bindService({
                 onBind: function () {
                     connect(service);
