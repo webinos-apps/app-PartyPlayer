@@ -56,6 +56,11 @@ partyplayer.main.onjoin = function(params, ref, from) {
     for (var item in fItems){
         partyplayer.sendMessageTo(from, {ns:"funnel", cmd:"updateFunnelItem", params:fItems[item]})
     }
+    
+    // send the currently playing item to the user
+    if (nowPlaying) {
+        partyplayer.sendMessageTo(from, {ns:"player", cmd:"updateItem", params:{nowPlaying:nowPlaying}}); 
+    }
 
     // Try to bind the file service of the user that is connecting. The file service is needed to be able
     // to transfer the files.
@@ -183,9 +188,17 @@ partyplayer.funnel.removeFunnelItem = function (funnelItemID) {
     partyplayer.sendMessage({ns:"funnel", cmd:"removeFunnelItem", params:{funnelItemID:funnelItemID}});
 };
 
+var nowPlaying;
+
 partyplayer.player.updateItem = function (itemID, duration) {
     log("updating item");
-    partyplayer.sendMessage({ns:"player", cmd:"updateItem", params:{nowPlaying:{itemID:itemID, duration:duration}}}); 
+    
+    nowPlaying = {
+        itemID: itemID,
+        duration: duration
+    };
+    
+    partyplayer.sendMessage({ns:"player", cmd:"updateItem", params:{nowPlaying:nowPlaying}}); 
 }
 
 

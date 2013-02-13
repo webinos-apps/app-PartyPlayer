@@ -465,7 +465,13 @@ partyplayer.player.onupdateItem = function (param, ref){
         log("found an item:"+item.artist +" - " + item.title);
         $("#albumArtImg").attr("src", item.cover);
         $("#albumArtImg").reflect({height:0.3,opacity:0.4});
-        $('#nowPlaying').text(item.artist +" - " + item.title);
+        
+        var text = "";
+        text += item.artist ? item.artist + ' - ' : '';
+        text += item.title ? item.title : item.filename;
+        
+        $('#nowPlaying').text(text);
+        $('#playingTitle').text('Now playing');
         //$('#nowDuration').text(param.nowPlaying.duration);
     }
     
