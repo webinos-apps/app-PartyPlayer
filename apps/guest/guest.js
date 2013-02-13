@@ -454,27 +454,40 @@ partyplayer.player.onstreamUpdate = function (param, ref) {
 partyplayer.player.onupdateItem = function (param, ref){
     var item;
     log("player.onUpdateItem - "+param.nowPlaying.itemID)
-    for (var i in currentCollection.collection) {
-        var candidate = currentCollection.collection[i];
-        if (candidate.itemID == param.nowPlaying.itemID) {
-            item = candidate;
-            break;
-        }
-    }
-    if(item != undefined){
-        log("found an item:"+item.artist +" - " + item.title);
-        $("#albumArtImg").attr("src", item.cover);
-        $("#albumArtImg").reflect({height:0.3,opacity:0.4});
-        
-        var text = "";
-        text += item.artist ? item.artist + ' - ' : '';
-        text += item.title ? item.title : item.filename;
-        
-        $('#nowPlaying').text(text);
-        $('#playingTitle').text('Now playing');
-        //$('#nowDuration').text(param.nowPlaying.duration);
-    }
     
+    if (param.nowPlaying.itemID) {
+        for (var i in currentCollection.collection) {
+            var candidate = currentCollection.collection[i];
+            if (candidate.itemID == param.nowPlaying.itemID) {
+                item = candidate;
+                break;
+            }
+        }
+
+        if (item === undefined) {
+            $("#albumArtImg").attr("src", "images/party.gif");
+            $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+            $('#nowPlaying').text("Unknown");
+            $('#playingTitle').text('Now playing');
+        } else {
+            log("found an item:"+item.artist +" - " + item.title);
+            $("#albumArtImg").attr("src", item.cover);
+            $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+
+            var text = "";
+            text += item.artist ? item.artist + ' - ' : '';
+            text += item.title ? item.title : item.filename;
+
+            $('#nowPlaying').text(text);
+            $('#playingTitle').text('Now playing');
+            //$('#nowDuration').text(param.nowPlaying.duration);
+        }
+    } else {
+        $("#albumArtImg").attr("src", "images/party.gif");
+        $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+        $('#nowPlaying').text(" ");
+        $('#playingTitle').text('Nothing playing');
+    }
 }
 
 function getGravatar(email, size) {
