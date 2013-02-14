@@ -22,32 +22,33 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
     <head>
         <meta charset="utf-8">
         <title>PartyPlayer Guest</title>
-				<meta name="viewport" content="width=device-width, initial-scale=1"> 
-				<link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
-				<link rel="stylesheet" href="../lib/jquery.mobile.structure.min.css " type="text/css"/>
-				<link rel="stylesheet" href="../lib/jquery.swipeButton.css" type="text/css"/>
-				<link rel="stylesheet" herf="../lib/flexslider.css" type="text/css"/>
+		    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+		    <link rel="stylesheet" href="../lib/jquery.mobile.structure.min.css " type="text/css"/>
+		    <link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
+		    <link rel="stylesheet" href="../lib/jquery.swipeButton.css" type="text/css"/>
+		    <link rel="stylesheet" href="../lib/flexslider.css" type="text/css"/>
+				<link rel="stylesheet" href="./skin/jplayer.blue.monday.css" type="text/css"/>
+		
+			<style>	
+				.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+				.party-nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
+			</style>
 
-				<style>	
-					.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
-					.party-nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
-				</style>
-
-				<script type="text/javascript" src="/webinos.js"></script>
-        <script type="text/javascript" src="../lib/jquery.min.js"></script>
-        <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
-				<script type="text/javascript" src="../lib/jquery.swipeButton.min.js"></script>
-				<script type="text/javascript" src="jquery.tinysort.min.js"></script>
-				<script type="text/javascript" src="jquery.tinysort.charorder.min.js"></script>
-        <!--script type=text/javascript src=../lib/id3v2.js></script>-->
-        <script type="text/javascript" src="../common/log.js"></script>
-        <script type="text/javascript" src="../common/pplayer.js"></script>
-       	<script type="text/javascript" src="../host/PartyCollection.js"></script>
-       	<script type="text/javascript" src="icons/icons.js"></script>
-        <script type="text/javascript" src="guest.js"></script>
-				<script type="text/javascript" src="../lib/jquery.flexslider-min.js"></script>
-				<link type="text/css" href="./skin/jplayer.blue.monday.css" rel="stylesheet" />
-        <script type="text/javascript" src="jquery.jplayer.min.js"></script>
+			<script type="text/javascript" src="/webinos.js"></script>
+      <script type="text/javascript" src="../lib/jquery.min.js"></script>
+      <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
+			<script type="text/javascript" src="../lib/jquery.swipeButton.min.js"></script>
+			<script type="text/javascript" src="jquery.tinysort.min.js"></script>
+			<script type="text/javascript" src="jquery.tinysort.charorder.min.js"></script>
+      <!--script type=text/javascript src=../lib/id3v2.js></script>-->
+      <script type="text/javascript" src="../common/log.js"></script>
+      <script type="text/javascript" src="../common/pplayer.js"></script>
+     	<script type="text/javascript" src="../host/PartyCollection.js"></script>
+     	<script type="text/javascript" src="icons/icons.js"></script>
+      <script type="text/javascript" src="guest.js"></script>
+			<script type="text/javascript" src="../lib/jquery.flexslider-min.js"></script>
+      <script type="text/javascript" src="jquery.jplayer.min.js"></script>
+      <script type="text/javascript" src="../lib/reflection.js"></script>
     </head>
     <body>
 		<div data-role="page" id="home">
@@ -99,27 +100,35 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</div>
 				
 				<div class="content-primary">
-				    <div data-role="collapsible-set" data-theme="a" data-content-theme="a">
-				        <div data-role="collapsible" data-collapsed="true">
-						    <h2>Stream Player</h2>
+					<div id="albumart" class="ui-body ui-body-a" style="text-align: center;"  data-theme="a" data-content-theme="a">
+						<h3 id="playingTitle">Nothing playing<h3>
+						<center>
+            	<img id="albumArtImg" src="images/party.png" width="150px" class="reflect"/>
+						</center>
+            <p id="nowPlaying">&nbsp;</p>
+					</div>
+			    <div data-role="collapsible-set" data-theme="a" data-content-theme="a">
+			        <div data-role="collapsible" data-collapsed="true">
+					    <h2>Stream Player</h2>
 
-				            Stream is: <span id="streamStatus">Offline</span>
-				            
-				            <div id="jquery_jplayer_1" class="jp-jplayer"></div>
-                              <div id="jp_container_1" class="jp-audio">
-                                <div class="jp-type-single">
-                                  <div class="jp-gui jp-interface">
-                                    <ul class="jp-controls">
-                                      <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
-                                      <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-                                      <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li> 
-                                    </ul>
-                                  </div>
+			            Stream is: <span id="streamStatus">Offline</span>
+			            
+			            <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+                            <div id="jp_container_1" class="jp-audio">
+                              <div class="jp-type-single">
+                                <div class="jp-gui jp-interface">
+                                  <ul class="jp-controls">
+                                    <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+                                    <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+                                    <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li> 
+                                  </ul>
                                 </div>
                               </div>
-                    </div>
-				    </div>
+                            </div>
+                  </div>
+			    </div>
 				</div>
+				
 			</div>
 
 			<style>

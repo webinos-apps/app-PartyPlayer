@@ -451,6 +451,45 @@ partyplayer.player.onstreamUpdate = function (param, ref) {
     }
 }
 
+partyplayer.player.onupdateItem = function (param, ref){
+    var item;
+    log("player.onUpdateItem - "+param.nowPlaying.itemID)
+    
+    if (param.nowPlaying.itemID) {
+        for (var i in currentCollection.collection) {
+            var candidate = currentCollection.collection[i];
+            if (candidate.itemID == param.nowPlaying.itemID) {
+                item = candidate;
+                break;
+            }
+        }
+
+        if (item === undefined) {
+            $("#albumArtImg").attr("src", "images/party.png");
+            $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+            $('#nowPlaying').text("Unknown");
+            $('#playingTitle').text('Now playing');
+        } else {
+            log("found an item:"+item.artist +" - " + item.title);
+            $("#albumArtImg").attr("src", item.cover);
+            $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+
+            var text = "";
+            text += item.artist ? item.artist + ' - ' : '';
+            text += item.title ? item.title : item.filename;
+
+            $('#nowPlaying').text(text);
+            $('#playingTitle').text('Now playing');
+            //$('#nowDuration').text(param.nowPlaying.duration);
+        }
+    } else {
+        $("#albumArtImg").attr("src", "images/party.png");
+        $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+        $('#nowPlaying').text(" ");
+        $('#playingTitle').text('Nothing playing');
+    }
+}
+
 function getGravatar(email, size) {
     // MD5 (Message-Digest Algorithm) by WebToolkit
     // 
@@ -463,6 +502,14 @@ function enterTheParty(username, mailAddress) {
 	//store values
 	userProfile.userName = username;
 	userProfile.userPic = getGravatar(mailAddress);
+	
+	// test if gravatar can be loaded
+	var img = new Image();
+	try {
+	    img.src = userProfile.userPic;
+	} catch (e) {
+	    userprofile.userPic = '../library/unknown.jpeg'; // does not work yet
+	}
 	
 	/*
 	 *@startuml ../docs/figures/guest_add_to_host.png

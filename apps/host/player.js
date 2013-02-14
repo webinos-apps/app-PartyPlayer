@@ -43,19 +43,24 @@ var player = (function(){
 		    
 		    sortedItems = funnel.getFunnel();
 
-            if(sortedItems.length == 0){
+            if(sortedItems.length == 0) {
+                partyplayer.player.updateItem(undefined, "00:01:00");
                 return false;
             }
 
 		    var key = sortedItems[0][0];
 		    if(!key){
+                partyplayer.player.updateItem(undefined, "00:01:00");
 		        return false;
 		    }
 		    
 		    var funnelListItem = funnel.getFunnelListItem(key);
 		    var item = pc.getItem(funnelListItem.itemID); 
 		    
-		    if (!item.item.bumped) return false;
+		    if (!item.item.bumped) {
+                partyplayer.player.updateItem(undefined, "00:01:00");
+		        return false;
+	        }
 		    
             funnel.animateToPlayer(key);
 		    
@@ -64,8 +69,10 @@ var player = (function(){
 		    }
 		    
             url = window.URL.createObjectURL(item.item.blob);
-            
+            partyplayer.player.updateItem(funnelListItem.itemID, "00:01:00");
+            $("#albumArtImg").attr("src", item.item.cover);
 		    playerViz.updatePlayer(url, playerSelector);
+
 		    playing = true;
 		},
 		/**
