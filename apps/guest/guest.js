@@ -465,7 +465,7 @@ partyplayer.player.onupdateItem = function (param, ref){
         }
 
         if (item === undefined) {
-            $("#albumArtImg").attr("src", "images/party.gif");
+            $("#albumArtImg").attr("src", "images/party.png");
             $("#albumArtImg").reflect({height:0.3,opacity:0.4});
             $('#nowPlaying').text("Unknown");
             $('#playingTitle').text('Now playing');
@@ -483,7 +483,7 @@ partyplayer.player.onupdateItem = function (param, ref){
             //$('#nowDuration').text(param.nowPlaying.duration);
         }
     } else {
-        $("#albumArtImg").attr("src", "images/party.gif");
+        $("#albumArtImg").attr("src", "images/party.png");
         $("#albumArtImg").reflect({height:0.3,opacity:0.4});
         $('#nowPlaying').text(" ");
         $('#playingTitle').text('Nothing playing');
@@ -502,6 +502,14 @@ function enterTheParty(username, mailAddress) {
 	//store values
 	userProfile.userName = username;
 	userProfile.userPic = getGravatar(mailAddress);
+	
+	// test if gravatar can be loaded
+	var img = new Image();
+	try {
+	    img.src = userProfile.userPic;
+	} catch (e) {
+	    userprofile.userPic = '../library/unknown.jpeg'; // does not work yet
+	}
 	
 	/*
 	 *@startuml ../docs/figures/guest_add_to_host.png
