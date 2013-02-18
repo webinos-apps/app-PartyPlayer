@@ -72,6 +72,16 @@ Each guest runs a guest app. Using the app you can share your own music collecti
 
 All music that has been added this way is moved to the funnel. This is where the interaction takes place. Think of simply upvoting your favourites, but also of playing mini games to gain power...
 
+### Specials for 0.8.x branch
+
+The 0.8.x branch is created for demonstration purposes to work in collaboration with Webinos-Platform 0.8.0. For demonstration purposes user icons have been included for the following users:
+
+* web1@victorklos.nl
+* web2@victorklos.nl
+* web3@victorklos.nl
+
+Please use these mail addresses for the demo accounts.
+
 ### Documentation
 
 Building the documentation requires [PlantUML](http://plantuml.sourceforge.net/), [jsdoc-toolkit](https://code.google.com/p/jsdoc-toolkit/) and [markdown](http://daringfireball.net/projects/markdown/).
