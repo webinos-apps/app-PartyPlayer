@@ -141,9 +141,15 @@ $(document).ready(function() {
     $.mobile.changePage("#home", { transition: "slideup"} );
 });
 
-$(window).unload(function() {
+var previousWindowBeforeUnload = window.onbeforeunload;
+
+window.onbeforeunload = function() { 
     leaveTheParty();
-});
+
+    if (previousWindowBeforeUnload) {
+        previousWindowBeforeUnload();
+    }
+}
 
 function joinAnotherParty() {
     $( "#join").unbind('click').bind('click', function (event) {
