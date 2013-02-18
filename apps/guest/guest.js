@@ -141,14 +141,21 @@ $(document).ready(function() {
     $.mobile.changePage("#home", { transition: "slideup"} );
 });
 
-$(window).unload(function() {
+
+var previousWindowBeforeUnload = window.onbeforeunload;
+
+window.onbeforeunload = function() { 
     if (userProfile && userProfile.userID) {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave", params:{userID:userProfile.userID}});
     } else {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
     }
     partyplayer.close();
-});
+    
+    if (previousWindowBeforeUnload) {
+        previousWindowBeforeUnload();
+    }
+};
 
 // size it full screen
 $( "#popupPanel" ).on({
