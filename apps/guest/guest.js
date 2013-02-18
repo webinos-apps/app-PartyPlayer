@@ -402,7 +402,7 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
 partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     log ('onvotedFunnel Invoked on Funnel');
 
-    $('#' + param.funnelItemID + ' span.ui-li-count').html(param.vote);
+    $('#' + param.funnelItemID + ' span.ui-li-count').html(param.votes);
     
     // sort
     $('ul#playlist li.playlist-item').tsort('span:eq(0)', {order:'desc'});
