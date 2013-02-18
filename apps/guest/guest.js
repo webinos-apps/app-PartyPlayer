@@ -389,9 +389,9 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
 partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     log ('onvotedFunnel Invoked on Funnel');
 
-    $('#' + param.funnelItemID + ' span.ui-li-count').html(param.vote);
+    $('#' + param.funnelItemID + ' span.ui-li-count').html(param.votes);
     
-    if(param.userID == userProfile.userID && param.vote > 0){
+    if(param.userID == userProfile.userID && param.votes > 0){
         //succesvol vote, disabled vote button
             //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
             // $('#' + param.funnelItemID).swipeDelete();

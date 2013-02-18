@@ -180,7 +180,10 @@ partyplayer.funnel.onaddItem = function(params, ref, from) {
 partyplayer.funnel.onvote = function (params, ref, from) {
     log("got a vote");
     var voteResult = funnel.voteItem(params.funnelItemID);
-    partyplayer.sendMessage({ns:"funnel", cmd:"votedFunnelItem", params:{userID:params.userID,funnelItemID:params.funnelItemID,vote:voteResult}});
+    
+    if (voteResult !== -1) {
+        partyplayer.sendMessage({ns:"funnel", cmd:"votedFunnelItem", params:{userID:params.userID,funnelItemID:params.funnelItemID,votes:voteResult}});
+    }
 }
 
 //@TODO: create callback from visual.js to this function 
