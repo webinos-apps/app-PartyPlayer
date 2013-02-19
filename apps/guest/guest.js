@@ -363,23 +363,9 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
 
         $('ul#playlist').append(trItem);
 
-        if (param.userID != userProfile.userID) {
-                //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-                // $('#' + param.funnelItemID).swipeDelete({
-                //     btnLabel: 'Vote',
-                //     btnTheme: 'a',
-                //     click: function(e) {
-                //         e.preventDefault();
-                //         currentCollection.voteClick(e);
-                //     }
-                // });
-                //         } else {
-                $('#' + param.funnelItemID).unbind("click").bind("click", currentCollection.voteClick);
-            // }
-        }
-
     	try {
     	    $('ul#playlist').listview('refresh');
+            $('ul#playlist li.playlist-item').unbind("click").bind("click", currentCollection.voteClick);
         } catch (err) {
 
         }
@@ -390,18 +376,6 @@ partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     log ('onvotedFunnel Invoked on Funnel');
 
     $('#' + param.funnelItemID + ' span.ui-li-count').html(param.vote);
-    
-    if(param.userID == userProfile.userID && param.vote > 0){
-        //succesvol vote, disabled vote button
-            //         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-            // $('#' + param.funnelItemID).swipeDelete();
-            //         } else {
-            $('#' + param.funnelItemID).unbind("click");
-        // }
-    } else {
-        //voted failed
-        log('vote for funnelItem: ' + param.funnelItemID + ' failed');
-    }
     
     // sort
     $('ul#playlist li.playlist-item').tsort('span:eq(0)', {order:'desc'});
@@ -534,8 +508,7 @@ var currentCollection = {
     collection: new Array(),
 	voteClick: function(event){
 	    var funnelItemID = $(this).attr('id');
-		console.log("funnel id = "+$(this).attr('id'));
-		console.log("vote+1");
+		$('#' + funnelItemID).unbind("click");
 		partyplayer.voteFunnelItem(funnelItemID);
 	},	
 	preferItemsClick: function(event){
