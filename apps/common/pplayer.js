@@ -265,6 +265,9 @@ partyplayer.init = function(hostorguest, callback, partyAddress) {
          * @private
          */
         onFound: function (service) {
+            if (self.channel) {
+                return;
+            }
             
             if (partyAddress && service.serviceAddress.indexOf(partyAddress) === -1) {
                 return;
@@ -325,8 +328,10 @@ partyplayer.init = function(hostorguest, callback, partyAddress) {
                         callback(true);
                     },
                     function(error) {
-                        alert("Could not create channel: " + error.message);
-                        callback(false);
+                        if (!self.channel) {
+                            alert("Could not create channel: " + error.message);
+                            callback(false);
+                        }
                     }
             );
         } else {
@@ -353,8 +358,10 @@ partyplayer.init = function(hostorguest, callback, partyAddress) {
                                 callback(true);
                             },
                             function(error) {
-                                alert("Could not connect to channel: " + error.message);
-                                callback(false);
+                                if (!self.channel) {
+                                    alert("Could not connect to channel: " + error.message);
+                                    callback(false);
+                                }
                             }
                         );
                     },
@@ -363,7 +370,7 @@ partyplayer.init = function(hostorguest, callback, partyAddress) {
                         // ok, but no action needed for now
                     },
                     function(error) {
-                        alert("Could not search for channel: " + error.message);
+                        //alert("Could not search for channel: " + error.message);
                     }
             );
         }
