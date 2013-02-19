@@ -154,16 +154,28 @@ partyplayer.funnel.onaddItem = function(params, ref, from) {
     
     if (bootstrapped) { // the party host must enable the party by visiting as guest on one of his devices
         funnelItemID = funnel.addItem(params.itemID, params.userID);
-        partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:uID,funnelItemID:funnelItemID,itemID:params.itemID,votes:1}});
+        partyplayer.sendMessage({"ns":"funnel",cmd:"updateFunnelItem", params:{userID:params.userID,funnelItemID:funnelItemID,itemID:params.itemID,votes:1}});
 
         var item = pc.getItem(params.itemID);
         var service = partyplayer.files.services[item.userID];
+        
+        var filename;
+        var type = 'audio/mpeg';
+        
+        if ($.browser.mozilla) {
+            // on firefox use .ogg if available
+            filename = item.item.filename + '.ogg';
+            type = 'application/ogg';
+        } else {
+            // otherwise use mp3 (which is the default)
+            filename = item.item.filename;
+        }
 
         if (service) {
     		service.requestFileSystem(1, 1024, function (fileSystem) {
-    		    fileSystem.root.getFile('/partyplayer/collection/' + item.item.filename, null, function(entry) {
+    		    fileSystem.root.getFile('/partyplayer/collection/' + filename, null, function(entry) {
         		    entry.file(function (blob) {
-                        item.item.blob = blob;
+                        item.item.blob = blob.slice(0, blob.size, type);
                         item.item.bumped = true;
                         funnel.bump();
                     });
@@ -179,7 +191,7 @@ partyplayer.funnel.onaddItem = function(params, ref, from) {
 
 partyplayer.funnel.onvote = function (params, ref, from) {
     log("got a vote");
-    var voteResult = funnel.voteItem(params.funnelItemID);
+    var voteResult = funnel.voteItem(params.funnelItemID, params.userID);
     
     if (voteResult !== -1) {
         partyplayer.sendMessage({ns:"funnel", cmd:"votedFunnelItem", params:{userID:params.userID,funnelItemID:params.funnelItemID,votes:voteResult}});

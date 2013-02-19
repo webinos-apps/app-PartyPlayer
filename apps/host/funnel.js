@@ -89,7 +89,8 @@ var funnel = (function () {
     	    var funnelItem = new partyplayer.FunnelItem(id, 1, userID); //1 = 1 vote
     	    var key = funnelList.addItem(funnelItem);
     	    funnelItem.funnelItemID = key;
-	    
+	        funnelItem.votedOn = new Array();
+	        funnelItem.votedOn.push(userID);
 
     	    sortedItems.push([key, funnelItem.votes]);
 
@@ -143,18 +144,24 @@ var funnel = (function () {
 		 *
 		 *  @param string key The funnelItem ID
 		**/
-		voteItem : function (key) {		    
+		voteItem : function (key, userID) {		    
 	        var funnelItem = funnelList.getItem(key);
 	        
 	        if(!funnelItem){
 	            return -1;
 	        }
+
+            // user is only allowed to vote once.
+	        if (funnelItem.votedOn.indexOf(userID) != -1) {
+	            return -1;
+	        }
+	        
 	        funnelItem.votes += 1;
-	        console.log(funnelItem.votes);
+	        funnelItem.votedOn.push(userID);
 	        
 	        //sort sortedItems object according to votes
 	        var oldSorted = sortedItems.slice();
-	        if(funnelItem.votes >= oldSorted[0][1]){
+	        if(oldSorted[0] && funnelItem.votes >= oldSorted[0][1]){
 	            for( var x = 0; x < sortedItems.length; x++){
 	                if(oldSorted[x][0] == key){
 	                    var newItem = [key, funnelItem.votes]
