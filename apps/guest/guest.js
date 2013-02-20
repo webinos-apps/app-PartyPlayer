@@ -501,6 +501,12 @@ function enterTheParty(username, mailAddress) {
         newUser += '</li>';        
 
     $('ul#guest-profiles').append(newUser);
+    
+    try {
+	    $('ul#guest-profiles').listview('refresh');
+    } catch (err) {
+        
+    }
 }
 
 var currentCollection = {
