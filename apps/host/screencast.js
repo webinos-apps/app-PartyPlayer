@@ -1,5 +1,5 @@
 //execute when site loads
-$(document).ready(function() {
+var initScreencast = function() {
     function fillPZAddrs(data) {
 		var pzhId, connectedPzp, connectedPzh;
         //If there is a pzh available
@@ -35,7 +35,7 @@ $(document).ready(function() {
 		//}
 		//$("</optgroup>").appendTo("#pzh_pzp_list");
     }
-    webinos.session.addListener('registeredBrowser', fillPZAddrs);
+
     //TODO: Perhaps we should be reading the info from the already loaded webinos.
     if(webinos.session.getSessionId()!=null){ //If the webinos has already started, force the registerBrowser event
         webinos.session.message_send({type: 'prop', payload: {status:'registerBrowser'}});
@@ -73,8 +73,10 @@ $(document).ready(function() {
 		
 	    webinos.discovery.findServices(new ServiceType('http://webinos.org/api/tv'), {onFound: function (service) {
 	    	//if(!isServiceDiscovered(serviceName)){
-    			discoveredServices[serviceName] = service;
-    			log('<li>recent TV API found: ' + service.api + ' @ ' + service.serviceAddress + '</li>');
+                webinosInjector.onServiceHasLoaded(service, function() {
+        			discoveredServices[serviceName] = service;
+        			log('<li>recent TV API found: ' + service.api + ' @ ' + service.serviceAddress + '</li>');
+    			});
 	    	//}else{
 	    	//	console.log(serviceName+' already found.');
 	    	//}
@@ -146,6 +148,6 @@ $(document).ready(function() {
 			console.log('DEFAULT CASE: action for the button with id '+$(el).attr('id')+' not defined.');
 		}
 	});
-});
+};
 
 

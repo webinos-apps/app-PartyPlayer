@@ -45,14 +45,14 @@ var WebinosInjector = WebinosInjector || (function () {
     return {
 		inject : function (callback) {
             if(window.WebSocket || window.MozWebSocket) {
-                addScript("./webinos.js", callback);
+                addScript("/webinos.js", callback);
             } else {
                 if(typeof WebinosSocket == 'undefined') {
                     setTimeout(function() {
                         inject(callback);
                     }, 1);
                 } else {
-                    addScript("./webinos.js", callback);
+                    addScript("/webinos.js", callback);
                 }
             }
 		},
@@ -66,4 +66,6 @@ var WebinosInjector = WebinosInjector || (function () {
 		    }
 		}
 	}
-};
+});
+
+var webinosInjector = webinosInjector || new WebinosInjector();
