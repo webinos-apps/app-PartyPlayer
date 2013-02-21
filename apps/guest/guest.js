@@ -141,14 +141,65 @@ $(document).ready(function() {
     $.mobile.changePage("#home", { transition: "slideup"} );
 });
 
-$(window).unload(function() {
+var previousWindowBeforeUnload = window.onbeforeunload;
+
+window.onbeforeunload = function() { 
+    leaveTheParty();
+
+    if (previousWindowBeforeUnload) {
+        previousWindowBeforeUnload();
+    }
+}
+
+function joinAnotherParty() {
+    $( "#join").unbind('click').bind('click', function (event) {
+        var partyAddress = $('#partyAddress').val();
+
+        if (partyAddress && partyAddress.length > 0) {
+            $( "#popupJoin" ).popup( "close" );
+            leaveTheParty();
+            partyplayer.init('guest', function(connected) {
+                if (connected) {
+                    initProfile();
+                    bindFileAPI();
+                }
+            }, partyAddress);
+        }
+    });
+    
+    $( "#cancelJoin").unbind('click').bind('click', function (event) {
+        $( "#popupJoin" ).popup( "close" );
+    });
+    
+    $( "#popupJoin" ).popup("open");
+}
+
+function leaveTheParty() {
     if (userProfile && userProfile.userID) {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave", params:{userID:userProfile.userID}});
     } else {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
     }
+    
+    // clear current playing item
+    $("#albumArtImg").attr("src", "images/party.png");
+    $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+    $('#nowPlaying').text("Unknown");
+    $('#playingTitle').text('Now playing');
+    
+    // clear playlist
+    $('ul#playlist li').remove();
+    
+    // clear party collection
+    $('ul#party-collection li').remove();
+    currentCollection.collection = new Array();
+    
+    // clear party crowd
+    $('ul#guest-profiles li').remove();
+    partyPlayerUsers = {};
+    
     partyplayer.close();
-});
+}
 
 // size it full screen
 $( "#popupPanel" ).on({
@@ -233,15 +284,31 @@ partyplayer.main.onremoveUser = function(param, ref) {
     log('onremoveUser Invoked!');
     
     delete partyPlayerUsers[param.userID];
+    
     //delete user from screen
     $('#'+param.userID).remove();
-    //delete items from collection
-    $('table#partyCollection tr[user="'+param.userID+'"]').remove();
-    
+
     try {
 	    $('ul#guest-profiles').listview('refresh');
     } catch (err) {
+    }
+    
+    //delete items from collection
+    for (var i=0; i< currentCollection.collection.length;) {
+        var item = currentCollection.collection[i];
         
+        if (item.userID == param.userID) {
+            // remove this item
+            currentCollection.collection.splice(i, 1);
+            $('#' + item.itemID).remove();
+        } else {
+            i++;
+        }
+    }
+    
+    try {
+        $('ul#party-collection').listview('refresh');
+    } catch (err) {
     }
 };
 
@@ -272,6 +339,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	
 	param.item.itemID = param.itemID;
     param.item.profileImage = profileImage;
+    param.item.userID = param.userID;
     currentCollection.collection.push(param.item);
 
     currentCollection.collection.sort(function(a, b) {
@@ -375,7 +443,7 @@ partyplayer.funnel.onupdateFunnelItem = function (param, ref) {
 partyplayer.funnel.onvotedFunnelItem = function(param, ref) {
     log ('onvotedFunnel Invoked on Funnel');
 
-    $('#' + param.funnelItemID + ' span.ui-li-count').html(param.vote);
+    $('#' + param.funnelItemID + ' span.ui-li-count').html(param.votes);
     
     // sort
     $('ul#playlist li.playlist-item').tsort('span:eq(0)', {order:'desc'});
@@ -502,6 +570,12 @@ function enterTheParty(username, mailAddress) {
         newUser += '</li>';        
 
     $('ul#guest-profiles').append(newUser);
+    
+    try {
+	    $('ul#guest-profiles').listview('refresh');
+    } catch (err) {
+        
+    }
 }
 
 var currentCollection = {

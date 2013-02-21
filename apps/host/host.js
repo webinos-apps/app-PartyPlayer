@@ -371,6 +371,13 @@ $(document).ready(function(){
     });
 });
 
-$(window).unload(function() {
+
+var previousWindowBeforeUnload = window.onbeforeunload;
+
+window.onbeforeunload = function() { 
     partyplayer.close();
-});
+    
+    if (previousWindowBeforeUnload) {
+        previousWindowBeforeUnload();
+    }
+};

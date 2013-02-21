@@ -238,7 +238,7 @@ partyplayer.getHost = function() {
  * @param hostorguest either 'host' or 'guest', relevant for a2a-stub behaveour
  * @param callback gets called when the player is initialized.
  */
-partyplayer.init = function(hostorguest, callback) {
+partyplayer.init = function(hostorguest, callback, partyAddress) {
     var self = this;
     this.isHost = false;
     this.channel = undefined;
@@ -250,6 +250,14 @@ partyplayer.init = function(hostorguest, callback) {
         this.isHost = true;
     }
     
+    var zoneId;
+    
+    // if (partyAddress) {
+    //     zoneId = {
+    //         zoneId: partyAddress
+    //     }
+    // }
+    
     webinos.discovery.findServices(new ServiceType("http://webinos.org/api/app2app"), {
         /**
          * When the service is found
@@ -257,11 +265,20 @@ partyplayer.init = function(hostorguest, callback) {
          * @private
          */
         onFound: function (service) {
-            service.bindService({
-                onBind: function () {
-                    connect(service);
-                }
-            });
+            // if the found service is not the service we are looking for...
+            if (self.channel) {
+                return; // already connected to a service
+            } else if (!partyAddress && service.serviceAddress != webinos.session.getPZHId()) {
+                return; // we are looking for a service within our own personal zone
+            } else if (partyAddress && service.serviceAddress.indexOf(partyAddress) === -1) {
+                return; // we are looking for a specific service and this is not it
+            } else {
+                service.bindService({
+                    onBind: function () {
+                        connect(service);
+                    }
+                });
+            }
         },
         /**
          * When an error occurs.
@@ -271,7 +288,7 @@ partyplayer.init = function(hostorguest, callback) {
         onError: function (error) {
             alert("Error finding service: " + error.message + " (#" + error.code + ")");
         }
-    });
+    }, null, zoneId);
     
     /**
      * Connect to app2app channel. When in host mode this function will create a channel and connect to it. When in
@@ -312,8 +329,10 @@ partyplayer.init = function(hostorguest, callback) {
                         callback(true);
                     },
                     function(error) {
-                        alert("Could not create channel: " + error.message);
-                        callback(false);
+                        if (!self.channel) {
+                            alert("Could not create channel: " + error.message);
+                            callback(false);
+                        }
                     }
             );
         } else {
@@ -340,8 +359,10 @@ partyplayer.init = function(hostorguest, callback) {
                                 callback(true);
                             },
                             function(error) {
-                                alert("Could not connect to channel: " + error.message);
-                                callback(false);
+                                if (!self.channel) {
+                                    alert("Could not connect to channel: " + error.message);
+                                    callback(false);
+                                }
                             }
                         );
                     },
@@ -350,7 +371,7 @@ partyplayer.init = function(hostorguest, callback) {
                         // ok, but no action needed for now
                     },
                     function(error) {
-                        alert("Could not search for channel: " + error.message);
+                        //alert("Could not search for channel: " + error.message);
                     }
             );
         }
