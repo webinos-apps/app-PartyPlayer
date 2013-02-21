@@ -252,11 +252,11 @@ partyplayer.init = function(hostorguest, callback, partyAddress) {
     
     var zoneId;
     
-    if (partyAddress) {
-        zoneId = {
-            zoneId: partyAddress
-        }
-    }
+    // if (partyAddress) {
+    //     zoneId = {
+    //         zoneId: partyAddress
+    //     }
+    // }
     
     webinos.discovery.findServices(new ServiceType("http://webinos.org/api/app2app"), {
         /**
@@ -265,19 +265,20 @@ partyplayer.init = function(hostorguest, callback, partyAddress) {
          * @private
          */
         onFound: function (service) {
+            // if the found service is not the service we are looking for...
             if (self.channel) {
-                return;
+                return; // already connected to a service
+            } else if (!partyAddress && service.serviceAddress != webinos.session.getPZHId()) {
+                return; // we are looking for a service within our own personal zone
+            } else if (partyAddress && service.serviceAddress.indexOf(partyAddress) === -1) {
+                return; // we are looking for a specific service and this is not it
+            } else {
+                service.bindService({
+                    onBind: function () {
+                        connect(service);
+                    }
+                });
             }
-            
-            if (partyAddress && service.serviceAddress.indexOf(partyAddress) === -1) {
-                return;
-            } 
-
-            service.bindService({
-                onBind: function () {
-                    connect(service);
-                }
-            });
         },
         /**
          * When an error occurs.
