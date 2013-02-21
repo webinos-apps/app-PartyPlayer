@@ -71,27 +71,29 @@ partyplayer.main.onjoin = function(params, ref, from) {
          * @private
          */
         onFound: function (service) {
-            if (params.serviceAddress === service.serviceAddress) {
-                service.bindService({
-                    onBind: function () {
-                        partyplayer.files.services[uID] = service;
-                    }
-                });
-            }
+            webinosInjector.onServiceHasLoaded(service, function() {
+                if (params.serviceAddress === service.serviceAddress) {
+                    service.bindService({
+                        onBind: function () {
+                            partyplayer.files.services[uID] = service;
+                        }
+                    });
+                }
             
-            if (!bootstrapped && service.serviceAddress.substring(0, webinos.session.getPZHId().length) === webinos.session.getPZHId()) {
-                // first PZP of this PZ has connected as guest. Adding all content from this PZP
-                bootstrapped = true;
+                if (!bootstrapped && service.serviceAddress.substring(0, webinos.session.getPZHId().length) === webinos.session.getPZHId()) {
+                    // first PZP of this PZ has connected as guest. Adding all content from this PZP
+                    bootstrapped = true;
                 
-                // this guest is the host
-                pc.getUser(uID).isHost = true;
+                    // this guest is the host
+                    pc.getUser(uID).isHost = true;
 
-                service.bindService({
-                    onBind: function () {
-                        addHostCollection(service, uID);
-                    }
-                });
-            }
+                    service.bindService({
+                        onBind: function () {
+                            addHostCollection(service, uID);
+                        }
+                    });
+                }
+            });
         },
         /**
          * When an error occurs.
@@ -360,14 +362,18 @@ $(document).ready(function(){
         });
     }
     
-    webinos.session.addListener('registeredBrowser', function () {
-        partyplayer.init('host', function(connected) {
-            if (connected) {
-                pc = new PartyCollection("Webinos Party");
-                player.init();
-                funnel.init(5);    
-            }
+    webinosInjector.inject(function() {
+        webinos.session.addListener('registeredBrowser', function () {
+            partyplayer.init('host', function(connected) {
+                if (connected) {
+                    pc = new PartyCollection("Webinos Party");
+                    player.init();
+                    funnel.init(5);    
+                }
+            });
         });
+        
+        initScreencast();
     });
 });
 

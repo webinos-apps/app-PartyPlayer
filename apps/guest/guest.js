@@ -29,14 +29,16 @@ function bindFileAPI() {
          * @private
          */
         onFound: function (service) {
-            if (webinos.session.getPZPId() === service.serviceAddress) {
-                service.bindService({
-                    onBind: function () {
-                        localItems.fileService = service;
-                        localItems.importItems();
-                    }
-                });
-            }
+            webinosInjector.onServiceHasLoaded(service, function() {
+                if (webinos.session.getPZPId() === service.serviceAddress) {
+                    service.bindService({
+                        onBind: function () {
+                            localItems.fileService = service;
+                            localItems.importItems();
+                        }
+                    });
+                }
+            });
         },
         /**
          * When an error occurs.
@@ -112,12 +114,14 @@ $('#home').live('pageshow', function(event) {
 });
 
 $('#home').live('pageinit', function(event) {
-    webinos.session.addListener('registeredBrowser', function () {
-        partyplayer.init('guest', function(connected) {
-            if (connected) {
-                initProfile();
-                bindFileAPI();
-            }
+    webinosInjector.inject(function() {
+        webinos.session.addListener('registeredBrowser', function () {
+            partyplayer.init('guest', function(connected) {
+                if (connected) {
+                    initProfile();
+                    bindFileAPI();
+                }
+            });
         });
     });
 });
