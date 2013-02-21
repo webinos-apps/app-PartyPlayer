@@ -284,15 +284,31 @@ partyplayer.main.onremoveUser = function(param, ref) {
     log('onremoveUser Invoked!');
     
     delete partyPlayerUsers[param.userID];
+    
     //delete user from screen
     $('#'+param.userID).remove();
-    //delete items from collection
-    $('table#partyCollection tr[user="'+param.userID+'"]').remove();
-    
+
     try {
 	    $('ul#guest-profiles').listview('refresh');
     } catch (err) {
+    }
+    
+    //delete items from collection
+    for (var i=0; i< currentCollection.collection.length;) {
+        var item = currentCollection.collection[i];
         
+        if (item.userID == param.userID) {
+            // remove this item
+            currentCollection.collection.splice(i, 1);
+            $('#' + item.itemID).remove();
+        } else {
+            i++;
+        }
+    }
+    
+    try {
+        $('ul#party-collection').listview('refresh');
+    } catch (err) {
     }
 };
 
@@ -323,6 +339,7 @@ partyplayer.main.onupdateCollectionItem = function (param, ref) {
 	
 	param.item.itemID = param.itemID;
     param.item.profileImage = profileImage;
+    param.item.userID = param.userID;
     currentCollection.collection.push(param.item);
 
     currentCollection.collection.sort(function(a, b) {
