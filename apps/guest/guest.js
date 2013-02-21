@@ -180,6 +180,24 @@ function leaveTheParty() {
     } else {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
     }
+    
+    // clear current playing item
+    $("#albumArtImg").attr("src", "images/party.png");
+    $("#albumArtImg").reflect({height:0.3,opacity:0.4});
+    $('#nowPlaying').text("Unknown");
+    $('#playingTitle').text('Now playing');
+    
+    // clear playlist
+    $('ul#playlist li').remove();
+    
+    // clear party collection
+    $('ul#party-collection li').remove();
+    currentCollection.collection = new Array();
+    
+    // clear party crowd
+    $('ul#guest-profiles li').remove();
+    partyPlayerUsers = {};
+    
     partyplayer.close();
 }
 
