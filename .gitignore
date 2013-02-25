@@ -3,3 +3,5 @@
 *.project
 docs/generated
 index.json
+deploy/dist
+deploy/node_modules

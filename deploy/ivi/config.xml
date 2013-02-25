@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" id="http://webinos.org/apps/partyplayer/ivi" version="0.8.1">  
+	<name>PartyPlayer Host</name>  
+	<description>Start a party and let your guest share music and decide on the playlist.</description>
+	<author href="http://www.tno.nl/en" email="partyplayer@servicelab.org">TNO</author>
+	<content src="ivi/index.html"/>  
+	<icon src="icon-party-player.png"/>   
+</widget>

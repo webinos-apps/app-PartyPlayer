@@ -1,0 +1,12 @@
+{
+  "name": "deployment",
+  "version": "0.1.0",
+  "description": "Package json to install grunt dependencies.",
+  "author": { "name": "Eelco Cramer", "email": "eelco@hailendal.org" },
+  "engines": { "node": ">=0.8.8" },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-compress": "*"
+  },
+  "contributors": ["Eelco Cramer"]
+}
