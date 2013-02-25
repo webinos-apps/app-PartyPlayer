@@ -49,7 +49,7 @@ For now your mp3 collection has to be indexed and added manually to the PartyPla
 
 1. Create a folder and put the mp3 you want to use in the PartyPlayer into that folder.
 2. Install the indexer pre-requests by executing *npm install* from the indexer folder *<PartyPlayer folder>/indexer*. Note: this will need [node-canvas](https://github.com/learnboost/node-canvas).
-3. Run the indexer by executing: *./indexer.js --lib=<path-to-folder-containing-mp3s>*
+3. Run the indexer by executing: *./indexer.js --lib=[path-to-folder-containing-mp3s]*
 
 #### Copy the files into your PZP
 
