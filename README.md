@@ -76,6 +76,14 @@ Check out [jira for AppParty](http://jira.webinos.org/browse/APPPARTY) for a com
 
 For details on the implementation please refer to the docs.
 
+#### Building the widgets
+
+Work is in progress to create widgets for the Party Player apps. Please follow these steps to build the widgets:
+
+1. Install [GruntJS](http://gruntjs.com/getting-started) by issueing the command: *npm install -g grunt-cli*
+2. Change into the *deploy* folder of the party player and issue the command *npm install* to install the build dependencies.
+3. Issue the command *grunt* to build the widgets. The widgets can be found in the newly created *dist* folder.
+
 ### Usage
 
 The Host app is supposed to run large, on a TV screen for example. It plays the media, shows upcoming songs, displays chats and invites people at the party to join in the interactive experience.
