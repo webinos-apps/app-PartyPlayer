@@ -113,6 +113,19 @@ $('#home').live('pageshow', function(event) {
     });
 });
 
+$('#about').live('pageshow', function(event) {
+    $('.aboutflexslider').flexslider({
+        animation: "slide",
+        controlNav: false,
+        animationLoop: true,
+        slideshow: true,
+        slideshowSpeed: 2000,
+        animationSpeed: 300,
+        randomize: true,
+        directionNav: false        
+    });
+});
+
 $('#home').live('pageinit', function(event) {
     webinosInjector.inject(function() {
         webinos.session.addListener('registeredBrowser', function () {
