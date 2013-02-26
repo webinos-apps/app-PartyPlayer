@@ -4,5 +4,5 @@
 	<description>Start a party and let your guest share music and decide on the playlist.</description>
 	<author href="http://www.tno.nl/en" email="partyplayer@servicelab.org">TNO</author>
 	<content src="host/index.html"/>  
-	<icon src="icon-party-player.png"/>   
+	<icon src="library/icon-party-player.png"/>   
 </widget>

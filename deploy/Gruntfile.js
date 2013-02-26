@@ -9,8 +9,7 @@ module.exports = function(grunt) {
                 },
                 files: [
                     { expand: true, cwd: '../apps', src: ['**'], dest: '/' },
-                    { expand: true, cwd: './host', src: ['config.xml'], dest: '/' },
-                    { src: ['icon-party-player.png'], dest: '/' }
+                    { expand: true, cwd: './host', src: ['config.xml'], dest: '/' }
                 ]
             },
             guest: {
@@ -20,8 +19,7 @@ module.exports = function(grunt) {
                 },
                 files: [
                     { expand: true, cwd: '../apps', src: ['**'], dest: '/' },
-                    { expand: true, cwd: './guest', src: ['config.xml'], dest: '/' },
-                    { src: ['icon-party-player.png'], dest: '/' }
+                    { expand: true, cwd: './guest', src: ['config.xml'], dest: '/' }
                 ]
             },
             ivi: {
@@ -31,8 +29,7 @@ module.exports = function(grunt) {
                 },
                 files: [
                     { expand: true, cwd: '../apps', src: ['**'], dest: '/' },
-                    { expand: true, cwd: './ivi', src: ['config.xml'], dest: '/' },
-                    { src: ['icon-party-player.png'], dest: '/' }
+                    { expand: true, cwd: './ivi', src: ['config.xml'], dest: '/' }
                 ]
             }
         }
