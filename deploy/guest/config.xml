@@ -4,5 +4,5 @@
 	<description>Join the party and share your music and decide on the playlist.</description>
 	<author href="http://www.tno.nl/en" email="partyplayer@servicelab.org">TNO</author>
 	<content src="guest/index.html"/>  
-	<icon src="icon-party-player.png"/>   
+	<icon src="library/icon-party-player.png"/>   
 </widget>
