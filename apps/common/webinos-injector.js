@@ -52,7 +52,7 @@ var WebinosInjector = WebinosInjector || (function () {
                         inject(callback);
                     }, 1);
                 } else {
-                    addScript("/webinos.js", callback);
+                    addScript("http://localhost:8080/webinos.js", callback);
                 }
             }
 		},
