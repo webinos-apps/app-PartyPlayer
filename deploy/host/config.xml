@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets" id="http://webinos.org/apps/partyplayer/host" version="0.8.1">  
 	<name>PartyPlayer Host</name>  
 	<description>Start a party and let your guest share music and decide on the playlist.</description>
-	<author href="http://www.tno.nl/en" email="partyplayer@servicelab.org">TNO</author>
+	<author href="https://github.com/webinos/app-PartyPlayer/blob/0.8.1/README.md" email="partyplayer@servicelab.org">TNO</author>
 	<content src="host/index.html"/>  
 	<icon src="library/icon-party-player.png"/>   
 </widget>
