@@ -188,8 +188,8 @@ function leaveTheParty() {
     // clear current playing item
     $("#albumArtImg").attr("src", "images/party.png");
     $("#albumArtImg").reflect({height:0.3,opacity:0.4});
-    $('#nowPlaying').text("Unknown");
-    $('#playingTitle').text('Now playing');
+    $('#nowPlaying').text("");
+    $('#playingTitle').text('Nothing playing');
     
     // clear playlist
     $('ul#playlist li').remove();
@@ -513,8 +513,8 @@ partyplayer.player.onupdateItem = function (param, ref){
         if (item === undefined) {
             $("#albumArtImg").attr("src", "images/party.png");
             $("#albumArtImg").reflect({height:0.3,opacity:0.4});
-            $('#nowPlaying').text("Unknown");
-            $('#playingTitle').text('Now playing');
+            $('#nowPlaying').text("");
+            $('#playingTitle').text('Nothing playing');
         } else {
             log("found an item:"+item.artist +" - " + item.title);
             $("#albumArtImg").attr("src", item.cover);
@@ -531,7 +531,7 @@ partyplayer.player.onupdateItem = function (param, ref){
     } else {
         $("#albumArtImg").attr("src", "images/party.png");
         $("#albumArtImg").reflect({height:0.3,opacity:0.4});
-        $('#nowPlaying').text(" ");
+        $('#nowPlaying').text("");
         $('#playingTitle').text('Nothing playing');
     }
 }

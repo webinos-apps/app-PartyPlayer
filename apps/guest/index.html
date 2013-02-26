@@ -101,6 +101,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				</div>
 				
 				<div class="content-primary">
+
 					<div id="albumart" class="ui-body ui-body-a" style="text-align: center;"  data-theme="a" data-content-theme="a">
 						<h3 id="playingTitle">Nothing playing<h3>
 						<center>
@@ -108,26 +109,43 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 						</center>
             <p id="nowPlaying">&nbsp;</p>
 					</div>
-			    <div data-role="collapsible-set" data-theme="a" data-content-theme="a">
-			        <div data-role="collapsible" data-collapsed="true">
-					    <h2>Stream Player</h2>
 
-			            Stream is: <span id="streamStatus">Offline</span>
-			            
-			            <div id="jquery_jplayer_1" class="jp-jplayer"></div>
-                            <div id="jp_container_1" class="jp-audio">
-                              <div class="jp-type-single">
-                                <div class="jp-gui jp-interface">
-                                  <ul class="jp-controls">
-                                    <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
-                                    <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-                                    <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li> 
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                  </div>
+			    <div data-role="collapsible-set" data-theme="a" data-content-theme="a">
+		        <div data-role="collapsible" data-collapsed="true">
+				    <h2>Stream Player</h2>
+
+            Stream is: <span id="streamStatus">Offline</span>
+            
+            <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+							<div id="jp_container_1" class="jp-audio">
+								<div class="jp-type-single">
+									<div class="jp-gui jp-interface">
+										<ul class="jp-controls">
+											<li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+											<li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+											<li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li> 
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
 			    </div>
+
+					<div data-role="popup" id="popupJoin" data-theme="a" class="ui-corner-all">
+						<form>
+							<div style="padding:10px 20px;">
+							  <h3>Who's party do you want to join?</h3>
+			          <label for="partyAddress" class="ui-hidden-accessible">Address:</label>
+			          <input type="text" name="partyAddress" id="partyAddress" value="" placeholder="partyAddress" data-theme="a" />
+
+				    	  <button type="button" id="join" data-theme="a">Join...</button>
+								<button type="button" id="cancelJoin" data-theme="a">Stay here</button>
+							</div>
+						</form>
+					</div>
+
+					<a href="javascript:joinAnotherParty();" data-role="button" data-theme="a">Join another party...</a>
+			
 				</div>
 				
 			</div>
@@ -245,21 +263,6 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				<h1>Party Player</h1>
 			</div>
 			<div data-role="content">
-				<div data-role="popup" id="popupJoin" data-theme="a" class="ui-corner-all">
-					<form>
-						<div style="padding:10px 20px;">
-						  <h3>Who's party do you want to join?</h3>
-		          <label for="partyAddress" class="ui-hidden-accessible">Address:</label>
-		          <input type="text" name="partyAddress" id="partyAddress" value="" placeholder="partyAddress" data-theme="a" />
-
-			    	  <button type="button" id="join" data-theme="a">Join...</button>
-							<button type="button" id="cancelJoin" data-theme="a">Stay here</button>
-						</div>
-					</form>
-				</div>
-			
-				<a href="javascript:joinAnotherParty();" data-role="button" data-theme="a">Join another party...</a>
-				
 				<ul id="guest-profiles" data-role="listview" data-inset="true" data-theme="a">
 					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Party Crowd</li>
 					
