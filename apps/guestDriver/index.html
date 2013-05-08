@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<!--
+Code contributed to the webinos platform.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+(C) Copyright 2012, TNO
+
+Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>PartyPlayer Guest</title>
+		    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+		    <link rel="stylesheet" href="../lib/jquery.mobile.structure.min.css " type="text/css"/>
+		    <link rel="stylesheet" href="tno-partyplayer-guest.css" type="text/css"/>
+		    <link rel="stylesheet" href="../lib/jquery.swipeButton.css" type="text/css"/>
+		    <link rel="stylesheet" href="../lib/flexslider.css" type="text/css"/>
+				<link rel="stylesheet" href="./skin/jplayer.blue.monday.css" type="text/css"/>
+		
+			<style>	
+				.party-nav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+				.party-nav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
+			</style>
+
+			<script type="text/javascript" src="/webinos.js"></script>
+      <script type="text/javascript" src="../lib/jquery.min.js"></script>
+      <script type="text/javascript" src="../lib/jquery.mobile.min.js"></script>
+			<script type="text/javascript" src="../lib/jquery.swipeButton.min.js"></script>
+			<script type="text/javascript" src="jquery.tinysort.min.js"></script>
+			<script type="text/javascript" src="jquery.tinysort.charorder.min.js"></script>
+      <!--script type=text/javascript src=../lib/id3v2.js></script>-->
+      <script type="text/javascript" src="../common/log.js"></script>
+      <script type="text/javascript" src="../common/pplayer.js"></script>
+     	<script type="text/javascript" src="../host/PartyCollection.js"></script>
+     	<script type="text/javascript" src="icons/icons.js"></script>
+      <script type="text/javascript" src="guest.js"></script>
+			<script type="text/javascript" src="../lib/jquery.flexslider-min.js"></script>
+      <script type="text/javascript" src="jquery.jplayer.min.js"></script>
+      <script type="text/javascript" src="../lib/reflection.js"></script>
+    </head>
+    <body>
+		<div data-role="page" id="home">
+			<div data-role="header" data-position="fixed">
+				<h1>Party Player</h1>
+<!--				<a href="#home" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>-->
+			</div>
+			<div data-role="content">
+				<div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+					<form>
+						<div style="padding:10px 20px;">
+						  <h3>Please enter your info</h3>
+						  <p>This is required only once and we promise not to spam you.</p>
+				          <label for="name" class="ui-hidden-accessible">Name:</label>
+				          <input type="text" name="name" id="name" value="" placeholder="name" data-theme="a" />
+
+				          <label for="mail" class="ui-hidden-accessible">E-mail address:</label>
+				          <input type="text" name="mail" id="mail" value="" placeholder="email" data-theme="a" />
+
+				    	  <button type="button" id="login" data-theme="a">Proceed...</button>
+						</div>
+					</form>
+				</div>
+			
+				<div data-role="popup" id="popupLoading" data-theme="a" class="ui-content">
+					<p>The party player is loading your music collection...</p>
+				</div>
+
+				<div class="content-secondary">
+					
+    			<!-- Logos -->
+
+					<div class="flexslider" style="text-align: center;margin-left: -90px;">
+						<ul class="slides">
+							<li>
+								<img src="../library/logos/logo-TNO.png" alt="Concept by TNO" style="width: 224px;"/>
+							</li>
+							<li>
+								<img src="../library/logos/bmw.png" alt="Brought to the car by BMW"/>
+							</li>
+							<li>
+								<img src="../library/logos/webinos.png" alt="Powered by Webinos"/>
+							</li>
+						</ul>
+					</div>
+	
+					<ul data-role="listview" data-inset="true" data-theme="a">
+					</ul>
+				</div>
+				
+				<div class="content-primary">
+					<div id="albumart" class="ui-body ui-body-a" style="text-align: center;"  data-theme="a" data-content-theme="a">
+						<h3 id="playingTitle">Nothing playing<h3>
+						<center>
+            	<img id="albumArtImg" src="images/party.png" width="150px" class="reflect"/>
+						</center>
+            <p id="nowPlaying">&nbsp;</p>
+					</div>
+			    <div data-role="collapsible-set" data-theme="a" data-content-theme="a">
+			        <div data-role="collapsible" data-collapsed="true">
+					    <h2>Stream Player</h2>
+
+			            Stream is: <span id="streamStatus">Offline</span>
+			            
+			            <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+                            <div id="jp_container_1" class="jp-audio">
+                              <div class="jp-type-single">
+                                <div class="jp-gui jp-interface">
+                                  <ul class="jp-controls">
+                                    <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+                                    <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+                                    <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li> 
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                  </div>
+			    </div>
+				</div>
+				
+			</div>
+
+			<style>
+				#home-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#home-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#home-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#home-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#home-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
+				<div data-role="navbar" class="party-nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="home-home" data-icon="custom" class="ui-btn-active ui-state-persist">HOME</a></li>
+					<li><a href="#playlist" id="home-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="home-collection" data-icon="custom">SONGS</a></li>
+					<li><a href="#guests" id="home-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#about" id="home-about" data-icon="custom">ABOUT</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>		
+		
+		<!-------- PLAYLIST ------>
+
+		<div data-role="page" class="type-home" id="playlist">
+			<div data-role="header" data-position="fixed">
+				<h1>Party Player</h1>
+			</div>
+			<div data-role="content">
+				<ul id="playlist" data-role="listview" data-inset="true" data-theme="a">
+					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Playlist</li>
+					
+					<!-- add content as <li> items-->
+					
+				</ul>
+			</div>
+
+			<style>
+				#playlist-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#playlist-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#playlist-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#playlist-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#playlist-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
+				<div data-role="navbar" class="party-nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="playlist-home" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="playlist-playlist" data-icon="custom" class="ui-btn-active ui-state-persist">PLAYLIST</a></li>
+					<li><a href="#collection" id="playlist-collection" data-icon="custom">SONGS</a></li>
+					<li><a href="#guests" id="playlist-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#about" id="playlist-about" data-icon="custom">ABOUT</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+		
+
+		<!-------- COLLECTION ------>
+
+		<div data-role="page" id="collection">
+			<div data-role="header" data-position="fixed">
+				<h1>Party Player</h1>
+			</div>
+			
+			<div data-role="content">
+				<div data-role="collapsible-set" data-theme="a" data-content-theme="a">
+					<div data-role="collapsible" data-collapsed="false">
+						<h2>Party Collection</h2>
+						<ul id="party-collection" data-role="listview" data-autodividers="true" data-split-icon="star" data-filter="true" data-filter-theme="a" data-divider-theme="a" data-split-theme="a">
+						</ul>
+					</div>
+
+					<div data-role="collapsible">
+						<h2>My Collection</h2>
+						<ul id="user-collection" data-role="listview" data-autodividers="true" data-filter="true" data-filter-theme="a" data-divider-theme="a" data-split-theme="a">
+						</ul>
+					</div>
+				</div>
+
+				<div data-role="collapsible-set" data-theme="a" data-content-theme="a">
+				</div>
+				
+			</div>
+
+			<style>
+				#collection-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#collection-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#collection-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#collection-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#collection-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
+				<div data-role="navbar" class="party-nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="collection-home" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="collection-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="collection-collection" data-icon="custom" class="ui-btn-active ui-state-persist">SONGS</a></li>
+					<li><a href="#guests" id="collection-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#about" id="collection-about" data-icon="custom">ABOUT</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+		
+		<!-------- GUESTS ------>
+
+		<div data-role="page" class="type-home" id="guests">
+			<div data-role="header" data-position="fixed">
+				<h1>Party Player</h1>
+			</div>
+			<div data-role="content">
+				<ul id="guest-profiles" data-role="listview" data-inset="true" data-theme="a">
+					<li data-swatch="a" class="ui-li ui-li-divider ui-btn ui-bar-a ui-corner-top" data-role="list-divider">Party Crowd</li>
+					
+					<!-- add guests as <li> items-->
+					
+				</ul>
+			</div>
+
+			<style>
+				#guests-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#guests-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#guests-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#guests-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#guests-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
+				<div data-role="navbar" class="party-nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="guests-home" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="guests-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="guests-collection" data-icon="custom">SONGS</a></li>
+					<li><a href="#guests" id="guests-guests" data-icon="custom" class="ui-btn-active ui-state-persist">CROWD</a></li>
+					<li><a href="#about" id="guests-about" data-icon="custom">ABOUT</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+		
+		<!-------- ABOUT ------>
+
+		<div data-role="page" class="type-home" id="about">
+			<div data-role="header" data-position="fixed">
+				<h1>Party Player</h1>
+			</div>
+
+			<div data-role="content">
+			</div>
+
+			<style>
+				#about-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#about-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#about-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#about-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#about-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+			</style>
+
+			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
+				<div data-role="navbar" class="party-nav" data-grid="d">
+				<ul>
+					<li><a href="#home" id="about-home" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="about-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="about-collection" data-icon="custom">SONGS</a></li>
+					<li><a href="#guests" id="about-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#about" id="about-about" data-icon="custom" class="ui-btn-active ui-state-persist">ABOUT</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+</html>
