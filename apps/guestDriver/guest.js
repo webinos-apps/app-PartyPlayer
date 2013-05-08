@@ -49,6 +49,56 @@ function bindFileAPI() {
     });
 }
 
+function bindVehicleAPI(callback) {
+    webinos.discovery.findServices(new ServiceType("http://webinos.org/api/vehicle"), {
+        /**
+         * When the service is found
+         * @param service The service that is found.
+         * @private
+         */
+        onFound: function (service) {
+            if (webinos.session.getPZPId() === service.serviceAddress) {
+                service.bindService({
+                    onBind: function () {
+                        localItems.vehicleService = service;
+                        if (callback) {
+                            callback();
+                        }
+
+                    }
+                });
+            }
+        },
+        /**
+         * When an error occurs.
+         * @param error The object describing the error event.
+         * @private
+         */
+        onError: function (error) {
+            alert("Error finding service: " + error.message + " (#" + error.code + ")");
+        }
+    });
+}
+
+function speedListener(event) {
+    if(event.vss > 1) {
+        $("div[data-role='footer']").animate({
+            opacity: 0.1
+        },1000);
+        $("div[data-role='footer']").attr("disabled", "disabled");
+        $.mobile.changePage( "#home", { transition: "slideup"} );
+    } else {
+        $("div[data-role='footer']").animate({
+            opacity: 1.0
+        },1000);
+        $("div[data-role='footer']").removeAttr("disabled");
+    }
+}
+
+function onServiceBound() {
+    localItems.vehicleService.addEventListener('vss', speedListener, false);
+}
+
 function validateEmail(email) { 
      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
      return re.test(email);
@@ -117,6 +167,7 @@ $('#home').live('pageinit', function(event) {
             if (connected) {
                 initProfile();
                 bindFileAPI();
+                bindVehicleAPI(onServiceBound);
             }
         });
     });
