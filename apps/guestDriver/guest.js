@@ -16,6 +16,8 @@
  * (C) Copyright 2012, TNO
  *
  * Authors: Victor Klos, Martin Prins, Arno Pont
+ *
+ * Vehicle API changes by Eric Smekens, (C) Copyright 2013, TNO.
  */
  
 var popupLogin = false;
@@ -80,18 +82,24 @@ function bindVehicleAPI(callback) {
     });
 }
 
+function disconnectVehicleAPI() {
+    localItems.vehicleService.removeEventListener('vss', speedListener, false);
+}
+
 function speedListener(event) {
-    if(event.vss > 1) {
-        $("div[data-role='footer']").animate({
-            opacity: 0.1
-        },1000);
-        $("div[data-role='footer']").attr("disabled", "disabled");
+    if(event.vss > 1000) {
+//        $("div[data-role='footer']").animate({
+//            opacity: 0.1
+//        },1000);
+//        $("div[data-role='footer'] ").attr("disabled", "disabled");
+        $("div[data-role='footer']").hide();
         $.mobile.changePage( "#home", { transition: "slideup"} );
     } else {
-        $("div[data-role='footer']").animate({
-            opacity: 1.0
-        },1000);
-        $("div[data-role='footer']").removeAttr("disabled");
+//        $("div[data-role='footer']").animate({
+//            opacity: 1.0
+//        },1000);
+//        $("div[data-role='footer']").removeAttr("disabled");
+        $("div[data-role='footer']").show();
     }
 }
 
@@ -190,6 +198,21 @@ $('#collection').live('pageinit', function(event) {
 
 $(document).ready(function() {
     $.mobile.changePage("#home", { transition: "slideup"} );
+
+    $("#chatinput").keyup(function (e) {
+        if (e.keyCode == 13) {
+            if($("#chatinput").val() !== "") {
+                partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"chat", cmd:"newChatMessage", params:{user: userProfile.userName, message: $("#chatinput").val() }});
+                $("#chatinput").val('');
+            }
+        }
+    });
+    $("#btnSend").click(function() {
+        if($("#chatinput").val() !== "") {
+            partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"chat", cmd:"newChatMessage", params:{user: userProfile.userName, message: $("#chatinput").val() }});
+            $("#chatinput").val('');
+        }
+    });
 });
 
 
@@ -202,7 +225,9 @@ window.onbeforeunload = function() {
         partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"main", cmd:"leave"});
     }
     partyplayer.close();
-    
+
+    disconnectVehicleAPI();
+
     if (previousWindowBeforeUnload) {
         previousWindowBeforeUnload();
     }
@@ -257,6 +282,7 @@ partyplayer.voteFunnelItem = function(funnelItemID){
 partyplayer.main = {};
 partyplayer.funnel = {};
 partyplayer.player = {};
+partyplayer.chat = {};
 partyplayer.main.onwelcome = function(param, ref) {
     userProfile.userID = param.userID;
     log('onwelcome invoked! userID = '+ userProfile.userID); 
@@ -520,6 +546,13 @@ partyplayer.player.onupdateItem = function (param, ref){
         $('#nowPlaying').text(" ");
         $('#playingTitle').text('Nothing playing');
     }
+}
+
+partyplayer.chat.onchatReceived = function (param, ref) {
+    $("#chatarea").append(param.user + ": " + param.message + "\n");
+    $("#chatarea").animate({
+        scrollTop: $("#chatarea")[0].scrollHeight - $("#chatarea").height()
+    },500);
 }
 
 function getGravatar(email, size) {

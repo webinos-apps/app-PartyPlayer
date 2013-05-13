@@ -28,6 +28,7 @@ partyplayer.funnel = {};
 partyplayer.files = { services: {}};
 partyplayer.player = {};
 partyplayer.player.streaming="False";
+partyplayer.chat = {};
 
 var bootstrapped = false;
 
@@ -238,6 +239,10 @@ partyplayer.player.stopScreencast = function () {
     $('#scStatus').attr('fill', 'Red');
     partyplayer.player.streaming="False";
     partyplayer.sendMessage({ns:"player", cmd:"streamUpdate", params:{enabled:"False"}}); 
+}
+
+partyplayer.chat.onnewChatMessage = function(params) {
+    partyplayer.sendMessage({ns: "chat", cmd:"chatReceived", params:{user: params.user, message: params.message}});
 }
 
 
