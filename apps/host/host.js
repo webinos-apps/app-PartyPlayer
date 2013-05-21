@@ -338,7 +338,7 @@ function logRandom(){
     @enduml
     */
 
-      /* 
+    /*
     @startuml protocol_leave.png
         hide footbox
         participant "g:PartyGuestApp" as guest
@@ -347,6 +347,18 @@ function logRandom(){
             guest -> host : leave(userID)
             host -> guest : removePlayer(userID)
             note right: a userID may not be provided
+        end
+    @enduml
+    */
+
+    /*
+    @startuml protocol_chat.png
+        hide footbox
+        participant "g:PartyGuestApp" as guest
+        participant PartyHostApp as host
+        group A guest sends a chat message
+        guest -> host : newChatMessage(userID, message)
+        host -> guest : chatReceived(userID, message)
         end
     @enduml
     */

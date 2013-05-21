@@ -85,22 +85,19 @@ function bindVehicleAPI(callback) {
 function disconnectVehicleAPI() {
     localItems.vehicleService.removeEventListener('vss', speedListener, false);
 }
+var speedGauge;
 
 function speedListener(event) {
-    if(event.vss > 1000) {
-//        $("div[data-role='footer']").animate({
-//            opacity: 0.1
-//        },1000);
-//        $("div[data-role='footer'] ").attr("disabled", "disabled");
-        $("div[data-role='footer']").hide();
+    if(event.vss > 2) {
+        $("div[data-role='navbar']").hide();
+        $("#speedGauge").show();
         $.mobile.changePage( "#home", { transition: "slideup"} );
     } else {
-//        $("div[data-role='footer']").animate({
-//            opacity: 1.0
-//        },1000);
-//        $("div[data-role='footer']").removeAttr("disabled");
-        $("div[data-role='footer']").show();
+        $("#speedGauge").hide();
+        $("div[data-role='navbar']").show();
     }
+
+    speedGauge.refresh(event.vss);
 }
 
 function onServiceBound() {
@@ -198,6 +195,15 @@ $('#collection').live('pageinit', function(event) {
 
 $(document).ready(function() {
     $.mobile.changePage("#home", { transition: "slideup"} );
+
+    speedGauge = new JustGage({
+        id: "speedGauge",
+        value: 0,
+        min: 0,
+        max: 160,
+        title: "Speed",
+        label: "km/h"
+    });
 
     $("#chatinput").keyup(function (e) {
         if (e.keyCode == 13) {
