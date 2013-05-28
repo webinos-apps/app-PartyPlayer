@@ -1,5 +1,6 @@
 #speedGauge {
-    width: 400px; height: 320px;
+    width: 320px; height: 236px;
     margin: 0 auto;
-    display:none;
+    /*display: none;*/
+    opacity: 0.2;
 }

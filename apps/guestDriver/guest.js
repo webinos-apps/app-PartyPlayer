@@ -90,10 +90,14 @@ var speedGauge;
 function speedListener(event) {
     if(event.vss > 2) {
         $("div[data-role='navbar']").hide();
-        $("#speedGauge").show();
+        $("#speedGauge").animate({
+            opacity: 1.0
+        }, 500);
         $.mobile.changePage( "#home", { transition: "slideup"} );
     } else {
-        $("#speedGauge").hide();
+        $("#speedGauge").animate({
+            opacity: 0.2
+        }, 500);
         $("div[data-role='navbar']").show();
     }
 
