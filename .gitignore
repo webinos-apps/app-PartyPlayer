@@ -3,3 +3,6 @@
 *.project
 docs/generated
 index.json
+
+*.iml
+.idea/

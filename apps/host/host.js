@@ -28,6 +28,7 @@ partyplayer.funnel = {};
 partyplayer.files = { services: {}};
 partyplayer.player = {};
 partyplayer.player.streaming="False";
+partyplayer.chat = {};
 
 var bootstrapped = false;
 
@@ -240,6 +241,10 @@ partyplayer.player.stopScreencast = function () {
     partyplayer.sendMessage({ns:"player", cmd:"streamUpdate", params:{enabled:"False"}}); 
 }
 
+partyplayer.chat.onnewChatMessage = function(params) {
+    partyplayer.sendMessage({ns: "chat", cmd:"chatReceived", params:{user: params.user, message: params.message}});
+}
+
 
 function updateUsers(){
     players = pc.getUsers();
@@ -333,7 +338,7 @@ function logRandom(){
     @enduml
     */
 
-      /* 
+    /*
     @startuml protocol_leave.png
         hide footbox
         participant "g:PartyGuestApp" as guest
@@ -342,6 +347,18 @@ function logRandom(){
             guest -> host : leave(userID)
             host -> guest : removePlayer(userID)
             note right: a userID may not be provided
+        end
+    @enduml
+    */
+
+    /*
+    @startuml protocol_chat.png
+        hide footbox
+        participant "g:PartyGuestApp" as guest
+        participant PartyHostApp as host
+        group A guest sends a chat message
+        guest -> host : newChatMessage(userID, message)
+        host -> guest : chatReceived(userID, message)
         end
     @enduml
     */
