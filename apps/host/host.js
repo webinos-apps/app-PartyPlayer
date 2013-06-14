@@ -358,7 +358,7 @@ function logRandom(){
         participant PartyHostApp as host
         group A guest sends a chat message
         guest -> host : newChatMessage(userID, message)
-        host -> guest : sendChatToClients(userID, message)
+        host -> guest : chatReceived(userID, message) 
         end
     @enduml
     */
