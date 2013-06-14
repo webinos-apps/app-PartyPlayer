@@ -139,6 +139,21 @@ $('#collection').live('pageinit', function(event) {
 
 $(document).ready(function() {
     $.mobile.changePage("#home", { transition: "slideup"} );
+
+    $("#chatinput").keyup(function (e) {
+        if (e.keyCode == 13) {
+            if($("#chatinput").val() !== "") {
+                partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"chat", cmd:"newChatMessage", params:{user: userProfile.userName, message: $("#chatinput").val() }});
+                $("#chatinput").val('');
+            }
+        }
+    });
+    $("#btnSend").click(function() {
+        if($("#chatinput").val() !== "") {
+            partyplayer.sendMessageTo(partyplayer.getHost(), {ns:"chat", cmd:"newChatMessage", params:{user: userProfile.userName, message: $("#chatinput").val() }});
+            $("#chatinput").val('');
+        }
+    });
 });
 
 
@@ -206,6 +221,7 @@ partyplayer.voteFunnelItem = function(funnelItemID){
 partyplayer.main = {};
 partyplayer.funnel = {};
 partyplayer.player = {};
+partyplayer.chat = {};
 partyplayer.main.onwelcome = function(param, ref) {
     userProfile.userID = param.userID;
     log('onwelcome invoked! userID = '+ userProfile.userID); 
@@ -469,6 +485,13 @@ partyplayer.player.onupdateItem = function (param, ref){
         $('#nowPlaying').text(" ");
         $('#playingTitle').text('Nothing playing');
     }
+}
+
+partyplayer.chat.onchatReceived = function (param, ref) {
+    $("#chatarea").append(param.user + ": " + param.message + "\n");
+    $("#chatarea").animate({
+        scrollTop: $("#chatarea")[0].scrollHeight - $("#chatarea").height()
+    },500);
 }
 
 function getGravatar(email, size) {
