@@ -17,7 +17,7 @@
  *
  * Authors: Victor Klos, Martin Prins, Arno Pont
  *
- * Vehicle API changes by Eric Smekens, (C) Copyright 2013, TNO.
+ * 2013 Vehicle API and chat additions - Eric Smekens
  */
  
 var popupLogin = false;
@@ -92,12 +92,12 @@ function speedListener(event) {
         $("div[data-role='navbar']").hide();
         $("#speedGauge").animate({
             opacity: 1.0
-        }, 500);
+        }, 50);
         $.mobile.changePage( "#home", { transition: "slideup"} );
     } else {
         $("#speedGauge").animate({
             opacity: 0.2
-        }, 500);
+        }, 50);
         $("div[data-role='navbar']").show();
     }
 

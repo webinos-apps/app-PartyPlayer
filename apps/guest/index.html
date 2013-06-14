@@ -17,6 +17,8 @@ limitations under the License.
 (C) Copyright 2012, TNO
 
 Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
+
+Chat Additions - Eric Smekens
 -->
 <html>
     <head>
@@ -136,7 +138,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				#home-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
 				#home-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
 				#home-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
-				#home-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+				#home-chat .ui-icon { background:  url(icons/chat.png) 50% 50% no-repeat; }
 			</style>
 
 			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
@@ -146,7 +148,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 					<li><a href="#playlist" id="home-playlist" data-icon="custom">PLAYLIST</a></li>
 					<li><a href="#collection" id="home-collection" data-icon="custom">SONGS</a></li>
 					<li><a href="#guests" id="home-guests" data-icon="custom">CROWD</a></li>
-					<li><a href="#about" id="home-about" data-icon="custom">ABOUT</a></li>
+					<li><a href="#chat" id="home-chat" data-icon="custom">CHAT</a></li>
 				</ul>
 				</div>
 			</div>
@@ -172,7 +174,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				#playlist-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
 				#playlist-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
 				#playlist-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
-				#playlist-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+				#playlist-chat .ui-icon { background:  url(icons/chat.png) 50% 50% no-repeat; }
 			</style>
 
 			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
@@ -182,7 +184,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 					<li><a href="#playlist" id="playlist-playlist" data-icon="custom" class="ui-btn-active ui-state-persist">PLAYLIST</a></li>
 					<li><a href="#collection" id="playlist-collection" data-icon="custom">SONGS</a></li>
 					<li><a href="#guests" id="playlist-guests" data-icon="custom">CROWD</a></li>
-					<li><a href="#about" id="playlist-about" data-icon="custom">ABOUT</a></li>
+					<li><a href="#chat" id="playlist-chat" data-icon="custom">CHAT</a></li>
 				</ul>
 				</div>
 			</div>
@@ -221,7 +223,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				#collection-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
 				#collection-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
 				#collection-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
-				#collection-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+				#collection-chat .ui-icon { background:  url(icons/chat.png) 50% 50% no-repeat; }
 			</style>
 
 			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
@@ -231,7 +233,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 					<li><a href="#playlist" id="collection-playlist" data-icon="custom">PLAYLIST</a></li>
 					<li><a href="#collection" id="collection-collection" data-icon="custom" class="ui-btn-active ui-state-persist">SONGS</a></li>
 					<li><a href="#guests" id="collection-guests" data-icon="custom">CROWD</a></li>
-					<li><a href="#about" id="collection-about" data-icon="custom">ABOUT</a></li>
+					<li><a href="#chat" id="collection-chat" data-icon="custom">CHAT</a></li>
 				</ul>
 				</div>
 			</div>
@@ -257,7 +259,7 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 				#guests-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
 				#guests-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
 				#guests-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
-				#guests-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+				#guests-chat .ui-icon { background:  url(icons/chat.png) 50% 50% no-repeat; }
 			</style>
 
 			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
@@ -267,38 +269,41 @@ Authors Victor Klos, Arno Pont, Martin Prins, Eelco Cramer
 					<li><a href="#playlist" id="guests-playlist" data-icon="custom">PLAYLIST</a></li>
 					<li><a href="#collection" id="guests-collection" data-icon="custom">SONGS</a></li>
 					<li><a href="#guests" id="guests-guests" data-icon="custom" class="ui-btn-active ui-state-persist">CROWD</a></li>
-					<li><a href="#about" id="guests-about" data-icon="custom">ABOUT</a></li>
+					<li><a href="#chat" id="guests-chat" data-icon="custom">CHAT</a></li>
 				</ul>
 				</div>
 			</div>
 		</div>
 
-		<!-------- ABOUT ------>
+		<!-------- CHAT ------>
 
-		<div data-role="page" class="type-home" id="about">
+		<div data-role="page" class="type-home" id="chat">
 			<div data-role="header" data-position="fixed">
 				<h1>Party Player</h1>
 			</div>
 
 			<div data-role="content">
+                <textarea readonly style="height:200px; width:100%" name="chatarea" id="chatarea"></textarea>
+                <input data-clear-btn="true" name="chatinput" id="chatinput" value="" placeholder="Your message..." type="text">
+                <input type="submit" id="btnSend" value="Send"/>
 			</div>
 
 			<style>
-				#about-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
-				#about-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
-				#about-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
-				#about-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
-				#about-about .ui-icon { background:  url(icons/about.png) 50% 50% no-repeat; }
+				#chat-home .ui-icon { background:  url(icons/home.png) 50% 50% no-repeat; }
+				#chat-playlist .ui-icon { background:  url(icons/playlist.png) 50% 50% no-repeat; }
+				#chat-collection .ui-icon { background:  url(icons/collection.png) 50% 50% no-repeat; }
+				#chat-guests .ui-icon { background:  url(icons/guests.png) 50% 50% no-repeat; }
+				#chat-chat .ui-icon { background:  url(icons/chat.png) 50% 50% no-repeat; }
 			</style>
 
 			<div data-role="footer" class="party-nav" data-position="fixed" data-id="navigation">
 				<div data-role="navbar" class="party-nav" data-grid="d">
 				<ul>
-					<li><a href="#home" id="about-home" data-icon="custom">HOME</a></li>
-					<li><a href="#playlist" id="about-playlist" data-icon="custom">PLAYLIST</a></li>
-					<li><a href="#collection" id="about-collection" data-icon="custom">SONGS</a></li>
-					<li><a href="#guests" id="about-guests" data-icon="custom">CROWD</a></li>
-					<li><a href="#about" id="about-about" data-icon="custom" class="ui-btn-active ui-state-persist">ABOUT</a></li>
+					<li><a href="#home" id="chat-home" data-icon="custom">HOME</a></li>
+					<li><a href="#playlist" id="chat-playlist" data-icon="custom">PLAYLIST</a></li>
+					<li><a href="#collection" id="chat-collection" data-icon="custom">SONGS</a></li>
+					<li><a href="#guests" id="chat-guests" data-icon="custom">CROWD</a></li>
+					<li><a href="#chat" id="chat-chat" data-icon="custom" class="ui-btn-active ui-state-persist">CHAT</a></li>
 				</ul>
 				</div>
 			</div>
